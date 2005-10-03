@@ -1,0 +1,76 @@
+<!--
+  This code was developped by IDEALX (http://IDEALX.org/) and
+  contributors (their names can be found in the CONTRIBUTORS file).
+
+                 Copyright (C) 2002 IDEALX
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+  USA.
+
+ author: <gerald.macinenti@IDEALX.com>
+ Version: $Id$
+-->
+
+<header>Edit group screen</header>
+
+<p>
+This screen allows you to view/modify a group's parameters.
+<p>
+A menu gives you access to two parameters categories: "General" and "Members".
+<p>
+
+<h2>Common features</h2>
+<p>
+Two elements are common to the twoo screens namely:
+<ul>
+<li><b>delete group</b> button:
+<p>
+When clicking on it, you will go to a confirmation page for completly removing the corresponding user from LDAP.
+<p>
+<li><b>Apply changes</b> button:
+<p>
+This button located at the bottom of the screen allow you to commit the changes you made on the screen, if you made changes on a screen and live it without applying them, your modification are lost.
+<p>
+Once you applied your changes and if no error occured, the same screen is redisplyed with the new updated parameters (no success message appears).
+<p>
+If an error occured during the modification process, an error screen is displayed and you may redisplay the screen by clicking on the "Back" button of you browser and then correct errors (if these where only parameters errors).
+<p>
+<h2>General Parameters</h2>
+<ul>
+<li><b>Organization:</b>
+<p>
+This is the Organization Unit under which the group was created, it is not editable.
+<p>
+<li><b>Gid number:</b>(gidNumber)
+<p>
+A unique (in the LDAP) number greater than the configured "minimum gid number" parameter, this parameter is not editable.
+<p>
+<li><b>Description:</b>(description)
+<p>
+A brief description for this group.
+<p>
+
+<h2>Members</h2>
+<p>
+This screen displays a listing of the various users belonging to the group, users which have this group as primary group are shown with a green text ("primary") and are not removable from this menu: you have to change the user primary group from the "General" screen of the user edition menu and then comme back to remove it from the group.
+<p>
+Other users are removable (that is users won't belong to the anymore) by clicking on their respective "remove" button in the "Remove member from this group" column.
+<p>
+When clicking on a user name in the list, you will jump to the user edition screen.
+<p>
+You may add one or many new users to the group by clicking on the "Select members" button, a users listing window will then appear with a search form to search specific users, each user has a "Add button" that you use to append the user to the text area,  when you finished your selection, close the users window and click on the "Add selected members to this groups" button to add all users listed in the text area to the groups.
+<p>
+ 
+

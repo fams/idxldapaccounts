@@ -1,0 +1,70 @@
+<!--
+  This code was developped by IDEALX (http://IDEALX.org/) and
+  contributors (their names can be found in the CONTRIBUTORS file).
+
+                 Copyright (C) 2002 IDEALX
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+  USA.
+
+ author: <gerald.macinenti@IDEALX.com>
+ Version: $Id$
+-->
+
+<header>Groups screen</header>
+
+<p>
+The main groups screen presents you with a search form, add and delete buttons and groups listing.
+<p>
+
+<h2>Display options</h2>
+<p>
+By default, groups are ordered by cn, (called "name" through the interface), but you can
+change this by clicking on column headers that allow it (like the "Group number" header).
+<p>
+When no search parameter is given (that is when first arriving to this screen or when clicking
+on the "Show complete list button"), the maximum number of groups is displayed, this number is
+specified in the module configuration as the "maximum number of results displayed by a LDAP search" parameter.
+<p>
+If the number of groups to be displayd exceeds the "maximum number of list items displayed per page" configuration parameter, results are displayed on multiple pages with a menu allowing direct access to each page.
+<p>
+
+
+<h2>Search</h2>
+<p>
+The search form allow to filter groups based on the attribute specified in the "search by" select box.
+<p>
+On non numeric attributes, you can use LDAP wildcards in the search text box.
+<p>
+Search is always performed under the LDAP Organizational Unit specified by the "LDAP groups search base" configuration parameter, but you can restrict it to a sub OU by selecting it in the OU tree displayed at the left of the search form.
+<p>
+When a search result is displayed, you may return to the full groups listing by clicking on
+the "Show complete list" button that will then appear under the search form.
+<p>
+
+<h2>Adding groups</h2> 
+<p>
+Under the search form, you will find a "Add group" button which leads you to the group creation form. A specific help screen is accessible from this screen.
+<p>
+
+<h2>Editing groups</h2>
+<p>
+The first column of the groups listing displays groups cn as links, when clicking on such a link, you will go to the edition screen for the corresponding group where you may modify his parameters. A specific help screen is accessible from this screen.
+<p>
+
+<h2>Deleting groups</h2>
+<p>
+The last column of the groups listing provides a "delete" button for each group, when clicking on it, you will go to a confirmation page for completly removing the corresponding group from LDAP.
+<p>

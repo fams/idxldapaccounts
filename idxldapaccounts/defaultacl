@@ -1,0 +1,12 @@
+configure_virtual=1
+configure_account=1
+view_user_tech=1
+view_user_perso=1
+view_group=1
+edit_user=1
+edit_group=1
+create_user=1
+delete_user=1
+create_group=1
+delete_group=1
+configure_discussao=1

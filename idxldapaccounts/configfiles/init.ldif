@@ -1,0 +1,61 @@
+dn: %SUFFIX%
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: Manoel Bernardes
+dc: omb
+
+dn: ou=People,%SUFFIX%
+ou: People
+objectClass: organizationalUnit
+
+dn: ou=Groups,%SUFFIX%
+ou: Groups
+objectClass: organizationalUnit
+
+dn: ou=Computers,%SUFFIX%
+ou: Computers
+objectClass: organizationalUnit
+
+dn: ou=Staff,%SUFFIX%
+ou:: Staff
+objectClass: top
+objectClass: organizationalUnit
+
+dn: cn=proxyuser,ou=Staff,%SUFFIX%
+objectClass: top
+objectClass: person
+sn: proxyuser
+cn: proxyuser
+userPassword:: e1NNRDV9NjBFWGFkM0dUKy95OWVqOHZaalV2c1JXdDUwPQ==
+
+dn: ou=personal_addressbook,%SUFFIX%
+ou: personal_addressbook
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=System,%SUFFIX%
+ou: System
+objectClass: organizationalUnit
+
+dn: ou=postfix,ou=system,%SUFFIX%
+ou: postfix
+objectClass: organizationalUnit
+structuralObjectClass: organizationalUnit
+
+dn: dc=domains,ou=postfix,ou=System,%SUFFIX%
+associatedDomain: mbernardes.com.br
+dc: domains
+objectClass: dNSDomain
+objectClass: domainRelatedObject
+
+dn: ou=mailinglists,ou=postfix,ou=System,%SUFFIX%
+ou: mailinglists
+objectClass: organizationalUnit
+structuralObjectClass: organizationalUnit
+
+dn: cn=users,ou=Groups,%SUFFIX%
+objectClass: posixGroup
+cn: users
+gidNumber: 100
+description: Default Group

@@ -1,0 +1,92 @@
+<!--
+  This code was developped by IDEALX (http://IDEALX.org/) and
+  contributors (their names can be found in the CONTRIBUTORS file).
+
+                 Copyright (C) 2002 IDEALX
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+  USA.
+
+ author: <gerald.macinenti@IDEALX.com>
+ Version: $Id$
+-->
+
+<header>Create user screen</header>
+
+<p>
+This screen is a simple form where you may enter the essential parameters for a user creation
+<p>
+
+<h2>Parameters</h2>
+<ul>
+<li><b>Organization:</b>
+<p>
+This is the Organization Unit under which the user will be created, it may be selected within all OU that
+reside under the "LDAP users search base" configured OU. By default, the selected OU is the
+one that was active in the users listing screen when you clicked on the "Add user button".
+<p>
+<li><b>User id:</b>(uid)
+<p>
+A word without space characters, usually built by concatenation of the first letter of the user's first name and the user's last name (nut this can be what ever you want).
+<p>
+This parameter must be unique in the LDAP.
+<p>
+This parameter is used as what is called the "login" by various accounts (Unix, Samba, Windows NT ...).
+<p>
+<li><b>Full name:</b>(cn)
+<p>
+The user's full name.
+<p>
+<li><b>Last name:</b>(sn)
+<p>
+The user's last name.
+<p>
+<li><b>Description:</b>(description)
+<p>
+A brief description for this user.
+<p>
+<li><b>Password:</b>(userPassword)
+<p>
+The password that will be used by this user to access his various accounts (Unix, Windows NT ...)
+<p>
+<li><b>Retype password:</b>
+<p>
+Enter the password again, both values will be compared to be sure you really typed what you wanted 
+to, which is not so easy to verify yourself as passwords are not displayed as you type them.
+<p>
+<li><b>Uid number:</b>(uidNumber)
+<p>
+A unique (in the LDAP) number greater than the configured "minimum uid number" parameter, a valid one will be proposed to you when you first access the form and if you change it to a non valid one, another valid one will be proposed to you again.
+<p>
+<li><b>Primary group:</b>(gidNumber)
+<p>
+The group the user belongs to in first place, you may directly type its name (cn) or select it
+by clicking on the "Select" button. This button opens a groups listing with their descriptions
+and a search form to search the group you want.
+<p>
+</ul>
+
+<h2>User creation</h2>
+<p>
+When you think the user's parameters are corrects, click on the "Create user" button at the bottom
+of the screen to effectively create the user.
+<p>
+If some parameters are incorrect, an error screen is displayed and you may correct you errors by
+redisplaying the creation form with the "Back" button of you browser.
+<p>
+If there was no error, an entry is created in the LDAP for this user and his home directory is created on the local (to Webmin) system. If this directory, as other parameters with default values doesn't suit your needs, you may modify it within the edition screen for this user.
+<p>
+If user creation was successfull, you access the edition screen for this user which displays a message confirming the success of the operation.
+<p>

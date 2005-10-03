@@ -1,0 +1,67 @@
+<!--
+  This code was developped by IDEALX (http://IDEALX.org/) and
+  contributors (their names can be found in the CONTRIBUTORS file).
+
+                 Copyright (C) 2002 IDEALX
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+  USA.
+
+ author: <gerald.macinenti@IDEALX.com>
+ Version: $Id$
+-->
+
+<header>Edit user Samba account screen</header>
+
+<p>
+This screen allow you to view/modify user Samba account parameters. This account may be used to activate simple Samba file sharing facilities or Windows NT/Lan Manager user account properties if the Samba server is configured to act as a Principal Domain Controller.
+<p>
+
+<h2>Account creation</h2>
+<p>
+If the user doesn't have a Samba account, the screens displays a creation form with default proposed values for some parameters.
+<p>
+Some parameters may not be editable and sometimes not even visible depending on the current account configuration which is partly done online from the corresponding account edition screen. We said "partly" because some paramters are forced to be non editable in the configuration file itself and this property superceedes online configuration of the account.
+<p>
+<p>
+When you think your parameters are OK, click on the "Create account" button to add the sambaAccount objectclass in the user's attributes. If no error occured, the modification form (see below) is displayed with the actual user parameters and with a success message. If an error occured, an error screen is displayed and you may redisplay the form by clicking on the "Back" button of your browser.<p> 
+If this account is aimed at providing Windows NT user properties informations, a Windows NT/Lan manager password must be provided for this user, for more, this passsword must be derived from the user's clear text Unix password (as given at user creation time within the module), so if your module is configured so as to encrypt user passwords, the clear text password is not recoverable by the program and must be given again (this will be be automatically proposed to you if necessary). You may disable user NT account temporarily (by selecting the "Disable Nt/Lan manager account" check button) and activate it later by modifying/reentering user Unix clear text password in the "General" screen for this user.
+<p> 
+<h2>Account modification</h2>
+<p>
+This screen is similar to the account creation screen except that it allow you to modify parameters by clicking on the "Apply changes" button at the bottom of the screen (here the same mechanisms as for the "General" screen applies).
+<p>
+Also, a new button appears for deleting user's Samba account: "delete account".
+<p>
+
+<h2>Parameters</h2>
+<p>
+Most parameters are self explanatory (providing you know a little about Samba or Windows) and the default configuration for this account presents the administrator with the most commonly used parameters for such accounts.  
+<p>
+Some parameters are forced to be non editable at configuration file level because the are the same as paramters appearing in the "General" screen or they have a certain relation with them. Note that things may not work properly if you change this. Here are these parameters:
+<ul>
+<li><b>description: </b> assigned in the "General" screen
+<li><b>uidNumber</b> assigned in the "General" screen
+<li><b>gidNumber</b> assigned in the "General" screen
+<li><b>cn</b> assigned in the "General" screen
+<li><b>uid</b> assigned at user creation time
+<li><b>sambaNTPassword: </b>computed from the users's userPassword (Unix password)
+<li><b>sambaLMPassword: </b>computed from the users's userPassword (Unix password)
+<li><b>sambaPrimaryGroupSID: </b>computed from the user's gidNumber
+<li><b>sambaSID: </b> computed from the user's uidNumber
+</ul>
+<p>
+Finally, note that the Samba account can be enabled/disabled by selecting/deselecting the "account is enabled" check button at the bottom of the screen.
+<p>

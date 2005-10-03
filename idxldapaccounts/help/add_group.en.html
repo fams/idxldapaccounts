@@ -1,0 +1,67 @@
+<!--
+  This code was developped by IDEALX (http://IDEALX.org/) and
+  contributors (their names can be found in the CONTRIBUTORS file).
+
+                 Copyright (C) 2002 IDEALX
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+  USA.
+
+ author: <gerald.macinenti@IDEALX.com>
+ Version: $Id$
+-->
+
+<header>Create group screen</header>
+
+<p>
+This screen is a simple form where you may enter the essential parameters for a group creation
+<p>
+
+<h2>Parameters</h2>
+<ul>
+<li><b>Organization:</b>
+<p>
+This is the Organization Unit under which the group will be created, it may be selected within all OU that
+reside under the "LDAP groups search base" configured OU. By default, the selected OU is the
+one that was active in the groups listing screen when you clicked on the "Add group button".
+<p>
+<li><b>Name:</b>(cn)
+<p>
+A name for the new group (that may contain space characters)
+<p>
+This parameter must be unique in the LDAP.
+<p>
+<li><b>Gid number:</b>(gidNumber)
+<p>
+A unique (in the LDAP) number greater than the configured "minimum gid number" parameter, a valid one will be proposed to you when you first access the form and if you change it to a non valid one, another valid one will be proposed to you again.
+<p>
+<li><b>Description:</b>(description)
+<p>
+A brief description for this group.
+<p>
+</ul>
+
+<h2>Group creation</h2>
+<p>
+When you think the group's parameters are corrects, click on the "Create group" button at the bottom
+of the screen to effectively create the group.
+<p>
+If some parameters are incorrect, an error screen is displayed and you may correct you errors by
+redisplaying the creation form with the "Back" button of you browser.
+<p>
+If there was no error, an entry is created in the LDAP for this group. 
+<p>
+If group creation was successfull, you access the edition screen for this group which displays a message confirming the success of the operation.
+<p>

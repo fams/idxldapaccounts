@@ -1,0 +1,37 @@
+# Frequently Asked Questions about Idxldapaccounts
+# $Id$
+
+Frequently Asked Questions about idxldapaccounts
+================================================
+
+1) Some users present in the LDAP are not displayed within the module ?
+-----------------------------------------------------------------------
+
+=>	this may be the case if these users don't have the required inetOrgPerson
+and posixAccount objectclasses (that is users that where not created within he module 
+itself)
+
+2) When I create a samba account I have the following error:
+------------------------------------------------------------
+
+LDAP_INVALID_SYNTAX: Some part of the request contained an invalid syntax. It could be a search with an
+invalid filter or a request to modify the schema and the given schema has a bad syntax.
+
+=>	your LDAP server probably doesn't include the samba.schema schema, place this file
+in you schema directory (usually /etc/openldap/schema) and add a line in your slapd.conf like:
+include /etc/openldap/schema/samba.schema
+
+3) When I create a new user account I have the following error:
+---------------------------------------------------------------
+
+Can't call method "get_value" on an undefined value at ./idxldapaccounts-lib.pl line 776,  line 42.
+
+=>	the default Primary Group for the new user doesn't exist in your LDAP repository, you must choose a group by clicking on the "select" button near the "Primary Group" field and if none is selectable, you should first create a group. 
+
+4) When accessing the module, I get a HTTP 500 error (internal server error)
+----------------------------------------------------------------------------
+
+=> the perl-ldap module (Net::LDAP) is required by idxldapaccounts and may not be installed on your system 
+
+# - The End
+

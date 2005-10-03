@@ -1,0 +1,19 @@
+ldap_server=
+ldap_admin=cn=Manager, dc=my-domain, dc=com
+ldap_password=secret
+ldap_users_base=ou=Users, dc=my-domain, dc=com
+ldap_groups_base=ou=Groups, dc=my-domain, dc=com
+nscd_path=/etc/init.d/nscd
+mkntpwd_path=/usr/local/sbin/mkntpwd
+samba_dir=/data/samba
+gid_default=Users
+min_gid=500
+min_uid=500
+loginshell_default=/bin/bash
+homedir_default=/data/samba/home/USERNAME
+letterhomes=0
+crypt_passwords=0
+max_items=10
+max_search_results=200
+hide_disabled_users=0
+remove_homes=0

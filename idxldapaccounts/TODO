@@ -1,0 +1,15 @@
+# This is TODO file for Idxldapaccounts Webmin module
+#$Id$
+#
+# BUGs and ENHencements
+
+* [ENH-295]: internationalisation
+	Internationalisation framework is done but now the module requires more langages 
+	for dictionary and online help (only english is supported at the moment).
+* [ENH-333]: write code for new account types
+	Module has been redisigned to accept generic account type management, providing
+	one adds a dedicated "edit_accounttype.cgi" file to handle it and little
+	configuration. At the moment, only Samba accounts are handled, more account
+	types should be added like mail accounts.
+
+# - The End

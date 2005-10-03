@@ -1,0 +1,16 @@
+## Authors and Contributors to the idxldapaccounts module for Webmin:
+
+Gerald Macinenti <gerald.macinenti@IDEALX.com> 
+	- code
+	- packaging
+	- support ;)
+
+Olivier Lemaire <olivier.lemaire@IDEALX.com>
+	- functional specifications
+	- tests
+
+Misja Hoebe <mhoebe@chn.nl>	
+	- "letterhomes" patch
+
+Aurélien Degrémont <adegremont@IDEALX.com>
+	- Samba V3 support

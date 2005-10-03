@@ -1,0 +1,102 @@
+# Changelog file for Idxldapaccounts
+# $Id$
+
+2003-12-01 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+	* version 0-2-5, the following bugs where corrected:
+	          * [BUG-638] empty parameters in creation forms
+		  * [BUG-812] error when invoquing the Net::LDAP::Schema::objectclass method
+		  * [BUG-813] UTF8 support
+		  * [BUG-816] popup sizing under IE
+		  * [BUG-817] unable to choose an item from a popup under IE
+
+	* independantly, Samba V3 support was added, resulting in an independant 
+	package while Samba V2 is still in use
+	
+2002-10-21 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+	* version 0-2-4 adaptation to new samba.schema file and minor corrections
+
+2002-10-04 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+	* thanks to Misja Hoebe for his patch to allow letterhomes 
+
+2002-09-05 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+	* version 0.2-3, minor corrections, thanks to Tim Verhoeven for its useful remarks
+
+2002-09-03 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+	* test basic configuration parameters when accessing the module page
+
+2002-07-12 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+	* perform a nscd restart after user creation
+
+2002-06-21 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+	* version 0.2-2, corrected user creation bug (thanks to Frido Roose), the module uses 
+	the user uid to chown user home directory but as this user uid wasn't yet 
+	present in LDAP, the system could not resolve user name, createUser 
+	function has been split into two functions, one for arributes array creation 
+	and another for system interaction, the last one being colled only if LDAP addition 
+	succeeds
+
+2002-06-19 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+        * version 0.2-1, in fine, the following BUGs and ENHencements from version 0.1 were corrected:
+		* [BUG-255] write a help document at least in help/intro.en.html 
+		* [BUG-294] document the idxldapaccounts-lib.pl API in POD format
+		* [BUG-260] limit items per page and use multiple pages for displaying users 
+            		list, groups lists, search results
+		* [BUG-269] Webmin acls aren't implemented for this module
+		* [BUG-271] when modifying a group's gidNumber, propagate the change to members
+            		of this group (and change the corresponding rid)
+		* [BUG-272] user input error checking
+		* [ENH-266] make the max item per page parameter configurable from 
+            		configuration menu
+		* [ENH-266] in the users list, show which accounts are disabled
+		* [ENH-267] show to which objeclasses belongs an account (posixAccount, 
+            		sambaAccount ...)
+		* [ENH-254] report an explicit error when a users entry doesn't follow 
+        		Idxldapaccounts objectclasses requirements (see README file for 
+        		details), note that this can only appen when editing LDAP accounts 
+        		that where not created within the Idxldapaccounts interface
+		* [ENH-273] use Webmin logging facility when a (at least) critical error occurs
+	
+2002-06-18 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+	* internationalisation framework
+	* online documentation
+
+2002-06-17 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+	* configurable hidding of disabled users
+	* action logging
+	* accounts synchronization: 
+	changing user uidNumber, gidNumber or password affects his Samba
+	account, removing a user removes him from all the groups he was a member of, users cannot
+	be removed from a group they have has a primary group, a group cannot be removed until some
+	of its members have it as their primary group
+
+2002-06-13 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+	* idxldapaccounts-lib.pl API documentation in pod format 	
+	* module ACLs	
+	* basic user input control
+	
+2002-06-12 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+		
+	* multiple Organizational Units management
+
+2002-06-10 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+	* users and groups browsers for adding users to a group or a user to groups	
+	
+2002-06-07 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+	* accounts modularization, module redisigned to allow generic LDAP accounts
+	administration 
+
+2002-06-05 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+
+	* display lists on multiple pages (max list items per page is configurable online)
+
+2002-06-04 Gérald Macinenti <gerald.macinenti@IDEALX.com>
+	
+	* first release (0.1)

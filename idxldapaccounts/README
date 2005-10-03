@@ -1,0 +1,115 @@
+# This is README file for Idxldapaccounts 0.2
+# $Id$
+
+PRESENTATION
+============
+
+Idxldapaccounts is a Webmin module that allow listing, search, creation and 
+edition of LDAP users accounts and groups and some system interactions like 
+creating or destroying users home directories.
+This module is first aimed at SAMBA-LDAP PDC administration, that is, Unix 
+servers using Samba and OpenLDAP to replace Windows NT4 servers as Primary 
+Domain Controller using LDAP as a technical directory to store users and 
+groups. But it can be used to manage any LDAP driven account like mail,
+instant messaging or PKI by only adding a corresponding CGI program and 
+little configuration modification.
+
+By a LDAP user we mean a LDAP entry belonging to the following objectclasses:
+	- inetOrgPerson
+	- posixAccount
+and who can have many other objectclasses corresponding to technical accounts
+like :
+	- sambaAccount
+	- shadowAccount
+	- ...
+
+By a LDAP group we mean an LDAP entry belonging to the following objectclasses:
+	- posixGroup
+
+Note that whereas the LDAP server can be different from the machine where 
+Webmin runs, the Samba server, where real accounts lives MUST be the machine 
+which runs Webmin.
+
+PLATEFORM
+=========
+
+This version has only a Redhat 7.2 configuration file but should work with no 
+effort on most Linux and OpenBSD systems.
+This module should work with Webmin >=0.92.
+The module has only been tested with OpenLDAP-2.0.21-8, the LDAP server must 
+include the samba.schema schema.
+
+REQUIREMENTS
+============
+
+Idxldapaccounts depends on the following softwares:
+	- Perl module perl-ldap >=0.25.
+		=> needed to run the module scripts
+	- mkntpwd utility 
+	  (can be found at 
+	  http://cvs.idealx.org/cgi-bin/cvsweb/samba/smbldap-tools/)
+		=> needed to generate Windows NT password if you want to manage domain users
+
+FUNCTIONALITIES
+===============
+
+Current version allows:
+	- users listing, search, edition, creation, deletion (with implicit 
+   	  file system interaction for users home directories operations)
+	- user groups listing with in place addition and deletion
+	- disable user account facility
+	- groups listing, search, edition, creation, deletion
+	- group members listing with in place addition or deletion
+	- order lists by attribute
+	- most parameters used by the application are configurable from 
+	  the Webmin interface
+	- Samba/NT accounts management
+	- generic account parameters online configuration (toggle 
+	  visibility/editability, change default value)
+
+
+INSTALLATION
+============
+
+from the CVS sources:
+---------------------
+move to the top directory and generate a wbm importation file 
+$ cd idxldapaccounts
+$ make
+
+a file named idxldapaccounts.wbm should be created in the current directory, 
+go to the Webmin module importation menu and choose this file for importation 
+within the file browser
+
+from the wbm distribution format
+-------------------------------
+go to the Webmin module importation menu and choose the file 
+idxldapaccounts.wbm for importation within the file browser
+
+
+Please report any bug or feature request to webmin@IDEALX.com
+
+
+RELEASE NOTES
+=============
+
+Current version is 0.2-4, please see the ChangeLog file for detailed changes 
+between the current version and the previous.
+
+CONTRIBUTIONS
+=============
+
+All contribution submissions are welcome, developers can look at the 
+idxldapaccounts-lib.pl API by viewing the pod documentation of this file with 
+the command: 
+	perldoc idxldapaccounts-lib.pl
+
+CONTACT
+======
+
+You may report bugs or submit requests at gerald.macinenti@IDEALX.com.
+For information on other IDEALX Webmin modules, see http://webmin.idealx.org 
+or drop a mail to webmin@IDEALX.org.
+
+# - The End 
+

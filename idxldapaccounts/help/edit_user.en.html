@@ -1,0 +1,122 @@
+<!--
+  This code was developped by IDEALX (http://IDEALX.org/) and
+  contributors (their names can be found in the CONTRIBUTORS file).
+
+                 Copyright (C) 2002 IDEALX
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+  USA.
+
+ author: <gerald.macinenti@IDEALX.com>
+ Version: $Id$
+-->
+
+<header>Edit user screen</header>
+
+<p>
+This screen allows you to access various forms for modifying user's main parameters and optional accounts.
+<p>
+<p>
+The first three options of the menu remain permanently while subsequents depends on the accounts that can be (are configured to be) administered by the module. This help only discribes these three entries, each optional account help screen being left to be written by individual account configuration code writters. 
+<p>
+
+<h2>Optional accounts menu entries</h2>
+<p>
+When optional accounts entries appear in the menu, they may have two states: if they are written using normal text, it means that the user has no such account and clicking on the link will lead you to a creation form for this account, if bold text is used, the user has an already configured account and the link will show you specific parameters for this account that you may modify. 
+<p>
+<h2>Common features</h2>
+<p>
+Two elements are common to the three screens namely:
+<ul>
+<li><b>delete user</b> button:
+<p>
+When clicking on it, you will go to a confirmation page for completly removing the corresponding user from LDAP.
+<p>
+<li><b>Apply changes</b> button:
+<p>
+This button located at the bottom of the screen allow you to commit the changes you made on the screen, if you made changes on a screen and live it without applying them, your modification are lost.
+<p>
+Once you applied your changes and if no error occured, the same screen is redisplyed with the new updated parameters (no success message appears).
+<p>
+If an error occured during the modification process, an error screen is displayed and you may redisplay the screen by clicking on the "Back" button of you browser and then correct errors (if these where only parameters errors).
+<p>
+<h2>General Parameters</h2>
+<ul>
+<li><b>Organization:</b>
+<p>
+This is the Organization Unit under which the user was created, it is not editable.
+<p>
+<li><b>Full name:</b>(cn)
+<p>
+The user's full name.
+<p>
+<li><b>Last name:</b>(sn)
+<p>
+The user's last name.
+<p>
+<li><b>Description:</b>(description)
+<p>
+A brief description for this user.
+<p>
+<li><b>Password:</b>(userPassword)
+<p>
+The user's password (used by this user to access his various accounts), it is not displayed on the screen but can be modified.
+<p>
+<li><b>Retype password:</b>
+<p>
+Enter the password again if you want to modify it, both values will be compared to be sure you really typed what you wanted to, which is not so easy to verify yourself as passwords are not displayed as you type them.
+<p>
+<li><b>Uid number:</b>(uidNumber)
+<p>
+A unique (in the LDAP) number greater than the configured "minimum uid number" parameter, a valid one will be proposed to you if you change it to a non valid one.
+<p>
+<li><b>Primary group:</b>(gidNumber)
+<p>
+The group the user belongs to in first place, you may directly type its name (cn) or select it
+by clicking on the "Select" button. This button opens a groups listing with their descriptions
+and a search form to search the group you want.
+<p>
+<li><b>account is enabled</b> check button
+<p>
+You may enable (resp. disable) the user account by seleting (deselecting) this check button. User account is disabled by placing a leading "!" in his password (so this technique isn't very efficient with clear passwords).
+</ul>
+
+<h2>Groups</h2>
+<p>
+This screen displays a listing of the various groups the user belongs to, the user primary group is shown with a green text ("Primary group") and is not removable from this menu: you have to change the user primary group from the "General" screen of this user and then comme back to remove it.
+<p>
+Other groups are removable (that is user won't belong to them anymore) by clicking on their respective "remove" button in the "Remove user from this group" column.
+<p>
+When clicking on a group name in the list, you will jump to the group edition screen.
+<p>
+You may add this user to one or many new groups by clicking on the "Select groups" button, a groups listing window will then appear with a search form to search specific groups, each group has a "Add button" that you use to append the group to the text area,  when you finished your selection, close the groups window and click on the "Add user to the selected groups" button to add the user to all groups listed in the text area.
+<p>
+ 
+<h2>Profile</h2>
+<p>
+This screen allow you to view/modify parameters related to the user's Unix (in fact POSIX) account on the local (to Webmin) host:
+<p>
+<ul>
+<li><b>Login shell</b> (loginShell)
+<p>
+The Unix shell under which the user interacts with the system when he logs in (using a physical console or a remote protocole like Telnet or SSH). You may select this shell between the various shells configured on the local host (listed in /etc/shells).
+<p>
+<li><b>Home directory</b> (homeDir)
+<p>
+The home directory of the user on the local system. If changing this value, previous home directory
+for this user will be removed or kept depending on the "remove homes" configuration parameter of the module.
+<p>
+</ul>
+

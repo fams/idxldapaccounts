@@ -1,0 +1,83 @@
+<!--
+  This code was developped by IDEALX (http://IDEALX.org/) and
+  contributors (their names can be found in the CONTRIBUTORS file).
+
+                 Copyright (C) 2002 IDEALX
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+  USA.
+
+ author: <gerald.macinenti@IDEALX.com>
+ Version: $Id$
+-->
+
+<header>Introduction</header>
+
+<h2>Presentation</h2>
+<p>
+<b>Idxldapaccounts</b> is a Webmin module that allow listing, search, creation and 
+edition of LDAP users accounts and groups and some system interactions like 
+creating or destroying users home directories.
+<p>
+This module is first aimed at SAMBA-LDAP PDC administration, that is, Unix 
+servers using Samba and OpenLDAP to replace Windows NT4 servers as Primary 
+Domain Controller using LDAP as a technical directory to store users and 
+groups.
+<p>
+By a LDAP user we mean a LDAP belonging to the following objectclasses:
+<ul>
+<li> inetOrgPerson
+<li>posixAccount
+</ul>
+and who can have many other objectclasses corresponding to technical accounts
+like :
+<li>sambaAccount
+<li>shadowAccount
+<li>...
+</ul>
+By a LDAP group we mean an LDAP entry belonging to the following objectclasses:
+<ul>
+<li>posixGroup
+</ul>
+<p>
+Note that whereas the LDAP server can be different from the machine where 
+Webmin runs, the Samba server, where real accounts lives MUST be the machine 
+which runs Webmin.
+<p>
+
+
+<h2>Functionalities</h2>
+<p>
+Current version allows:
+<ul>
+<li>users listing, search, edition, creation, deletion (with implicit file system interaction for users home directories operations)
+<li>user groups listing with in place addition and deletion
+<li>disable user account facility
+<li>groups listing, search, edition, creation, deletion
+<li>group members listing with in place addition or deletion
+<li>order lists by attribute
+<li>most parameters used by the application are configurable from the Webmin interface
+</ul>
+<p>
+
+<h2>How do I Begin</h2>
+<p>
+To begin with <b>Idxldapaccounts</b>, you LDAP parameters must be properly configured, this can be done online by clicking on the "Module config" link at the top of the screen, so please consult the LDAP server administrator or check you LDAP configuration before beginning.
+<p>
+When your LDAP parameters are configured, you can see three icons on the main screen, namely the users icon, the groups icon and the accounts one which lead you to corresponding lists.
+<p>
+On most screens you will find a contextual help by clicking on the "help" link at the top.
+<p>
+

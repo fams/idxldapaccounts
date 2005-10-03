@@ -1,0 +1,5 @@
+name=NE Usuarios e Grupos
+desc=Usuarios e Grupos
+op_support=linux
+depends=
+category=users

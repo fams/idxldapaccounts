@@ -1,0 +1,39 @@
+<!--
+  This code was developped by IDEALX (http://IDEALX.org/) and
+  contributors (their names can be found in the CONTRIBUTORS file).
+
+                 Copyright (C) 2002 IDEALX
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+  USA.
+
+ author: <gerald.macinenti@IDEALX.com>
+ Version: $Id$
+-->
+
+<header>Edit account screen</header>
+
+<p>
+This screen allow you to configure for each account parameter the fact that the parameter will be visible or editable in the user account edition screen, and the default value for this parameter (used when you create a specific user account.
+<p>
+This screen is mostly self explanatory and you may refeer to the specific user account edition screen help for more details on specific account parameters.
+<p>
+Some parameters cannot be configured as editable nor theyr default value can be changed, this is the case if the parameter has a leading "*" in the accounts configuration file ("accounts.conf" or "default_accounts.conf"). This mechanism prevents unconsidered modification of parameters which may lead to system inconsistency and disfunctionment so don't change this unless you really know what you do.
+<p>
+At the bottom of the screen, the "Apply" button valids your changes on the screen by saviing this configuration to a file, note that this configuration isn't taken into account unless you save it and that when it is saved, it will be used in all futur sessions (until you change the configuration again).
+<p>
+If the configuration is saved without error, a success message appears on the screen.
+<p> 
+
