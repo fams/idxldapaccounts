@@ -1126,11 +1126,13 @@ sub modifyUserGeneral {
     $attrs{'gidNumber'} = $gidnumber;
     my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
     if ($homedir) {
+    	if (( -e $homedir)) {
 		if (system("chown $user_uid:$gidnumber $homedir")) {
 			&error($text{'err_changing_directory_owner'}." $homedir $user_uid.$gidnumber");
 			exit 1;
 		}
 		&webmin_log("changing user [$user_uid] home directory [$homedir] to owner [$user_uid.$gidnumber]"); 
+	}
     }
 
     # password
