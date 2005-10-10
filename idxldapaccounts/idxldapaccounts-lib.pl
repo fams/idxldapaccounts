@@ -346,7 +346,7 @@ objectclasses and corresponding required attributes
 
 sub LDAPAddUser {
     my ($ldap, $dn, $attrs) = (@_);
-                     #&error(@$attrs[1]);
+                     #&error(@$attrs[3]);
 
     my $res = $ldap->add( $dn, attrs => [ @$attrs ] );
     if ($res->code()) { 
@@ -354,7 +354,7 @@ sub LDAPAddUser {
                ": ".&ldap_error_text($res->code));
     } elsif ($config{'create_ldap_ab_base'}){
  #criando base do personal addressbook
-        my $uid = @$attrs[1];
+        my $uid = @$attrs[3];
         my $res = $ldap->add( "ou=$uid,".$config{'ldap_personal_ab_base'},
                     attrs => [ 
                         ou             => "$uid",
