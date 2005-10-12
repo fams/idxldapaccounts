@@ -387,12 +387,37 @@ $user_uid: user uid attribute
 
 sub LDAPDeleteUser {
     my ($ldap, $base, $user_uid) =(@_);
-    my $res = &LDAPSearch($ldap, "uid=$user_uid", [ 'dn', 'homeDirectory' ], $base);
+    my $res = &LDAPSearch($ldap, "uid=$user_uid", [ 'dn', 'homeDirectory','mail','mailAlternateAddress' ], $base);
     my $user = $res->entry;
     if (!defined($user)) {
 		&error($text{'err_could_not_find_user'}.": $user_uid");
 		exit 1;
     }
+    my $usermail=$user->get_value('mail', asref=>1 );
+    my $usermail2=$user->get_value('mailAlternateAddress', asref=>1 );
+	my @mails=(@$usermail,@$usermail2);
+    #use Data::Dumper;
+    #Removendo das listas de discussao
+	my $listbase = $config{'ldap_discussao_base'};
+	my $listfilter;
+	foreach $curmail(@mails){
+		$listfilter.="(mailForwardingAddress=$curmail)";
+	}
+	my $mailcount =@mails;
+	if($mailcount>1){
+		$listfilter="(|".$listfilter.")";
+	}
+   	my $reslista=&LDAPSearch($ldap,"(&(objectclass=qmailuser)$listfilter)",['uid','mailForwardingAddress'],$listbase);
+	@entries=$reslista->entries;
+	while (my $list_entry = shift @entries){
+		my $mailforwarding=$list_entry->get_value('mailForwardingAddress',asref=>1);
+		#&error(Dumper($mailforwarding));
+    	foreach my $curmail(@mails){
+			grep(/$curmail/, @$mailforwarding) && $list_entry->delete ( 'mailForwardingAddress' => [ $curmail ] );
+		}
+		$list_entry->update($ldap);
+	}
+	#removendo o usuÃrio
     my $dn = $user->dn; 
     my $res = $ldap->delete( $dn );
     if ($res->code()) { 
