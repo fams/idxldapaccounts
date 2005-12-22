@@ -418,6 +418,7 @@ sub LDAPDeleteUser {
 		$list_entry->update($ldap);
 	}
 	#removendo o usuÃrio
+	my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
     my $dn = $user->dn; 
     my $res = $ldap->delete( $dn );
     if ($res->code()) { 
