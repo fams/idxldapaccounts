@@ -65,6 +65,7 @@ if ($in{'add'}){
 if ($in{'changequota'}) { 
     $attrs{'mailQuota'}=$in{'mailquota'}."S";
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
+    &MailSanitizer($ldap, $base, $user_uid);
 }
 if ($in{'change'}) {	
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
@@ -303,3 +304,36 @@ sub MailCreateCheck{
 			  $base);  
     return ($result->count > 0)? 1: 0;
 }
+
+sub MailSanitizer{
+    my ($ldap,$base,$mailuid) = @_;
+    my $result = &LDAPSearch($ldap,
+			  "(&(objectclass=qmailuser)(uid=$mailuid))",
+                             'mailMessageStore',
+                             $base);
+    if ($result->count > 1) {
+        &error($text{'err_mail_box_invalid'});
+    }
+    my $diretorio = $result->entry->get_value('mailMessageStore');
+    if(($diretorio=~/\.\./)or($diretorio=~/ /)){
+        &error($text{'err_mail_box_invalid'});
+    }
+
+    if ( ! -d $diretorio){
+        eval { mkpath([ "$diretorio"], 0 , 0711 ) };
+        if ($@) {
+            &error($text{'err_create_mail_box'});
+        }
+        eval { mkpath([ "$diretorio/new","$diretorio/cur","$diretorio/tmp"], 0 , 0700 ) };
+        if ($@) {
+            &error($text{'err_create_mail_box'});
+        }
+    }
+    system("/bin/chown $mailuid:100 $diretorio");
+    system("/bin/chown $mailuid:100 $diretorio/new");
+    system("/bin/chown $mailuid:100 $diretorio/cur");
+    system("/bin/chown $mailuid:100 $diretorio/tmp");
+
+
+}
+

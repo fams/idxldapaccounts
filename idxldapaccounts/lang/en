@@ -40,6 +40,7 @@ err_mail_domain_nexist=Inexistent Domain
 err_mail_box_invalid=Mail Box invalid
 err_mail_exists=Mail Box exists
 err_copying_skel_directory=Error copying skel to homedirectory
+err_create_mail_box=Error creating MailMessageStore Directory
 
 
 warn_mkntpwd_not_found=warning, the mkntpwd utility could not be found, you will not be able to create NT accounts
