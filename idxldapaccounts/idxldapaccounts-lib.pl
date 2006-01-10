@@ -423,7 +423,7 @@ sub LDAPDeleteUser {
     my $dn = $user->dn; 
     my $res = $ldap->delete( $dn );
     if ($res->code()) { 
-		&error(&ldap_error_name($res->code).
+		&error("User".&ldap_error_name($res->code).
 			   ": ".&ldap_error_text($res->code)); 
     }
 #Removendo personal Addressbook
@@ -431,7 +431,7 @@ sub LDAPDeleteUser {
          my $dn="ou=$user_uid,".$config{'ldap_personal_ab_base'};
          my $res = $ldap->delete( $dn );
          if ($res->code()) {
-              &error(&ldap_error_name($res->code).
+              &error("PAB".&ldap_error_name($res->code).
                            ": ".&ldap_error_text($res->code));
          }
     }
