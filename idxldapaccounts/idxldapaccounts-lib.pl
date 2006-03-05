@@ -972,6 +972,40 @@ sub LDAPGroupRemoveMember {
 
 =cut "
 
+=pod "
+=item I<gid2sid($ldap, $gid)>
+
+=item *
+Return the sid of the group with the given gid
+
+=item *
+$ldap: a Net::LDAP object
+
+=item *
+$gid: a gid
+
+=cut "
+
+sub gid2sid {
+    my ($ldap, $gid) = (@_);
+    
+    my $attrs = ['gidNumber', 'sambaSID'];
+    my $result =  &LDAPSearch($ldap, 
+							  "gidNumber=$gid", 
+							  $attrs, 
+							  $config{'ldap_groups_base'});
+	if ($result->count>0) {
+		my $group = $result->entry;
+		my $sid = $group ? &LDAPGetGroupAttribute($ldap, $group, 'sambaSID') : undef;
+		return $sid;
+	} else {
+		return undef;
+	}
+
+}
+
+
+
 
 =pod "
 
@@ -1198,8 +1232,7 @@ sub modifyUserGeneral {
 		
 		$attrs{'sambaSID'} = $config{'samba_sid'} . '-';
 		$attrs{'sambaSID'} .= (2 * int($in{'uidNumber'})) + 1000;
-		$attrs{'sambaPrimaryGroupSID'} = $config{'samba_sid'} . '-';
-		$attrs{'sambaPrimaryGroupSID'} .= (2 * int($gidnumber)) + 1000;
+		$attrs{'sambaPrimaryGroupSID'} = &gid2sid($ldap,$gidnumber);
 		
 
 # samba v2

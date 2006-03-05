@@ -140,7 +140,7 @@ if ($in{'delete'}) {
             $value = $config{'samba_sid'} . '-' . ((2 * int($uidNumber)) + 1000);
         }
         if ($attr eq 'primaryGroupID') {
-            $value = $config{'samba_sid'} . '-' . ((2 * int($gidNumber)) + 1000);
+            $value =  &gid2sid($ldap,$gidNumber);
         }
         if ($attr eq 'sambaHomeDrive') {
             print "<tr><td>$attr</td><td>\n";
