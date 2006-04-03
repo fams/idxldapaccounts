@@ -127,12 +127,20 @@ if ($in{'create'}) {
     if(&MailCreateCheck($ldap,$base,$attrs{'mail'})){
         &error($text{'err_mail_exists'});
     }
+    #FIXME bad design
     my @old_ocs = &LDAPGetUserAttributes($ldap, $user, 'objectclass');
     my @new_ocs = ();
     foreach (@old_ocs) {
-    	push(@new_ocs, $_) unless ($_ eq 'qmailUser');
+    	push(@new_ocs, $_) unless ($_ eq 'qmailUser' || $_ eq 'hordePerson' );
     } 
     push(@new_ocs, 'qmailUser');
+    #FIXME i need to find a better place to do it
+    #Horde hack
+    if ($config{'use_horde'}){
+    	push(@new_ocs, 'hordePerson');
+	$attrs{'hordePrefs'}=".";
+	$attrs{'ImpPrefs'}=".";
+    }
     $attrs{'objectclass'} = \@new_ocs;
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
     $creation = "<font color=green>".$text{'edit_qmailuser_successfully_created'}."</font></br>\n";

@@ -72,7 +72,7 @@ list_users_description=Descricao
 list_users_delete_user=Remover usuario
 list_users_disabled=desligado
 list_users_not_found=nao encontrado
-list_users_delete=removido
+list_users_delete=remover
 
 choose_users_title=Usuarios
 choose_users_search_users=Procurar usuarios

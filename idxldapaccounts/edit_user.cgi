@@ -139,18 +139,18 @@ if ($onglet eq "General") {
 		$value='';
 	}
     print "<tr><td><b>".$text{'edit_user_last_name'}.": </b></td><td><input type=text name=sn value='$value'></td></tr>\n";
-    my $description = &LDAPGetUserAttribute($ldap, $user, 'description');
-    if ($description) {
-		$value=$description;
-	} else {
-		$value='';
-	}
     my $title = &LDAPGetUserAttribute($ldap, $user, 'title');
     if ($title) { $value=$title; } else { $value='';}
     print "<tr><td><b>".$text{'edit_user_persontitle'}.": </b></td><td><input type=text name=title value='$value'></td></tr>\n";
     my $personou = &LDAPGetUserAttribute($ldap, $user, 'ou');
     if ($personou) { $value=$personou; } else { $value='';}
     print "<tr><td><b>".$text{'edit_user_personou'}.": </b></td><td><input type=text name=ou value='$value'></td></tr>\n";
+    my $description = &LDAPGetUserAttribute($ldap, $user, 'description');
+    if ($description) {
+		$value=$description;
+	} else {
+		$value='';
+	}
     print "<tr><td><b>".$text{'edit_user_description'}.": </b></td><td><input type=text name=description value='$value'></td></tr>\n";
     my $userPassword = &LDAPGetUserAttribute($ldap, $user, 'userpassword');
     $value = $userPassword;

@@ -32,8 +32,12 @@ require './idxldapaccounts-lib.pl';
 print "<hr>\n";
 
 my $error = &check_configuration_errors(); 
-if (!$error) {
-    @opts = ( 'users', 'groups', 'accounts', 'virtual','discussao');
+if (!$error) {	
+    if ($config{'remove_personal_ab'}){
+    	@opts = ( 'users', 'groups', 'accounts', 'virtual','discussao');
+    }else{
+    	@opts = ( 'users', 'groups', 'accounts', 'virtual');
+    }
     @links = map { "list_${_}.cgi" } @opts;
     @titles = map { $text{"index_${_}_link"} } @opts;
     @icons = map { "images/${_}.gif" } @opts;

@@ -5,7 +5,7 @@ do '../web-lib.pl';
 #  This code was developped by IDEALX (http://IDEALX.org/) and
 #  contributors (their names can be found in the CONTRIBUTORS file).
 #
-#                 Copyright (C) 2002 IDEALX
+#				 Copyright (C) 2002 IDEALX
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -108,19 +108,19 @@ returns a Net::LDAP object
 =cut "
 
 sub LDAPInit {
-    my $ldap = Net::LDAP->new($config{'ldap_server'}) or 
+	my $ldap = Net::LDAP->new($config{'ldap_server'}) or 
 	  &error($text{'err_could_not_create_ldap_object'}.": ".$config{'ldap_server'}."$@");
-    my $mesg = $ldap->bind(
+	my $mesg = $ldap->bind(
 						   dn => $config{'ldap_admin'},
 						   password => $config{'ldap_password'});
-    if ($mesg->code()) { 
+	if ($mesg->code()) { 
 		&error(&ldap_error_name($mesg->code).
 			   ": ".&ldap_error_text($mesg->code).
 			   "<br>".$text{'err_binding'}." [".
 			   $config{'ldap_admin'}." | ".
 			   $config{'ldap_password'}."]");
-    }
-    return $ldap;
+	}
+	return $ldap;
 }
 
 =pod "
@@ -136,11 +136,11 @@ takes a Net::LDAP object as parameter
 =cut "
 
 sub LDAPClose {
-    my $ldap = shift;
-    
-    if ($ldap) {
+	my $ldap = shift;
+	
+	if ($ldap) {
 		$ldap->unbind();
-    }
+	}
 }
 
 =pod "
@@ -165,20 +165,20 @@ $base: base DN for search
 =cut "
 
 sub LDAPSearch {
-    my ($ldap, $searchString, $attrs, $base) = (@_);
-    my $result = $ldap->search(
+	my ($ldap, $searchString, $attrs, $base) = (@_);
+	my $result = $ldap->search(
 							   base => $base,
 							   scope => "sub",
 							   sizelimit => $config{'max_search_results'},
 							   filter => utf8Encode($searchString),
 							   attrs => $attrs,
 							  );
-    if ($result->code()) { 
+	if ($result->code()) { 
 		my $text = &ldap_error_name($result->code);
 		&error($text.
 			   ": ".&ldap_error_text($result->code)) unless ($text =~ /SIZELIMIT/i);
 	}
-    return $result;
+	return $result;
 }
 
 =pod "
@@ -199,14 +199,14 @@ $attrs: entries attributes returned by the search
 =cut "
 
 sub LDAPGetUsers {
-    my ($ldap, $attrs) = (@_);
-    my $result =  &LDAPSearch($ldap, 
+	my ($ldap, $attrs) = (@_);
+	my $result =  &LDAPSearch($ldap, 
 							  "(&(objectClass=inetOrgPerson)(objectClass=posixAccount)(uid=*))", 
 							  $attrs, 
 							  $config{'ldap_users_base'},
 							 );
-    my @users = $result->entries;
-    return @users;
+	my @users = $result->entries;
+	return @users;
 }
 
 =pod "
@@ -227,13 +227,13 @@ $attrs: entries attributes returned by the search
 =cut "
 
 sub LDAPGetGroups {
-    my ($ldap, $attrs) = (@_);
-    my $result =  &LDAPSearch($ldap, 
+	my ($ldap, $attrs) = (@_);
+	my $result =  &LDAPSearch($ldap, 
 							  "(&(objectClass=posixGroup)(cn=*))", 
 							  $attrs, 
 							  $config{'ldap_groups_base'});
-    my @groups = $result->entries;
-    return @groups;
+	my @groups = $result->entries;
+	return @groups;
 }
 
 
@@ -250,12 +250,12 @@ $ldap: a Net::LDAP object
 =cut " 
 
 sub LDAPGetObjectClasses {
-    my $ldap = shift;
+	my $ldap = shift;
 
-    my $schema = $ldap->schema();
-    my @ocs = $schema->objectclasses();
+	my $schema = $ldap->schema();
+	my @ocs = $schema->objectclasses();
 
-    return @ocs;
+	return @ocs;
 }
 
 =pod " 
@@ -274,12 +274,12 @@ $ocs: an object classe name
 =cut "
 
 sub LDAPGetObjectClasseAttributes {
-    my ($ldap, $ocs) = (@_);
+	my ($ldap, $ocs) = (@_);
 
-    my $schema = $ldap->schema();
-    my @attrs = $schema->attributes($ocs);
+	my $schema = $ldap->schema();
+	my @attrs = $schema->attributes($ocs);
 
-    return @attrs;
+	return @attrs;
 }
 
 =pod "
@@ -300,17 +300,17 @@ $base: base DN for search
 =cut "
 
 sub LDAPGetOUs {
-    my ($ldap, $base) = (@_);
-    my $attrs = [ 'ou' ];
-    my $result = $ldap->search(
+	my ($ldap, $base) = (@_);
+	my $attrs = [ 'ou' ];
+	my $result = $ldap->search(
 							   base => $base,
 							   scope => "sub",
 							   filter => "objectClass=organizationalUnit",
 							   attrs => $attrs,
 							  );
 
-    my @OUs = $result->entries;
-    return @OUs;
+	my @OUs = $result->entries;
+	return @OUs;
 }
 
 
@@ -346,26 +346,24 @@ objectclasses and corresponding required attributes
 =cut "
 
 sub LDAPAddUser {
-    my ($ldap, $dn, $attrs) = (@_);
-                     #&error(@$attrs[3]);
-
-    my $res = $ldap->add( $dn, attrs => [ @$attrs ] );
-    if ($res->code()) { 
-        &error(&ldap_error_name($res->code).
-               ": ".&ldap_error_text($res->code));
-    } elsif ($config{'create_ldap_ab_base'}){
- #criando base do personal addressbook
-        my $uid = @$attrs[3];
-        my $res = $ldap->add( "ou=$uid,".$config{'ldap_personal_ab_base'},
-                    attrs => [ 
-                        ou             => "$uid",
-                        objectclass    => ['top','organizationalUnit']
-                         ] );
-          if ($res->code()) {
-               &error(&ldap_error_name($res->code).
-                    ": ".&ldap_error_text($res->code));
-          }
-    }
+	my ($ldap, $dn, $attrs) = (@_);
+	my $res = $ldap->add( $dn, attrs => [ @$attrs ] );
+	if ($res->code()) { 
+		&error(&ldap_error_name($res->code).
+			   ": ".&ldap_error_text($res->code));
+	} elsif ($config{'create_ldap_ab_base'}){
+ 	#criando base do personal addressbook
+		my $uid = getAttrValue($attrs,"uid");
+		my $res = $ldap->add( "ou=$uid,".$config{'ldap_personal_ab_base'},
+					attrs => [ 
+						ou			 => "$uid",
+						objectclass	=> ['top','organizationalUnit']
+						 ] );
+		  if ($res->code()) {
+			   &error(&ldap_error_name($res->code).
+					": ".&ldap_error_text($res->code));
+		  }
+	}
 }
 
 =pod "
@@ -387,62 +385,64 @@ $user_uid: user uid attribute
 =cut "
 
 sub LDAPDeleteUser {
-    my ($ldap, $base, $user_uid) =(@_);
-    my $res = &LDAPSearch($ldap, "uid=$user_uid", [ 'dn', 'homeDirectory','mail','mailAlternateAddress' ], $base);
-    my $user = $res->entry;
-    if (!defined($user)) {
+	my ($ldap, $base, $user_uid) =(@_);
+	my $res = &LDAPSearch($ldap, "uid=$user_uid", [ 'dn', 'homeDirectory','mail','mailAlternateAddress' ], $base);
+	my $user = $res->entry;
+	if (!defined($user)) {
 		&error($text{'err_could_not_find_user'}.": $user_uid");
 		exit 1;
-    }
-    my $usermail=$user->get_value('mail', asref=>1 );
-    my $usermail2=$user->get_value('mailAlternateAddress', asref=>1 );
+	}
+	my $usermail=$user->get_value('mail', asref=>1 );
+	my $usermail2=$user->get_value('mailAlternateAddress', asref=>1 );
 	my @mails=(@$usermail,@$usermail2);
-    #use Data::Dumper;
-    #Removendo das listas de discussao
-	my $listbase = $config{'ldap_discussao_base'};
-	my $listfilter;
-	foreach $curmail(@mails){
-		$listfilter.="(mailForwardingAddress=$curmail)";
-	}
-	my $mailcount =@mails;
-	if($mailcount>1){
-		$listfilter="(|".$listfilter.")";
-	}
-   	my $reslista=&LDAPSearch($ldap,"(&(objectclass=qmailuser)$listfilter)",['uid','mailForwardingAddress'],$listbase);
-	@entries=$reslista->entries;
-	while (my $list_entry = shift @entries){
-		my $mailforwarding=$list_entry->get_value('mailForwardingAddress',asref=>1);
-		#&error(Dumper($mailforwarding));
-    	foreach my $curmail(@mails){
-			grep(/$curmail/, @$mailforwarding) && $list_entry->delete ( 'mailForwardingAddress' => [ $curmail ] );
+	#use Data::Dumper;
+#Removendo das listas de discussao
+	if($config{'create_ldap_ab_base'}){
+		my $listbase = $config{'ldap_discussao_base'};
+		my $listfilter;
+		foreach $curmail(@mails){
+			$listfilter.="(mailForwardingAddress=$curmail)";
 		}
+		my $mailcount =@mails;
+		if($mailcount>1){
+			$listfilter="(|".$listfilter.")";
+		}
+   		my $reslista=&LDAPSearch($ldap,"(&(objectclass=qmailuser)$listfilter)",['uid','mailForwardingAddress'],$listbase);
+		@entries=$reslista->entries;
+		while (my $list_entry = shift @entries){
+			my $mailforwarding=$list_entry->get_value('mailForwardingAddress',asref=>1);
+			#&error(Dumper($mailforwarding));
+			foreach my $curmail(@mails){
+				grep(/$curmail/, @$mailforwarding) && $list_entry->delete ( 'mailForwardingAddress' => [ $curmail ] );
+			}
 		$list_entry->update($ldap);
+		}
 	}
-	#removendo o usuÃrio
+#Removendo o usuÃrio
 	my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
-    my $dn = $user->dn; 
-    my $res = $ldap->delete( $dn );
-    if ($res->code()) { 
+	my $dn = $user->dn; 
+	my $res = $ldap->delete( $dn );
+	if ($res->code()) { 
 		&error("User".&ldap_error_name($res->code).
-			   ": ".&ldap_error_text($res->code)); 
-    }
+		   ": ".&ldap_error_text($res->code)); 
+	}
 #Removendo personal Addressbook
-    if ($config{'remove_personal_ab'}){
-         my $dn="ou=$user_uid,".$config{'ldap_personal_ab_base'};
-         my $res = $ldap->delete( $dn );
-         if ($res->code()) {
-              &error("PAB".&ldap_error_name($res->code).
-                           ": ".&ldap_error_text($res->code));
-         }
-    }
-    if ($config{'remove_homes'}) {
+	if ($config{'remove_personal_ab'}){
+		 my $dn="ou=$user_uid,".$config{'ldap_personal_ab_base'};
+		 my $res = $ldap->delete( $dn );
+		 if ($res->code()) {
+			  &error("PAB".&ldap_error_name($res->code).
+						   ": ".&ldap_error_text($res->code));
+		 }
+	}
+	if ($config{'remove_homes'}) {
 		my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
 		if (system("rm -rf $homedir")) {
 			&error($text{'err_removing_directory'}.": $homedir");
 			exit 1;
 		}
 		&webmin_log("removing user [$user_uid] home directory [$homedir]"); 
-    }
+	}
 }
 
 =pod "
@@ -467,17 +467,17 @@ $array: modified attributes as a hash reference
 =cut "
 
 sub LDAPModifyUser {
-    my ($ldap, $base, $user_uid, $array) = (@_);
-    my $result = &LDAPSearch($ldap, 
+	my ($ldap, $base, $user_uid, $array) = (@_);
+	my $result = &LDAPSearch($ldap, 
 							 "uid=$user_uid", 
 							 [], 
 							 $base);
-    my $user = $result->entry;
-    defined($user) or 
+	my $user = $result->entry;
+	defined($user) or 
 	  &error($text{'err_could_not_find_user'}.": [uid=$user_uid]"); 
 
-    my $changes = {};
-    foreach (keys %$array) {
+	my $changes = {};
+	foreach (keys %$array) {
 		if ($array->{$_} =~ /^\s*$/) {
 			$changes->{$_} = [];
 		} elsif ($_ =~ /(password|path|objectclass)/i) {
@@ -486,14 +486,14 @@ sub LDAPModifyUser {
 			$changes->{$_} = utf8Encode($array->{$_});
 		}
 	}
-    my $dn = $user->dn;
-    my $res = $ldap->modify( $dn, 
+	my $dn = $user->dn;
+	my $res = $ldap->modify( $dn, 
 							 replace => { %$changes },
 						   );
-    if ($res->code()) { 
+	if ($res->code()) { 
 		&error(&ldap_error_name($res->code).
 			   ": ".&ldap_error_text($res->code)); 
-    }
+	}
 	$user->update($ldap);
 }
 
@@ -517,9 +517,9 @@ $attr: attribute name
 =cut "
 
 sub LDAPGetUserAttribute {
-    my ($ldap, $user, $attr) = (@_);
-    my $value = $user->get_value($attr);
-    return utf8Decode($value);
+	my ($ldap, $user, $attr) = (@_);
+	my $value = $user->get_value($attr);
+	return utf8Decode($value);
 }
 
 =pod "
@@ -541,9 +541,9 @@ $attr: attribute name
 =cut "
 
 sub LDAPGetUserAttributes {
-    my ($ldap, $user, $attr) = (@_);
-    my @values = $user->get_value($attr);
-    return map (utf8Decode($_), @values);
+	my ($ldap, $user, $attr) = (@_);
+	my @values = $user->get_value($attr);
+	return map (utf8Decode($_), @values);
 }
 
 =pod "
@@ -563,10 +563,10 @@ $user_uid: user UID
 =cut "
 
 sub LDAPGetUserGroups {
-    my ($ldap, $user_uid) = (@_);
-    my @groups= &LDAPGetGroups($ldap);
-    my @ok_groups = ();
-    foreach my $group (@groups) {
+	my ($ldap, $user_uid) = (@_);
+	my @groups= &LDAPGetGroups($ldap);
+	my @ok_groups = ();
+	foreach my $group (@groups) {
 		my @members = &LDAPGetGroupAttributes($ldap, $group, 'memberuid');
 		foreach (@members) {
 			if ($_ eq $user_uid) {
@@ -574,8 +574,8 @@ sub LDAPGetUserGroups {
 				push(@ok_groups, $group_cn);
 			}
 		}
-    }
-    return @ok_groups;
+	}
+	return @ok_groups;
 }
 
 =pod "
@@ -597,17 +597,17 @@ $group_cn: the group CN
 =cut "
 
 sub LDAPUserAddGroup {
-    my ($ldap, $user_uid, $group_cn) = (@_);
-    my $result = &LDAPSearch($ldap, 
+	my ($ldap, $user_uid, $group_cn) = (@_);
+	my $result = &LDAPSearch($ldap, 
 							 "cn=$group_cn",  
 							 ['memberuid'],
 							 $config{'ldap_groups_base'});
-    my $group = $result->entry;
-    if (!defined($group)) {
+	my $group = $result->entry;
+	if (!defined($group)) {
 		&error($text{'err_could_not_find_group'}.": [$group_cn]");
 		exit 1;
-    }
-    &LDAPGroupAddMember($ldap, $group, $user_uid);
+	}
+	&LDAPGroupAddMember($ldap, $group, $user_uid);
 }
 
 =pod "
@@ -629,13 +629,13 @@ $group_cn: the group CN
 =cut "
 
 sub LDAPUserRemoveGroup {
-    my ($ldap, $user_uid, $group_cn) = (@_);
-    my $result = &LDAPSearch($ldap, 
+	my ($ldap, $user_uid, $group_cn) = (@_);
+	my $result = &LDAPSearch($ldap, 
 							 "cn=$group_cn",  
 							 ['memberuid'],
 							 $config{'ldap_groups_base'});
-    my $group = $result->entry;
-    &LDAPGroupRemoveMember($ldap, $group, $user_uid);
+	my $group = $result->entry;
+	&LDAPGroupRemoveMember($ldap, $group, $user_uid);
 }
 
 =pod "
@@ -656,15 +656,15 @@ $ocs: an objectclass name
 
 =cut "
 sub LDAPUserAddOcs {
-    my ($ldap, $user, $ocs) = (@_);
-    my @OCS = &LDAPGetUserAttributes($ldap, $user, 'objectClass');
-    my @new_OCS= ();
-    foreach (@OCS) {
+	my ($ldap, $user, $ocs) = (@_);
+	my @OCS = &LDAPGetUserAttributes($ldap, $user, 'objectClass');
+	my @new_OCS= ();
+	foreach (@OCS) {
 		push(@new_OCS, $_) unless ($_ eq $ocs);
-    }
-    push(@new_OCS, $ocs);
-    $user->replace('objectClass', \@new_OCS);
-    $user->update($ldap);
+	}
+	push(@new_OCS, $ocs);
+	$user->replace('objectClass', \@new_OCS);
+	$user->update($ldap);
 }
 
 =pod "
@@ -685,15 +685,15 @@ $ocs: an objectclass name
 
 =cut "
 sub LDAPUserHasOcs {
-    my ($ldap, $user, $ocs) = (@_);
-    my @OCS = &LDAPGetUserAttributes($ldap, $user, 'objectClass');
-    my $res = undef;
-    foreach (@OCS) {
+	my ($ldap, $user, $ocs) = (@_);
+	my @OCS = &LDAPGetUserAttributes($ldap, $user, 'objectClass');
+	my $res = undef;
+	foreach (@OCS) {
 		if (lc($_) eq lc($ocs)) {
 			$res = 1;
 		}
-    }
-    return $res;
+	}
+	return $res;
 }
 
 =pod "
@@ -712,13 +712,13 @@ $user: a Net::LDAP::Entry object corresponding to an user
 =cut "
 
 sub LDAPUserIsDisabled {
-    my ($ldap, $user) = (@_);
-    my $userpassword = &LDAPGetUserAttribute($ldap, $user, 'userPassword');
-    if ($userpassword =~ /^\!/) {
+	my ($ldap, $user) = (@_);
+	my $userpassword = &LDAPGetUserAttribute($ldap, $user, 'userPassword');
+	if ($userpassword =~ /^\!/) {
 		return 1;
-    } else {
+	} else {
 		return undef;
-    }
+	}
 }
 
 
@@ -753,13 +753,13 @@ objectclasse and corresponding required attributes
 =cut "
 
 sub LDAPAddGroup {
-    my ($ldap, $dn, $attrs) = (@_); 
+	my ($ldap, $dn, $attrs) = (@_); 
 	
-    my $res = $ldap->add( utf8Encode($dn), attrs => [ @$attrs ] );
-    if ($res->code()) { 
+	my $res = $ldap->add( utf8Encode($dn), attrs => [ @$attrs ] );
+	if ($res->code()) { 
 		&error(&ldap_error_name($res->code).
 			   ": ".&ldap_error_text($res->code)."DN:".$dn); 
-    }
+	}
 }
 
 =pod "
@@ -778,20 +778,20 @@ $group_cn: group CN
 =cut "
 
 sub LDAPDeleteGroup {
-    my ($ldap, $group_cn) =(@_);
-    my $result = &LDAPSearch($ldap, 
+	my ($ldap, $group_cn) =(@_);
+	my $result = &LDAPSearch($ldap, 
 							 "cn=$group_cn", 
 							 [], 
 							 $config{'ldap_groups_base'});
-    my @entries = $result->entries;
+	my @entries = $result->entries;
 	my $group = $entries[0];
-    defined($group) or 
+	defined($group) or 
 	  &error($text{'err_could_not_find_group'}.": [cn=$group]"); 
 	my $res = $ldap->delete($group->dn);
-    if ($res->code()) { 
+	if ($res->code()) { 
 		&error(&ldap_error_name($res->code).
 			   ": ".&ldap_error_text($res->code)); 
-    }
+	}
 }
 
 =pod "
@@ -813,16 +813,16 @@ $array: modified attributes as a hash reference
 =cut "
 
 sub LDAPModifyGroup {
-    my ($ldap, $group_cn, $array) = (@_);
-    my $result = &LDAPSearch($ldap, 
+	my ($ldap, $group_cn, $array) = (@_);
+	my $result = &LDAPSearch($ldap, 
 							 "cn=$group_cn", 
 							 [], 
 							 $config{'ldap_groups_base'});
-    my @entries = $result->entries;
+	my @entries = $result->entries;
 	my $group = $entries[0];
-    defined($group) or 
+	defined($group) or 
 	  &error($text{'err_could_not_find_group'}.": [cn=$group]"); 
-    my $dn = $group->dn;
+	my $dn = $group->dn;
 	foreach (keys %$array) {
 		if ($array->{$_} =~ /^\s*$/) {
 			$array->{$_} = [];
@@ -830,13 +830,13 @@ sub LDAPModifyGroup {
 			$array->{$_} = utf8Encode($array->{$_});
 		}
 	}
-    my $res = $ldap->modify( $dn,
+	my $res = $ldap->modify( $dn,
 							 replace => $array ,
 						   );
-    if ($res->code()) { 
+	if ($res->code()) { 
 		&error(&ldap_error_name($res->code).
 			   ": ".&ldap_error_text($res->code)); 
-    }
+	}
 }
 
 =pod "
@@ -857,9 +857,9 @@ $attr: attribute name
 
 =cut "
 sub LDAPGetGroupAttribute {
-    my ($ldap, $group, $attr) = (@_);
-    my $value = $group->get_value($attr);
-    return utf8Decode($value);
+	my ($ldap, $group, $attr) = (@_);
+	my $value = $group->get_value($attr);
+	return utf8Decode($value);
 }
 
 =pod "
@@ -880,9 +880,9 @@ $attr: attribute name
 
 =cut "
 sub LDAPGetGroupAttributes {
-    my ($ldap, $group, $attr) = (@_);
-    my @values = $group->get_value($attr);
-    return map (utf8Decode($_), @values);
+	my ($ldap, $group, $attr) = (@_);
+	my @values = $group->get_value($attr);
+	return map (utf8Decode($_), @values);
 }
 
 
@@ -905,27 +905,27 @@ $member: a member UID
 =cut "
 
 sub LDAPGroupAddMember {
-    my ($ldap, $group, $member) = (@_);
-    
-    my $res = &LDAPSearch($ldap, 
+	my ($ldap, $group, $member) = (@_);
+	
+	my $res = &LDAPSearch($ldap, 
 						  "(uid=$member)", 
 						  [], 
 						  $config{'ldap_users_base'});
-    if (!defined($res->entry)) {
+	if (!defined($res->entry)) {
 		&error($text{'err_could_not_find_user'}.": [$member]");
 		exit 1;
-    }
-    my @members = &LDAPGetGroupAttributes($ldap, $group, 'memberuid');
+	}
+	my @members = &LDAPGetGroupAttributes($ldap, $group, 'memberuid');
 
-    my @new_members = ();
-    foreach (@members) {
+	my @new_members = ();
+	foreach (@members) {
 		push(@new_members, $_) unless ($_ eq $member);
-    }
-    push(@new_members, $member);
+	}
+	push(@new_members, $member);
 	foreach (@new_members) {
 		webmin_log("member: ",undef, $_, undef);
 	}
-    $group->replace('memberuid', \@new_members);
+	$group->replace('memberuid', \@new_members);
 	$group->update($ldap);
 }
 
@@ -948,13 +948,13 @@ $member: a member UID
 =cut "
 
 sub LDAPGroupRemoveMember {
-    my ($ldap, $group, $member) = (@_);
-    my @members = &LDAPGetGroupAttributes($ldap, $group, 'memberuid');
-    my @new_members = ();
-    foreach (@members) {
+	my ($ldap, $group, $member) = (@_);
+	my @members = &LDAPGetGroupAttributes($ldap, $group, 'memberuid');
+	my @new_members = ();
+	foreach (@members) {
 		push(@new_members, $_) unless ($_ eq $member);
-    }
-    $group->replace('memberuid', \@new_members);
+	}
+	$group->replace('memberuid', \@new_members);
 	$group->update($ldap);
 }
 
@@ -987,10 +987,10 @@ $gid: a gid
 =cut "
 
 sub gid2sid {
-    my ($ldap, $gid) = (@_);
-    
-    my $attrs = ['gidNumber', 'sambaSID'];
-    my $result =  &LDAPSearch($ldap, 
+	my ($ldap, $gid) = (@_);
+	
+	my $attrs = ['gidNumber', 'sambaSID'];
+	my $result =  &LDAPSearch($ldap, 
 							  "gidNumber=$gid", 
 							  $attrs, 
 							  $config{'ldap_groups_base'});
@@ -1005,7 +1005,34 @@ sub gid2sid {
 }
 
 
+=pod"
 
+=item I<getAttrValue($attrs,$attr)
+
+=item *
+get attribute value in pair list
+
+=item *
+$attrs attrs
+
+=item *
+$attr attribute desired
+
+=cut"
+
+sub getAttrValue{
+	my ($attrs,$attr)= (@_);
+	my $get=0;
+	my $out;
+	foreach (@$attrs){
+		chomp;
+		$out=$out.$_."<br/>\n";
+		if($get){
+			return $_;
+		}
+		 /^$attr$/ && do { $get=1 ; };
+	}
+}
 
 =pod "
 
@@ -1024,68 +1051,66 @@ $array: form parameters as returned by the add_user.cgi script, as a hash refere
 
 
 sub createUserArray {
-    my ($ldap, $array) = (@_);
+	my ($ldap, $array) = (@_);
 
-    my $user_uid = $array->{'uid'};
+	my $user_uid = $array->{'uid'};
 
-    # clean some params
-    my @attrs = ();
-    foreach $k (keys %$array) {
+	# clean some params
+	my @attrs = ();
+	foreach $k (keys %$array) {
 		next if ($k =~ /^(cat|create|change|onglet|base|userPassword|retypeuserPassword|primaryGroup)$/);
 		next if ($array->{$k} =~ /^\s*$/);
 		push (@attrs, $k, utf8Encode($array->{$k}));
-    }
+	}
 
-    # gidNumber
-    my $primarygroup = $array->{'primaryGroup'};
-    my $gidnumber = &cn2gid($ldap, $primarygroup);
-    if (!defined($gidnumber)) {
+	# gidNumber
+	my $primarygroup = $array->{'primaryGroup'};
+	my $gidnumber = &cn2gid($ldap, $primarygroup);
+	if (!defined($gidnumber)) {
 		&error($text{'err_primary_group_not_found'});
 		exit 1;
-    }
-    push(@attrs, 'gidNumber', $gidnumber);
+	}
+	push(@attrs, 'gidNumber', $gidnumber);
 
-    # password
-    my $userpassword = undef;
-    if ($config{'crypt_passwords'} == 1) {
-    #fams 17092004 password patch
-        if ($config{'crypt_passwords_hash'} == 1) {
-            my $crypted = crypt($in{'userPassword'}, join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64]);
-            $userpassword = '{Crypt}'.$crypted;
-        }
-        if ($config{'crypt_passwords_hash'} == 2) {
-            my $crypted = md5_base64($in{'userPassword'})."=="; 
-            $userpassword = '{MD5}'.$crypted;
-        }
-#        if ($config{'crypt_passwords_hash'} == 1) {
-#            my $sha= new SHA;
-#            my $hash = $sha->hash($in{'userPassword'});
-#            my $crypted
+	# password
+	my $userpassword = undef;
+	if ($config{'crypt_passwords'} == 1) {
+	#fams 17092004 password patch
+		if ($config{'crypt_passwords_hash'} == 1) {
+			my $crypted = crypt($in{'userPassword'}, join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64]);
+			$userpassword = '{Crypt}'.$crypted;
+		}
+		if ($config{'crypt_passwords_hash'} == 2) {
+			my $crypted = md5_base64($in{'userPassword'})."=="; 
+			$userpassword = '{MD5}'.$crypted;
+		}
+#		if ($config{'crypt_passwords_hash'} == 1) {
+#			my $sha= new SHA;
+#			my $hash = $sha->hash($in{'userPassword'});
+#			my $crypted
 #	
-#	    my $crypted
-    } else {
+#		my $crypted
+	} else {
 		$userpassword = $array->{'userPassword'};
-    }
-    push(@attrs, 'userPassword', $userpassword);
+	}
+	push(@attrs, 'userPassword', $userpassword);
 	
-    # Unix home and shell
-    my $homedir = $config{'homedir_default'};
+	# Unix home and shell
+	my $homedir = $config{'homedir_default'};
 
-    if ($config{'letterhomes'} == 1) {
-        $homeletter = lc(substr($user_uid,0,1));
-        $homedir =~s/USERNAME/$homeletter\/$user_uid/;
-    } else {
+	if ($config{'letterhomes'} == 1) {
+		$homeletter = lc(substr($user_uid,0,1));
+		$homedir =~s/USERNAME/$homeletter\/$user_uid/;
+	} else {
 		$homedir =~ s/USERNAME/$user_uid/;
-    }
-    push(@attrs, 'homeDirectory', $homedir);
-    push(@attrs, 'loginShell', $config{'loginshell_default'}); 
-    push(@attrs, 'impPrefs' , ['.']);
-    push(@attrs, 'hordePrefs' , ['.']);
+	}
+	push(@attrs, 'homeDirectory', $homedir);
+	push(@attrs, 'loginShell', $config{'loginshell_default'}); 
 
-    # objectClass
-    push (@attrs, 'objectClass', ['top','inetOrgPerson', 'posixAccount','hordePerson']);
+	# objectClass
+	push (@attrs, 'objectClass', ['top','inetOrgPerson', 'posixAccount']);
 
-    return @attrs;
+	return @attrs;
 }
 
 
@@ -1106,16 +1131,16 @@ $array: user attributes as returned by the createUserArray function
 
 
 sub createUser {
-    my ($ldap, $array) = (@_);
+	my ($ldap, $array) = (@_);
 
-    # get needed params
-    my $user_uid = $array->{'uid'};
-    my $gidnumber = $array->{'gidNumber'};
-    my $homedir = $array->{'homeDirectory'};	
+	# get needed params
+	my $user_uid = $array->{'uid'};
+	my $gidnumber = $array->{'gidNumber'};
+	my $homedir = $array->{'homeDirectory'};	
 
-    # local home directory
+	# local home directory
 	$dirname=dirname($homedir);
-    if (! -e $dirname) {
+	if (! -e $dirname) {
 		if (system("mkdir -p $dirname")) {
 			&error($text{'err_creating_directory'}.": $dirname");
 			exit 1;
@@ -1126,11 +1151,11 @@ sub createUser {
 			&error($text{'err_copying_skel_directory'});
 			exit 1;
 		}
-    } 
-    # perform a nscd restart to be sure the user is known from the system
-    my $nscd = $config{"nscd_path"};
-    system("$nscd restart");
-    if (system("chown -R $user_uid:$gidnumber $homedir")) {
+	} 
+	# perform a nscd restart to be sure the user is known from the system
+	my $nscd = $config{"nscd_path"};
+	system("$nscd restart");
+	if (system("chown -R $user_uid:$gidnumber $homedir")) {
 		&error($text{'err_changing_directory_owner'}." $homedir $user_uid.$gidnumber");
 		exit 1;
 	}
@@ -1161,63 +1186,63 @@ $array: form parameters as returned by the edit_user.cgi script, as a hash refer
 
 
 sub modifyUserGeneral {
-    my ($ldap, $base, $user_uid, $array) = (@_);
-    my %in = %$array;
+	my ($ldap, $base, $user_uid, $array) = (@_);
+	my %in = %$array;
 
-    my $searchattrs = ['objectClass', 'homeDirectory'];
-    my $mesg = &LDAPSearch($ldap, "(uid=$user_uid)", $searchattrs, $base);
-    my $user = $mesg->entry;
-    if (!defined($user)) {
+	my $searchattrs = ['objectClass', 'homeDirectory'];
+	my $mesg = &LDAPSearch($ldap, "(uid=$user_uid)", $searchattrs, $base);
+	my $user = $mesg->entry;
+	if (!defined($user)) {
 		&error($text{'err_could_not_find_user'});
 		exit 1;
-    }
+	}
 
-    my %attrs = ();
-    foreach $k (keys %in) {
+	my %attrs = ();
+	foreach $k (keys %in) {
 		next if ($k =~ /^(cat|uid|change|onglet|base|enableAccount|acctFlags|userPassword|retypeuserPassword|primaryGroup)$/);
 		#		next if $in{$k} =~ /^\s*$/;
 		$attrs{$k} = $in{$k};
-    }
-    # gidNumber
-    my $gidnumber = &cn2gid($ldap, $in{'primaryGroup'});
-    if (!defined($gidnumber)) {
+	}
+	# gidNumber
+	my $gidnumber = &cn2gid($ldap, $in{'primaryGroup'});
+	if (!defined($gidnumber)) {
 		&error($text{'err_primary_group_not_found'});
 		exit 1;
-    }
-    $attrs{'gidNumber'} = $gidnumber;
-    my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
-    if ($homedir) {
-    	if (( -e $homedir)) {
+	}
+	$attrs{'gidNumber'} = $gidnumber;
+	my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
+	if ($homedir) {
+		if (( -e $homedir)) {
 		if (system("chown $user_uid:$gidnumber $homedir")) {
 			&error($text{'err_changing_directory_owner'}." $homedir $user_uid.$gidnumber");
 			exit 1;
 		}
 		&webmin_log("changing user [$user_uid] home directory [$homedir] to owner [$user_uid.$gidnumber]"); 
 	}
-    }
+	}
 
-    # password
-    my $userpassword = $in{'userPassword'};
-    my $iscrypted = ($userpassword =~ /^({Crypt}|{MD5}|{SSHA})/i) ? 1 : undef;
-    if ($config{'crypt_passwords'} == 1 && !$iscrypted) {
-        if($config{'crypt_passwords_hash'} == 1){
-            my $crypted = crypt($in{'userPassword'}, 
-            join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64]);
-            $userpassword = '{Crypt}'.$crypted;
-        }
-        if($config{'crypt_passwords_hash'} == 2){
-            my $crypted = md5_base64($in{'userPassword'})."=="; 
-            $userpassword = '{MD5}'.$crypted;
-        }
-    }
-    # enable/disable account
-    if (!$in{'enableAccount'}) {
+	# password
+	my $userpassword = $in{'userPassword'};
+	my $iscrypted = ($userpassword =~ /^({Crypt}|{MD5}|{SSHA})/i) ? 1 : undef;
+	if ($config{'crypt_passwords'} == 1 && !$iscrypted) {
+		if($config{'crypt_passwords_hash'} == 1){
+			my $crypted = crypt($in{'userPassword'}, 
+			join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64]);
+			$userpassword = '{Crypt}'.$crypted;
+		}
+		if($config{'crypt_passwords_hash'} == 2){
+			my $crypted = md5_base64($in{'userPassword'})."=="; 
+			$userpassword = '{MD5}'.$crypted;
+		}
+	}
+	# enable/disable account
+	if (!$in{'enableAccount'}) {
 		$userpassword = "!$userpassword";
-    }
-    $attrs{'userPassword'} = $userpassword;
-    
-    # Samba dependencies
-    if (&LDAPUserHasOcs($ldap, $user, 'sambaSAMaccount')) {
+	}
+	$attrs{'userPassword'} = $userpassword;
+	
+	# Samba dependencies
+	if (&LDAPUserHasOcs($ldap, $user, 'sambaSAMaccount')) {
 		&webmin_log("synchronizing samba parameters for user [$user_uid]");
 		if (!$iscrypted) {
 			#my $cmd = $config{'mkntpwd_path'}." ".$in{'userPassword'};
@@ -1241,9 +1266,9 @@ sub modifyUserGeneral {
 # 		} 
 # 		$attrs{'rid'} = (2 * int($in{'uidNumber'})) + 1000;
 # 		$attrs{'primaryGroupID'} = (2 * int($gidnumber)) + 1000;
-    }
+	}
 
-    return %attrs;
+	return %attrs;
 }
 
 =pod "
@@ -1268,22 +1293,22 @@ $array: form parameters as returned by the edit_user.cgi script, as a hash refer
 =cut "
 
 sub modifyUserProfile {
-    my ($ldap, $base, $user_uid, $array) = (@_);
-    my %in = %$array;
-    my %attrs = ();
+	my ($ldap, $base, $user_uid, $array) = (@_);
+	my %in = %$array;
+	my %attrs = ();
 
-    # loginShell
-    $attrs{'loginShell'} = $in{'loginShell'};
+	# loginShell
+	$attrs{'loginShell'} = $in{'loginShell'};
 
-    # homeDirectory 
-    my $searchattrs = ['homeDirectory', 'gidNumber'];
-    my $mesg = &LDAPSearch($ldap, "(uid=$user_uid)", $searchattrs, $base);
-    my $user = $mesg->entry;
-    my $old_home = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
-    my $gidnumber = &LDAPGetUserAttribute($ldap, $user, 'gidNumber');
-    my $homedir = $in{'homeDirectory'};
+	# homeDirectory 
+	my $searchattrs = ['homeDirectory', 'gidNumber'];
+	my $mesg = &LDAPSearch($ldap, "(uid=$user_uid)", $searchattrs, $base);
+	my $user = $mesg->entry;
+	my $old_home = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
+	my $gidnumber = &LDAPGetUserAttribute($ldap, $user, 'gidNumber');
+	my $homedir = $in{'homeDirectory'};
 
-    if ($old_home ne $homedir) {
+	if ($old_home ne $homedir) {
 		$attrs{'homeDirectory'}=$homedir;
 		if ($old_home && $config{'remove_homes'}) {
 			if (system("rm -rf $old_home")) {
@@ -1304,9 +1329,9 @@ sub modifyUserProfile {
 			}
 			&webmin_log("changing user [$user_uid] home directory [$homedir] to owner [$user_uid.$gidnumber]"); 
 		}
-    }
+	}
 
-    return %attrs;
+	return %attrs;
 }
 
 =pod "
@@ -1322,68 +1347,68 @@ $input: reference to the %in array as received by the edit_user.cgi script
 =cut "
 
 sub checkErrors {
-    my $arg = shift;
-    my %in = %$arg;
-     
-    # verify passwords
+	my $arg = shift;
+	my %in = %$arg;
+	 
+	# verify passwords
 	if ($in{'userPassword'} ne utf8Encode($in{'userPassword'})) {
 		&error("Wrong character in password");
 	}
 	
-    if ($in{'userPassword'} ne $in{'retypeuserPassword'}) {
+	if ($in{'userPassword'} ne $in{'retypeuserPassword'}) {
 		&error($text{'err_passwords_dont_match'});
 		exit 1;
-    }
-    if ($in{'userPassword'} eq '') {
+	}
+	if ($in{'userPassword'} eq '') {
 		&error($text{'err_password_cannot_be_empty'});
 		exit 1;
-    }
-    if ($in{'userPassword'} =~ /\s/) {
+	}
+	if ($in{'userPassword'} =~ /\s/) {
 		&error($text{'err_password_no_space'});
 		exit 1;
-    }
+	}
 
-    # verify uid
+	# verify uid
 	if ($in{'uid'} ne utf8Encode($in{'uid'})) {
 		&error("Wrong character in uid");
 	}
-    if ($in{'uid'} eq '') {
+	if ($in{'uid'} eq '') {
 		&error($text{'err_user_id_not_empty'});
 		exit 1;
-    }
-    if ($in{uid} =~ /\s/) {
+	}
+	if ($in{uid} =~ /\s/) {
 		&error($text{'err_user_id_no_space'});
 		exit 1;
-    }
-    # verify uidNumber
-    if ($in{'uidNumber'} eq '') {
+	}
+	# verify uidNumber
+	if ($in{'uidNumber'} eq '') {
 		&error($text{'err_uid_not_empty'});
 		exit 1;
-    }
-    if ($in{uidNumber} =~ /\s/) {
+	}
+	if ($in{uidNumber} =~ /\s/) {
 		&error($text{'err_uid_no_space'});
 		exit 1;
-    }
-    if ($in{uidNumber} =~ /\D/) {
+	}
+	if ($in{uidNumber} =~ /\D/) {
 		&error($text{'err_uid_numeric'});
 		exit 1;
-    }
-    if ($in{uidNumber} =~ /^0/) {
+	}
+	if ($in{uidNumber} =~ /^0/) {
 		&error($text{'err_uid_begin_by_zero'});
 		exit 1;
-    }
+	}
 
-    # verify cn
-    if ($in{'cn'} =~ /^\s*$/) {
+	# verify cn
+	if ($in{'cn'} =~ /^\s*$/) {
 		&error($text{'err_user_cn_not_empty'});
 		exit 1;
-    }
+	}
 
-    # verify sn
-    if ($in{'sn'} =~ /^\s*$/) {
+	# verify sn
+	if ($in{'sn'} =~ /^\s*$/) {
 		&error($text{'err_user_sn_not_empty'});
 		exit 1;
-    }
+	}
 }
 #######
 # Utils
@@ -1408,16 +1433,16 @@ $ldap: a Net::LDAP object
 =cut "
 
 sub getGids {
-    my $ldap = shift;
-    my $attrs = ['cn', 'gidnumber'];
-    my @groups = &LDAPGetGroups($ldap, $attrs);
-    my %gids =();
-    foreach (@groups) {
+	my $ldap = shift;
+	my $attrs = ['cn', 'gidnumber'];
+	my @groups = &LDAPGetGroups($ldap, $attrs);
+	my %gids =();
+	foreach (@groups) {
 		my $cn = &LDAPGetGroupAttribute($ldap, $_, 'cn');
 		my $gidnumber = &LDAPGetGroupAttribute($ldap, $_, 'gidnumber');
 		$gids{$cn} = $gidnumber;
-    }
-    return %gids;
+	}
+	return %gids;
 }
 
 =pod "
@@ -1433,16 +1458,16 @@ $ldap: a Net::LDAP object
 =cut "
 
 sub getUids {
-    my $ldap = shift;
-    my $attrs = ['uid', 'uidnumber'];
-    my @users = &LDAPGetUsers($ldap, $attrs);
-    my %uids =();
-    foreach (@users) {
+	my $ldap = shift;
+	my $attrs = ['uid', 'uidnumber'];
+	my @users = &LDAPGetUsers($ldap, $attrs);
+	my %uids =();
+	foreach (@users) {
 		my $uid = &LDAPGetUserAttribute($ldap, $_, 'uid');
 		my $uidnumber = &LDAPGetUserAttribute($ldap, $_, 'uidnumber');
 		$uids{$uid} = $uidnumber;
-    }
-    return %uids;
+	}
+	return %uids;
 }
 
 =pod "
@@ -1461,10 +1486,10 @@ $gid: a gidNumber
 =cut "
 
 sub gid2cn {
-    my ($ldap, $gid) = (@_);
-    
-    my $attrs = ['cn', 'gidNumber'];
-    my $result =  &LDAPSearch($ldap, 
+	my ($ldap, $gid) = (@_);
+	
+	my $attrs = ['cn', 'gidNumber'];
+	my $result =  &LDAPSearch($ldap, 
 							  "gidNumber=$gid", 
 							  $attrs, 
 							  $config{'ldap_groups_base'});
@@ -1493,10 +1518,10 @@ $cn: a CN
 =cut "
 
 sub cn2gid {
-    my ($ldap, $cn) = (@_);
-    
-    my $attrs = ['cn', 'gidNumber'];
-    my $result =  &LDAPSearch($ldap, 
+	my ($ldap, $cn) = (@_);
+	
+	my $attrs = ['cn', 'gidNumber'];
+	my $result =  &LDAPSearch($ldap, 
 							  "cn=$cn", 
 							  $attrs, 
 							  $config{'ldap_groups_base'});
@@ -1527,12 +1552,12 @@ $uid: an uidNumber
 
 =cut "
 sub checkUid {
-    my ($ldap, $uid) = (@_);
-    my %UIDS = getUids($ldap);
-    my %revUIDS = reverse %UIDS;
-    if ($revUIDS{$uid}) {
+	my ($ldap, $uid) = (@_);
+	my %UIDS = getUids($ldap);
+	my %revUIDS = reverse %UIDS;
+	if ($revUIDS{$uid}) {
 		&error($text{'err_uid_already_exists'}.": $uid, ".$text{'err_uid_valid'}.": ".&pickUid($ldap));
-    }    
+	}	
 }
 
 =pod "
@@ -1551,12 +1576,12 @@ $gid: an gidNumber
 
 =cut "
 sub checkGid {
-    my ($ldap, $gid) = (@_);
-    my %GIDS = getGids($ldap);
-    my %revGIDS = reverse %GIDS;
-    if ($revGIDS{$gid}) {
+	my ($ldap, $gid) = (@_);
+	my %GIDS = getGids($ldap);
+	my %revGIDS = reverse %GIDS;
+	if ($revGIDS{$gid}) {
 		&error($text{'err_gid_already_exists'}.": $gid, ".$text{'err_uid_valid'}.": ".&pickGid($ldap));
-    }    
+	}	
 }
 
 =pod "
@@ -1575,13 +1600,13 @@ $uid: an uidNumber
 
 =cut "
 sub pickUid {
-    my $ldap = shift;
-    my %UIDS = &getUids($ldap);
-    my @uids = values %UIDS;
-    @uids = reverse sort {$a <=> $b} @uids;
-    my @maxs = ($config{'min_uid'}, $uids[0] + 1);
-    my $min_uid = ($config{'min_uid'} <= $uids[0] + 1) ? $uids[0] +1 : $config{'min_uid'};
-    return $min_uid;
+	my $ldap = shift;
+	my %UIDS = &getUids($ldap);
+	my @uids = values %UIDS;
+	@uids = reverse sort {$a <=> $b} @uids;
+	my @maxs = ($config{'min_uid'}, $uids[0] + 1);
+	my $min_uid = ($config{'min_uid'} <= $uids[0] + 1) ? $uids[0] +1 : $config{'min_uid'};
+	return $min_uid;
 }
 
 =pod "
@@ -1600,13 +1625,13 @@ $gid: an gidNumber
 
 =cut "
 sub pickGid {
-    my $ldap = shift;
-    my %GIDS = &getGids($ldap);
-    my @gids = values %GIDS;
-    @gids = reverse sort {$a <=> $b} @gids;
-    my @maxs = ($config{'min_gid'}, $gids[0] + 1);
-    my $min_gid = ($config{'min_gid'} <= $gids[0] + 1) ? $gids[0] +1 : $config{'min_gid'};
-    return $min_gid;
+	my $ldap = shift;
+	my %GIDS = &getGids($ldap);
+	my @gids = values %GIDS;
+	@gids = reverse sort {$a <=> $b} @gids;
+	my @maxs = ($config{'min_gid'}, $gids[0] + 1);
+	my $min_gid = ($config{'min_gid'} <= $gids[0] + 1) ? $gids[0] +1 : $config{'min_gid'};
+	return $min_gid;
 }
 
 
@@ -1633,22 +1658,22 @@ $gidnumber: a gidNumber (optional)
 
 =cut "
 sub userPrimaryGroup {
-    my ($ldap, $user, $cn, $gidnumber) = (@_);
+	my ($ldap, $user, $cn, $gidnumber) = (@_);
 	
-    my $primary = &LDAPGetUserAttribute($ldap, $user, 'gidNumber');
-    if ($gidnumber) {
+	my $primary = &LDAPGetUserAttribute($ldap, $user, 'gidNumber');
+	if ($gidnumber) {
 		if ($primary == $gidnumber) {
 			return 1;
 		} else {
 			return undef;
 		}
-    } 
+	} 
 
-    if (&gid2cn($ldap, $primary) eq $cn) {
+	if (&gid2cn($ldap, $primary) eq $cn) {
 		return 1;
-    } else {
+	} else {
 		return undef;
-    }
+	}
 }
 
 =pod "
@@ -1660,32 +1685,32 @@ Parse accounts configuration file and return a hash reference like this:
 
 {
 
-    ACCOUNTTYPE1 => { 
+	ACCOUNTTYPE1 => { 
 
 	ATTRIBUTE1 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
 	ATTRIBUTE2 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
 
-    }
+	}
 
-    ACCOUNTTYPE2 => {
+	ACCOUNTTYPE2 => {
 
 
 	...
@@ -1701,20 +1726,20 @@ is loaded
 
 =cut "
 sub parseConfig {
-    my $file  = shift;
-    
-    my $conf = {};
-    my $fd = open(FILE, $file);
-    defined($fd) or $fd = open(FILE, 'default_accounts.conf');
-    defined($fd) or &error($text{'err_no_accounts_configuration'});
-    
-    my $k = {};
-    foreach my $l (<FILE>) {
+	my $file  = shift;
+	
+	my $conf = {};
+	my $fd = open(FILE, $file);
+	defined($fd) or $fd = open(FILE, 'default_accounts.conf');
+	defined($fd) or &error($text{'err_no_accounts_configuration'});
+	
+	my $k = {};
+	foreach my $l (<FILE>) {
 		next if ($l =~ /^\#/);
-        if ($l =~ /^\[(.*)\]/) {
-            $k = $1;
-            $conf->{$k} = {};
-        } elsif ($l =~ /^\*/) {
+		if ($l =~ /^\[(.*)\]/) {
+			$k = $1;
+			$conf->{$k} = {};
+		} elsif ($l =~ /^\*/) {
 			$l =~ s/^\*//;
 			if ($l =~ /^(.*)=(.*),(.*),(.*)$/) {
 				$conf->{$k}->{$1}->{'visible'} = $2;
@@ -1727,10 +1752,10 @@ sub parseConfig {
 			$conf->{$k}->{$1}->{'editable'} = $3;
 			$conf->{$k}->{$1}->{'default'} = $4;
 		}
-    }
+	}
 	
-    close($fd);
-    return $conf;
+	close($fd);
+	return $conf;
 }
 
 
@@ -1746,31 +1771,31 @@ $conf: a hash reference describing accounts configuration like this
 
 {
 
-    ACCOUNTTYPE1 => { 
+	ACCOUNTTYPE1 => { 
 
 	ATTRIBUTE1 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
 	ATTRIBUTE2 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
-    }
+	}
 
-    ACCOUNTTYPE2 => {
+	ACCOUNTTYPE2 => {
 
 	...
 
@@ -1782,12 +1807,12 @@ $conf: a hash reference describing accounts configuration like this
 
 
 sub writeConfig {
-    my $conf = shift;
-    
-    my $fd = open(FILE, ">accounts.conf");
-    defined($fd) or &error($text{'err_writing_to'}." accounts.conf: $!");
+	my $conf = shift;
+	
+	my $fd = open(FILE, ">accounts.conf");
+	defined($fd) or &error($text{'err_writing_to'}." accounts.conf: $!");
 
-    foreach my $ocs (keys %{$conf}) {
+	foreach my $ocs (keys %{$conf}) {
 		print FILE "\n[$ocs]\n";
 		foreach my $attr (keys %{$conf->{$ocs}}) {
 			my $str = '';
@@ -1811,8 +1836,8 @@ sub writeConfig {
 			} 
 			print FILE "$str\n";
 		}
-    }
-    close($fd);
+	}
+	close($fd);
 }
 
 =pod "
@@ -1827,31 +1852,31 @@ $conf: a hash reference describing accounts configuration like this
 
 {
 
-    ACCOUNTTYPE1 => { 
+	ACCOUNTTYPE1 => { 
 
 	ATTRIBUTE1 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
 	ATTRIBUTE2 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
-    }
+	}
 
-    ACCOUNTTYPE2 => {
+	ACCOUNTTYPE2 => {
 
 	...
 
@@ -1861,9 +1886,9 @@ $conf: a hash reference describing accounts configuration like this
  
 =cut "
 sub getConfiguredOcs {
-    my $conf = shift;
+	my $conf = shift;
 
-    return keys %$conf;
+	return keys %$conf;
 }
 
 =pod "
@@ -1878,31 +1903,31 @@ $conf: a hash reference describing accounts configuration like this
 
 {
 
-    ACCOUNTTYPE1 => { 
+	ACCOUNTTYPE1 => { 
 
 	ATTRIBUTE1 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
 	ATTRIBUTE2 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
-    }
+	}
 
-    ACCOUNTTYPE2 => {
+	ACCOUNTTYPE2 => {
 
 	...
 
@@ -1915,9 +1940,9 @@ $ocs: an objectclass name corresponding to a configured account type
  
 =cut "
 sub getConfiguredAttrs {
-    my ($conf, $ocs) = (@_);
-    
-    return keys %{$conf->{$ocs}};
+	my ($conf, $ocs) = (@_);
+	
+	return keys %{$conf->{$ocs}};
 }
 
 =pod "
@@ -1934,31 +1959,31 @@ $ldap: a Net::LDAP object
 $conf: a hash reference describing accounts configuration like this
 
 {
-    ACCOUNTTYPE1 => { 
+	ACCOUNTTYPE1 => { 
 
 	ATTRIBUTE1 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
 	ATTRIBUTE2 => {
 
-	    visible => 0 or 1,
+		visible => 0 or 1,
 
-	    editable => 0 or 1,
+		editable => 0 or 1,
 
-	    default => default value for this attibute,
+		default => default value for this attibute,
 
 	},
 
-    }
+	}
 
-    ACCOUNTTYPE2 => {
+	ACCOUNTTYPE2 => {
 
 	...
 
@@ -1981,19 +2006,19 @@ $base: current selected base DN
 =cut "
 
 sub printMenu {
-    my ($ldap, $conf, $user, $user_uid, $onglet, $base) = (@_);
-    my @onglets = ("General", "Groups", "Profile");    
-    print "<table><tr>\n";
-    foreach (@onglets) {
+	my ($ldap, $conf, $user, $user_uid, $onglet, $base) = (@_);
+	my @onglets = ("General", "Groups", "Profile");	
+	print "<table><tr>\n";
+	foreach (@onglets) {
 		if ($_ eq $onglet) {
 			print "<td><b><font color=blue>$_</font></b></td>\n";
 		} else {
 			print "<td><b><a href=edit_user.cgi?uid=$user_uid&onglet=$_&base=".&urlize($base).">$_</a></b></td>\n";
 		}
-    }
-    my @cocs = &getConfiguredOcs($conf);
-    my @ocs = &LDAPGetUserAttributes($ldap, $user, 'objectclass');
-    foreach my $co (@cocs) {
+	}
+	my @cocs = &getConfiguredOcs($conf);
+	my @ocs = &LDAPGetUserAttributes($ldap, $user, 'objectclass');
+	foreach my $co (@cocs) {
 		my $url = "edit_".lc($co).".cgi?uid=$user_uid&onglet=$co&base=".&urlize($base);
 		if (indexof(uc($co), map(uc($_),@ocs)) != -1) {
 			if ($co eq $onglet) {
@@ -2009,9 +2034,9 @@ sub printMenu {
 			}
 		}
 	}
-    print "</tr></table>\n";
-    print "<br>\n";
-    
+	print "</tr></table>\n";
+	print "<br>\n";
+	
 }
 
 =pod "
@@ -2034,13 +2059,13 @@ $current: current page number
 
 
 sub pagesLinks {
-    my ($url, $numkeys, $current) = (@_);
+	my ($url, $numkeys, $current) = (@_);
 
-    my $max = $config{'max_items'};
-    my $num = int($numkeys / $max) + 1;
+	my $max = $config{'max_items'};
+	my $num = int($numkeys / $max) + 1;
 
-    my $pages = '';
-    if ($num <=> 1) {
+	my $pages = '';
+	if ($num <=> 1) {
 		$pages .= "page:  ";
 		for (my $p = 1; $p <= $num; $p++) {
 			if ($p == $current) {
@@ -2050,9 +2075,9 @@ sub pagesLinks {
 			}
 		}
 		$pages .= "<br><br>\n";
-    }
+	}
 
-    return $pages;
+	return $pages;
 }
 
 =pod "
@@ -2079,25 +2104,25 @@ $current: current selected OU
 
 
 sub printLDAPTree {
-    my ($link, $ldap, $base, $current) = (@_);
-    print "<ul>";
-    if ($base eq $current) {
+	my ($link, $ldap, $base, $current) = (@_);
+	print "<ul>";
+	if ($base eq $current) {
 		print "<b><font color=blue><li> <a href=$link?base=".&urlize($base)."><font color=blue>$base</font></a></font></b>";
-    } else {
+	} else {
 		print "<li> <a href=$link?base=".&urlize($base).">$base</a>";
-    }
-    my $attrs = [ 'ou' ];
-    my $result = $ldap->search(
+	}
+	my $attrs = [ 'ou' ];
+	my $result = $ldap->search(
 							   base => $base,
 							   scope => "one",
 							   filter => "objectClass=organizationalUnit",
 							   attrs => $attrs,
 							  );
 
-    foreach my $ou ($result->entries) {
+	foreach my $ou ($result->entries) {
 		&printLDAPTree($link, $ldap, $ou->dn, $current);
-    }
-    print "</ul>";
+	}
+	print "</ul>";
 }
 
 
@@ -2134,14 +2159,14 @@ $virtual: list of dcobjects
 
 =cut"
 sub LDAPChangeVirtual(){
-    my ($ldap,$virtual) =@_;
-    my $changes ={};
-    $changes->{'associatedDomain'} = @virtual;
-    my $res = $ldap->modify($config{'ldap_virtual_base'}, replace => { %$changes } );
-    if ($res->code()) { 
-        &error(&ldap_error_name($res->code).
-            ": ".&ldap_error_text($res->code)); 
-    }
+	my ($ldap,$virtual) =@_;
+	my $changes ={};
+	$changes->{'associatedDomain'} = @virtual;
+	my $res = $ldap->modify($config{'ldap_virtual_base'}, replace => { %$changes } );
+	if ($res->code()) { 
+		&error(&ldap_error_name($res->code).
+			": ".&ldap_error_text($res->code)); 
+	}
 
 }
 =pod "
@@ -2158,13 +2183,13 @@ $ldap: a Net::LDAP object
 
 =cut"
 sub LDAPGetVirtuals {
-    my ($ldap) = (@_);
-    $result = LDAPSearch($ldap,"(&(objectClass=dNSDomain)(objectClass=domainRelatedObject)(dc=domains))",
-            ['associatedDomain'],
-            $config{'ldap_virtual_base'});
-    if($result->count>1){
-        &error($text{'err_vitual_too_many_base'});
-    }
+	my ($ldap) = (@_);
+	$result = LDAPSearch($ldap,"(&(objectClass=dNSDomain)(objectClass=domainRelatedObject)(dc=domains))",
+			['associatedDomain'],
+			$config{'ldap_virtual_base'});
+	if($result->count>1){
+		&error($text{'err_vitual_too_many_base'});
+	}
    my $entry = $result->entry;
    return $entry;
 }
@@ -2183,13 +2208,13 @@ $ldap: a Net::LDAP object
 
 =cut"
 sub LDAPGetDiscussao {
-    my ($ldap) = (@_);
-    $result = LDAPSearch($ldap,"(&(objectClass=qmailUser)(objectClass=top))",
-            $attrs,
-            $config{'ldap_discussao_base'});
-    if($result->count>1){
-        &error($text{'err_discussao_too_many_base'});
-    }
+	my ($ldap) = (@_);
+	$result = LDAPSearch($ldap,"(&(objectClass=qmailUser)(objectClass=top))",
+			$attrs,
+			$config{'ldap_discussao_base'});
+	if($result->count>1){
+		&error($text{'err_discussao_too_many_base'});
+	}
    my $entry = $result->entry;
    return $entry;
 }
