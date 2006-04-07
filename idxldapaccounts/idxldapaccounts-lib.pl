@@ -23,7 +23,15 @@ do '../web-lib.pl';
 #  USA.
 
 # author: <gerald.macinenti@IDEALX.com>
+<<<<<<< idxldapaccounts-lib.pl
+# 
+# Hacked, extended and broked by
+# Author: Fernando Augusto Medeiros Silva <fams@linxuxplace.com.br>
+# 
 # Version: $Id$
+=======
+# Version: $Id$
+>>>>>>> 1.9
 
 ## initialize module configuration
 &init_config();
@@ -395,6 +403,16 @@ sub LDAPDeleteUser {
 	my $usermail=$user->get_value('mail', asref=>1 );
 	my $usermail2=$user->get_value('mailAlternateAddress', asref=>1 );
 	my @mails=(@$usermail,@$usermail2);
+<<<<<<< idxldapaccounts-lib.pl
+	#use Data::Dumper;
+#Removendo aderecos do usuario, FIXME need to have a better place to put it
+#Removendo das listas de discussao
+	if($config{'create_ldap_ab_base'}){
+		my $listbase = $config{'ldap_discussao_base'};
+		my $listfilter;
+		foreach $curmail(@mails){
+			$listfilter.="(mailForwardingAddress=$curmail)";
+=======
 	#use Data::Dumper;
 #Removendo das listas de discussao
 	if($config{'create_ldap_ab_base'}){
@@ -402,6 +420,7 @@ sub LDAPDeleteUser {
 		my $listfilter;
 		foreach $curmail(@mails){
 			$listfilter.="(mailForwardingAddress=$curmail)";
+>>>>>>> 1.9
 		}
 		my $mailcount =@mails;
 		if($mailcount>1){
@@ -418,6 +437,8 @@ sub LDAPDeleteUser {
 		$list_entry->update($ldap);
 		}
 	}
+<<<<<<< idxldapaccounts-lib.pl
+=======
 #Removendo o usuÃrio
 	my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
 	my $dn = $user->dn; 
@@ -426,7 +447,20 @@ sub LDAPDeleteUser {
 		&error("User".&ldap_error_name($res->code).
 		   ": ".&ldap_error_text($res->code)); 
 	}
+>>>>>>> 1.9
 #Removendo personal Addressbook
+<<<<<<< idxldapaccounts-lib.pl
+	if ($config{'remove_personal_ab'}){
+		 my $dn="ou=$user_uid,".$config{'ldap_personal_ab_base'};
+		 my $res = $ldap->delete( $dn );
+		 if ($res->code()) {
+			  &error("PAB".&ldap_error_name($res->code).
+						   ": ".&ldap_error_text($res->code));
+		 }
+	}
+#Removendo Homedir
+	if ($config{'remove_homes'}) {
+=======
 	if ($config{'remove_personal_ab'}){
 		 my $dn="ou=$user_uid,".$config{'ldap_personal_ab_base'};
 		 my $res = $ldap->delete( $dn );
@@ -436,13 +470,25 @@ sub LDAPDeleteUser {
 		 }
 	}
 	if ($config{'remove_homes'}) {
+>>>>>>> 1.9
 		my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homeDirectory');
 		if (system("rm -rf $homedir")) {
 			&error($text{'err_removing_directory'}.": $homedir");
 			exit 1;
 		}
 		&webmin_log("removing user [$user_uid] home directory [$homedir]"); 
+<<<<<<< idxldapaccounts-lib.pl
 	}
+#Removendo o usuario, Finalmente
+	my $dn = $user->dn; 
+	my $res = $ldap->delete( $dn );
+	if ($res->code()) { 
+		&error("User".&ldap_error_name($res->code).
+		   ": ".&ldap_error_text($res->code)); 
+	}
+=======
+	}
+>>>>>>> 1.9
 }
 
 =pod "
@@ -1005,10 +1051,42 @@ sub gid2sid {
 }
 
 
+<<<<<<< idxldapaccounts-lib.pl
 =pod"
 
 =item I<getAttrValue($attrs,$attr)
 
+=item *
+get attribute value in pair list
+
+=item *
+$attrs attrs
+
+=item *
+$attr attribute desired
+
+=cut"
+=======
+=pod"
+
+=item I<getAttrValue($attrs,$attr)
+>>>>>>> 1.9
+
+<<<<<<< idxldapaccounts-lib.pl
+sub getAttrValue{
+	my ($attrs,$attr)= (@_);
+	my $get=0;
+	my $out;
+	foreach (@$attrs){
+		chomp;
+		$out=$out.$_."<br/>\n";
+		if($get){
+			return $_;
+		}
+		 /^$attr$/ && do { $get=1 ; };
+	}
+}
+=======
 =item *
 get attribute value in pair list
 
@@ -1033,6 +1111,7 @@ sub getAttrValue{
 		 /^$attr$/ && do { $get=1 ; };
 	}
 }
+>>>>>>> 1.9
 
 =pod "
 
