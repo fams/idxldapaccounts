@@ -1,12 +1,21 @@
+line1=General Config,11
+max_items=maximum number of list items displayed on a page,0
+max_search_results=maximum number of results displayed by a LDAP search,0
+hide_disabled_users=hide disabled users,4,1-yes,0-no
+nscd_path=nscd daemon init script path,0
+line2=Ldap Config,11
 ldap_server=LDAP server FQDN,0
 ldap_admin=LDAP administrator,0
 ldap_password=LDAP administrator password,0
 ldap_users_base=LDAP users search base,0
 ldap_groups_base=LDAP groups search base,0
-nscd_path=nscd daemon init script path,0
-mkntpwd_path=mkntpwd utility path,0
-samba_dir=Samba users directory,0
+ldap_personal_ab_base=LDAP Personal Addressbook search base,0
+ldap_virtual_base=LDAP Virtual Domain Base,0
+ldap_discussao_base=LDAP Mailing list Base,0
+line3=Samba Config,11
 samba_sid=Samba domain SID,0
+#users
+line4,User Prefs,11
 gid_default=default primary group,0
 min_gid=minimal gid number,0
 min_uid=minimal uid number,0
@@ -15,15 +24,11 @@ letterhomes=use letterhomes,4,1-yes,0-no
 loginshell_default=default unix shell
 crypt_passwords=should passwords be encrypted?,4,1-yes,0-no
 crypt_passwords_hash=crypt salt hash?,4,2-MD5,1-SSHA,0-CRYPT
-max_items=maximum number of list items displayed on a page,0
-max_search_results=maximum number of results displayed by a LDAP search,0
-hide_disabled_users=hide disabled users,4,1-yes,0-no
 remove_homes=remove user home directory when deleting user or modifying his home directory,4,1-yes,0-no
+#/users
+line5=Email Prefs,11
+mailMessageStoreBase=Maildir Base,0
 use_horde=Create Horde Prefs,4,0-no,1-yes
 create_ldap_ab_base=Create LDAP Personal Addresbook for each user,4,1-yes,0-no
-ldap_personal_ab_base=LDAP Personal Addressbook search base,0
 remove_personal_ab=Remove Personal Addressbook when deleting user,4,1-yes,0-no
-ldap_virtual_base=LDAP Virtual Domain Base,0
 use_discussao=Use distribution list,4,1-yes,0-no
-ldap_discussao_base=LDAP Mail list Base,0
-mailMessageStoreBase=Maildir Base,0

@@ -33,7 +33,7 @@ print "<hr>\n";
 
 my $error = &check_configuration_errors(); 
 if (!$error) {	
-    if ($config{'remove_personal_ab'}){
+    if ($config{'use_discussao'}){
     	@opts = ( 'users', 'groups', 'accounts', 'virtual','discussao');
     }else{
     	@opts = ( 'users', 'groups', 'accounts', 'virtual');
