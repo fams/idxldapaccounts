@@ -96,16 +96,18 @@ print "<form action=$url method=post>\n";
 print "<table width='80%'>\n";
 
 if ($in{'delete'}) {
+    my $attr_d;
     foreach my $attr (keys %{$conf->{$onglet}}) {
-    next if ($attr =~ /(uid|uidNumber|gidNumber|cn|description)/);
-    &LDAPModifyUser($ldap, $base, $user_uid, {$attr => \()});
+        next if ($attr =~ /(uid|uidNumber|gidNumber|cn|description)/);
+        $attr_d->{$attr}=' ';
     }
     my @old_ocs = &LDAPGetUserAttributes($ldap, $user, 'objectclass');
     my @new_ocs = ();
     foreach (@old_ocs) {
            push(@new_ocs, $_) unless ($_ =~ /$onglet/i);
     } 
-    &LDAPModifyUser($ldap, $base, $user_uid, {'objectClass' => \@new_ocs});
+    $attr_d->{'objectClass'}= \@new_ocs;
+    &LDAPModifyUser($ldap, $base, $user_uid, $attr_d);
     &webmin_log("deleting samba account for user [$user_uid]",undef, undef,\%in);
     print "<font color=green>".$text{'edit_sambaaccount_deleted'}."</font></br>\n";
 } elsif ($in{'new'}) {
@@ -139,7 +141,7 @@ if ($in{'delete'}) {
         if ($attr eq 'sambaSID') {
             $value = $config{'samba_sid'} . '-' . ((2 * int($uidNumber)) + 1000);
         }
-        if ($attr eq 'primaryGroupID') {
+        if ($attr eq 'sambaPrimaryGroupSID') {
             $value =  &gid2sid($ldap,$gidNumber);
         }
         if ($attr eq 'sambaHomeDrive') {
