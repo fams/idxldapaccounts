@@ -276,10 +276,6 @@ sub sambaCreateUserArray {
         $attrs{'sambaLMPassword'} = 'NO PASSWORDXXXXXXXXXXXXXXXXXXXXX';
         $attrs{'sambaNTPassword'} = 'NO PASSWORDXXXXXXXXXXXXXXXXXXXXX';
     } else {
-        #my $cmd = $config{'mkntpwd_path'}." ".$in{'userPassword'};
-        #my $lmntpassword = `$cmd`;
-        #chop($lmntpassword);
-        #my @lmnt = split(':', $lmntpassword);
         my @lmnt = ntlmgen ($in{'userPassword'});
         $attrs{'sambaLMPassword'} = $lmnt[0];
         $attrs{'sambaNTPassword'} = $lmnt[1];
@@ -307,10 +303,6 @@ sub sambaModifyUser {
     }
 
     if (my $password = $in{'userPassword'}) {
-        #my $cmd = $config{'mkntpwd_path'}." ".$in{'userPassword'};
-        #my $lmntpassword = `$cmd`;
-        #chop($lmntpassword);
-        #my @lmnt = split(':', $lmntpassword);
         my @lmnt = ntlmgen ($in{'userPassword'}); 
         $attrs{'sambaLMPassword'} = $lmnt[0];
         $attrs{'sambaNTPassword'} = $lmnt[1];

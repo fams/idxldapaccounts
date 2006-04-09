@@ -113,11 +113,6 @@ sub check_configuration_warnings {
 		push(@warnings, 'warn_unable_to_read_LDAP_schema');
 	}
 
-    # check mkntpwd utility
-    #unless ( -e $config{'mkntpwd_path'} ) {
-#	push(@warnings, 'warn_mkntpwd_not_found');
- #   }
-
 
     $ldap->unbind();
     return \@warnings;

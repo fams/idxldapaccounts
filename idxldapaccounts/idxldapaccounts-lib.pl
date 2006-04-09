@@ -1249,10 +1249,6 @@ sub modifyUserGeneral {
 	if (&LDAPUserHasOcs($ldap, $user, 'sambaSAMaccount')) {
 		&webmin_log("synchronizing samba parameters for user [$user_uid]");
 		if (!$iscrypted) {
-			#my $cmd = $config{'mkntpwd_path'}." ".$in{'userPassword'};
-			#my $lmntpassword = `$cmd`;
-			#chop($lmntpassword);
-			#my @lmnt = split(':', $lmntpassword);
 			my @lmnt = ntlmgen ($in{'userPassword'});
 # samba v3
 			$attrs{'sambaLMPassword'}=$lmnt[0];
