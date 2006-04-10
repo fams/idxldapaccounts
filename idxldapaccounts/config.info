@@ -30,5 +30,5 @@ line5=Email Prefs,11
 mailMessageStoreBase=Maildir Base,0
 use_horde=Create Horde Prefs,1,1-yes,0-no
 create_ldap_ab_base=Create LDAP Personal Addresbook for each user,1,1-yes,0-no
-remove_personal_ab=Remove Personal Addressbook when deleting user,4,1-yes,0-no
-use_discussao=Use distribution list,4,1-yes,0-no
+remove_personal_ab=Remove Personal Addressbook when deleting user,1,1-yes,0-no
+use_discussao=Use distribution list,1,1-yes,0-no
