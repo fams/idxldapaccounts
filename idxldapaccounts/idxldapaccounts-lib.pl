@@ -80,7 +80,8 @@ use Net::LDAP::Util qw(ldap_error_name ldap_error_text);
 use Unicode::MapUTF8 qw(to_utf8 from_utf8);
 use Crypt::SmbHash;
 use Digest::MD5  qw(md5 md5_hex md5_base64);
-use Digest::SHA1;
+use Digest::SHA1 qw(sha1);
+use MIME::Base64 qw(encode_base64);
 use File::Basename;
 use File::Path;
 
@@ -126,6 +127,7 @@ sub LDAPInit {
 	}
 	return $ldap;
 }
+sub make_salt;
 
 =pod "
 
@@ -1078,7 +1080,7 @@ sub createUserArray {
 
 	# password
 	my $userpassword = undef;
-	if ($config{'crypt_passwords'} == 1) {
+	if ($config{'crypt_passwords'} == 0) {
 	#fams 17092004 password patch
 		if ($config{'crypt_passwords_hash'} == 1) {
 			my $crypted = crypt($in{'userPassword'}, join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64]);
@@ -1088,12 +1090,6 @@ sub createUserArray {
 			my $crypted = md5_base64($in{'userPassword'})."=="; 
 			$userpassword = '{MD5}'.$crypted;
 		}
-#		if ($config{'crypt_passwords_hash'} == 1) {
-#			my $sha= new SHA;
-#			my $hash = $sha->hash($in{'userPassword'});
-#			my $crypted
-#	
-#		my $crypted
 	} else {
 		$userpassword = $array->{'userPassword'};
 	}
@@ -1229,7 +1225,7 @@ sub modifyUserGeneral {
 	my $userpassword = $in{'userPassword'};
 	my $iscrypted = ($userpassword =~ /^({Crypt}|{MD5}|{SSHA})/i) ? 1 : undef;
 	if ($config{'crypt_passwords'} == 1 && !$iscrypted) {
-		if($config{'crypt_passwords_hash'} == 1){
+		if($config{'crypt_passwords_hash'} == 0){
 			my $crypted = crypt($in{'userPassword'}, 
 			join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64]);
 			$userpassword = '{Crypt}'.$crypted;
@@ -1237,6 +1233,11 @@ sub modifyUserGeneral {
 		if($config{'crypt_passwords_hash'} == 2){
 			my $crypted = md5_base64($in{'userPassword'})."=="; 
 			$userpassword = '{MD5}'.$crypted;
+		}
+		if ($config{'crypt_passwords_hash'} == 1 ) {
+      		# Generate SSHA hash (SHA1 with salt)
+      			my $salt = make_salt(4);
+      			$userpassword = "{SSHA}" . encode_base64( sha1($in{'userPassword'}.$salt) . $salt,'' );
 		}
 	}
 	# enable/disable account
@@ -2219,10 +2220,22 @@ sub LDAPGetDiscussao {
    return $entry;
 }
 
+
+# Generates salt
+# Similar to Crypt::Salt module from CPAN
+sub make_salt
+  {
+    my $length=32;
+    $length = $_[0] if exists($_[0]);
+  
+    my @tab = ('.', '/', 0..9, 'A'..'Z', 'a'..'z');
+    return join "",@tab[map {rand 64} (1..$length)];
+  }
 =pod "
 
 =head1 AUTHORS
 
 Gerald Macinenti - <gerald.macinenti@IDEALX.com>
+Fernando Augusto Medeiros Sivla - <fams@linuxplace.com.br>
 
 =cut "
