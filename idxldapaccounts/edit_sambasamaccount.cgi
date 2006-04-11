@@ -207,11 +207,19 @@ if ($in{'delete'}) {
                            next;
                        }
     
-                      if ($attr =~ /(pwd)/i) {
-                          if ($value == 0) {
-                              print "<tr><td>$attr: </td><td><input type=checkbox name=$attr></td></tr>\n";
-                          } else {
+                      if ($attr =~ /(pwdCan)/i) {
+                          if ($value < time()) {
                               print "<tr><td>$attr: </td><td><input type=checkbox name=$attr checked></td></tr>\n";
+                          } else {
+                              print "<tr><td>$attr: </td><td><input type=checkbox name=$attr></td></tr>\n";
+                          }
+                          next;
+                      }
+                      if ($attr =~ /(pwd)Must/i) {
+                          if ($value == 0) {
+                              print "<tr><td>$attr: </td><td><input type=checkbox name=$attr checked></td></tr>\n";
+                          } else {
+                              print "<tr><td>$attr: </td><td><input type=checkbox name=$attr></td></tr>\n";
                           }
                           next;
                       }
@@ -311,14 +319,14 @@ sub sambaModifyUser {
     }
     #  pwd and login options
     if ($in{'sambaPwdCanChange'}) {
-        $attrs{'sambaPwdCanChange'} = 2147483647;
-    } else {
         $attrs{'sambaPwdCanChange'} = 0;
+    } else {
+        $attrs{'sambaPwdCanChange'} = 2147483647;
     }
     if ($in{'sambaPwdMustChange'}) {
-        $attrs{'sambaPwdMustChange'} = 2147483647;
-    } else {
         $attrs{'sambaPwdMustChange'}= 0;
+    } else {
+        $attrs{'sambaPwdMustChange'} = 2147483647;
     }
     # enable/disable account 
     my $sambaAcctFlags = $in{'sambaAcctFlags'};
