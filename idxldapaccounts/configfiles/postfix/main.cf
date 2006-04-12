@@ -672,9 +672,9 @@ acceptdomains_server_host = localhost
 acceptdomains_server_port = 389
 acceptdomains_version = 3
 acceptdomains_bind = yes
-acceptdomains_bind_dn = cn=proxyuser,ou=Staff,dc=omb,dc=com,dc=br
-acceptdomains_bind_pw = aHeMxl3805
-acceptdomains_search_base = dc=domains,ou=postfix,ou=System,dc=omb,dc=com,dc=br
+acceptdomains_bind_dn = cn=proxyuser,ou=Staff,%SUFFIX%
+acceptdomains_bind_pw = %PROXYPW%
+acceptdomains_search_base = dc=domains,ou=postfix,ou=System,%SUFFIX%
 acceptdomains_query_filter = (associatedDomain=%s)
 acceptdomains_result_attribute = associatedDomain
 
@@ -685,9 +685,9 @@ virtualrecipients_server_host = localhost
 virtualrecipients_server_port = 389
 virtualrecipients_bind = yes
 virtualrecipients_version = 3
-virtualrecipients_bind_dn = cn=proxyuser,ou=Staff,dc=omb,dc=com,dc=br
-virtualrecipients_bind_pw = aHeMxl3805
-virtualrecipients_search_base = ou=People,dc=omb,dc=com,dc=br
+virtualrecipients_bind_dn = cn=proxyuser,ou=Staff,%SUFFIX%
+virtualrecipients_bind_pw = %PROXYPW%
+virtualrecipients_search_base = ou=People,%SUFFIX%
 virtualrecipients_query_filter = (|(mail=%s)(mailAlternateAddress=%s))
 virtualrecipients_result_attribute = uid
 
@@ -698,9 +698,9 @@ mailinglists_server_host = localhost
 mailinglists_server_port = 389
 mailinglists_version = 3
 mailinglists_bind = yes
-mailinglists_bind_dn = cn=proxyuser,ou=Staff,dc=omb,dc=com,dc=br
-mailinglists_bind_pw = aHeMxl3805
-mailinglists_search_base = ou=mailinglists,ou=postfix,ou=System,dc=omb,dc=com,dc=br
+mailinglists_bind_dn = cn=proxyuser,ou=Staff,%SUFFIX%
+mailinglists_bind_pw = %PROXYPW%
+mailinglists_search_base = ou=mailinglists,ou=postfix,ou=System,%SUFFIX%
 mailinglists_query_filter = (|(mail=%s)(mailAlternateAddress=%s))
 mailinglists_result_attribute = mailForwardingAddress
 
@@ -709,9 +709,9 @@ matchlogin_server_host = localhost
 matchlogin_server_port = 389
 matchlogin_bind = yes
 matchlogin_version = 3
-matchlogin_bind_dn = cn=proxyuser,ou=Staff,dc=omb,dc=com,dc=br
-matchlogin_bind_pw = aHeMxl3805
-matchlogin_search_base = ou=People,dc=omb,dc=com,dc=br
+matchlogin_bind_dn = cn=proxyuser,ou=Staff,%SUFFIX%
+matchlogin_bind_pw = %PROXYPW%
+matchlogin_search_base = ou=People,%SUFFIX%
 matchlogin_query_filter = (&(objectClass=qmailUser)(|(mail=%s)(mailAlternateAddress=%s)))
 matchlogin_result_attribute = uid
 

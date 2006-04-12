@@ -2,8 +2,8 @@ dn: %SUFFIX%
 objectClass: top
 objectClass: dcObject
 objectClass: organization
-o: Manoel Bernardes
-dc: omb
+o: $ORG
+dc: 
 
 dn: ou=People,%SUFFIX%
 ou: People
@@ -27,7 +27,6 @@ objectClass: top
 objectClass: person
 sn: proxyuser
 cn: proxyuser
-userPassword:: e1NNRDV9NjBFWGFkM0dUKy95OWVqOHZaalV2c1JXdDUwPQ==
 
 dn: ou=personal_addressbook,%SUFFIX%
 ou: personal_addressbook
