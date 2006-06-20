@@ -1602,12 +1602,79 @@ $uid: an uidNumber
 =cut "
 sub pickUid {
 	my $ldap = shift;
+	if($config{'use_new_allocation'}){
+		return get_next_id($ldap,"uidNumber",$config{'min_uid'});
+	}
 	my %UIDS = &getUids($ldap);
 	my @uids = values %UIDS;
 	@uids = reverse sort {$a <=> $b} @uids;
 	my @maxs = ($config{'min_uid'}, $uids[0] + 1);
 	my $min_uid = ($config{'min_uid'} <= $uids[0] + 1) ? $uids[0] +1 : $config{'min_uid'};
 	return $min_uid;
+}
+#FIXME a funcao abaixo foi portada nas coxas... 
+
+=pod "
+
+=item I<get_next_id($ldap, $attribute)>
+
+=item *
+Return an uidNumber/gidNumber that doesn't already exist in LDAP nor minorates the connfigured
+minimum uidNumber
+
+=item *
+$ldap: a Net::LDAP object
+
+=item *
+$uid: an uidNumber
+
+=cut "
+
+sub get_next_id($$$) {
+  my $ldap = shift;
+  my $attribute = shift;
+  my $minid = shift;
+  my $tries = 0;
+  my $found=0;
+  my $next_uid_mesg;
+  my $nextuid;
+  $ldap_base_dn=$config{'ldap_suffix'};
+  do {
+	$next_uid_mesg = $ldap->search(
+								  base => $config{'ldap_pool_dn'},
+								  filter => "(objectClass=sambaUnixIdPool)",
+								  scope => "base"
+								 );
+	$next_uid_mesg->code && &error("Error looking for next uid");
+	if ($next_uid_mesg->count != 1) {
+	  &error("Could not find base dn, to get next $attribute");
+	}
+	my $entry = $next_uid_mesg->entry(0);
+            
+	$nextuid = $entry->get_value($attribute);
+	if($nextuid < $minid){
+		$nextuid=$minid;
+	}
+	my $modify=$ldap->modify( $config{'ldap_pool_dn'},
+							 changes => [
+								 replace => [ $attribute => $nextuid + 1 ]
+										]
+							   );
+	$modify->code && &error("Error: ". $modify->error);
+	# let's check if the id found is really free (in ou=Groups or ou=Users)...
+	my $check_uid_mesg = $ldap->search(
+									  base => $ldap_base_dn,
+									  filter => "($attribute=$nextuid)",
+									 );
+	$check_uid_mesg->code && &error("Cannot confirm $attribute $nextuid is free");
+	if ($check_uid_mesg->count == 0) {
+	  $found=1;
+	  return $nextuid;
+	}
+	$tries++;
+	#print "Cannot confirm $attribute $nextuid is free: checking for the next one\n"
+  } while ($found != 1);
+  &error("Could not allocate $attribute!");
 }
 
 =pod "
@@ -1627,6 +1694,9 @@ $gid: an gidNumber
 =cut "
 sub pickGid {
 	my $ldap = shift;
+	if($config{use_new_allocation}){
+		return get_next_id($ldap,"uidNumber",$config{'min_gid'});
+	}
 	my %GIDS = &getGids($ldap);
 	my @gids = values %GIDS;
 	@gids = reverse sort {$a <=> $b} @gids;

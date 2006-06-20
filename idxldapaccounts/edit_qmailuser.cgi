@@ -65,7 +65,6 @@ if ($in{'add'}){
 if ($in{'changequota'}) { 
     $attrs{'mailQuota'}=$in{'mailquota'}."S";
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
-    &MailSanitizer($ldap, $base, $user_uid);
 }
 if ($in{'change'}) {	
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
@@ -140,7 +139,11 @@ if ($in{'create'}) {
     	push(@new_ocs, 'hordePerson');
 	$attrs{'hordePrefs'}=".";
 	$attrs{'ImpPrefs'}=".";
+    }else{
+	$attrs{'hordePrefs'}=undef;
+	$attrs{'ImpPrefs'}=undef;
     }
+	
     $attrs{'objectclass'} = \@new_ocs;
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
     $creation = "<font color=green>".$text{'edit_qmailuser_successfully_created'}."</font></br>\n";
@@ -177,6 +180,7 @@ if ($in{'delete'}) {
         push(@new_ocs, $_) unless ($_ =~ /$onglet/i);
     } 
     &LDAPModifyUser($ldap, $base, $user_uid, {'objectClass' => \@new_ocs});
+    &MailSanitizer($ldap, $base, $user_uid);
     &webmin_log("deleting proxy account for user [$user_uid]",undef, undef,\%in);
     print "<font color=green>".$text{'edit_mail_deleted'}."</font></br>\n";
     print "</table>\n";
@@ -342,6 +346,4 @@ sub MailSanitizer{
     system("/bin/chown $mailuid:100 $diretorio/cur");
     system("/bin/chown $mailuid:100 $diretorio/tmp");
 
-
 }
-
