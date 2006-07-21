@@ -41,6 +41,19 @@ my $base = $config{'ldap_discussao_base'};
 my $base_users = $config{'ldap_users_base'};
 my $ldap = LDAPInit();
 #my @Attrs = &LDAPGetObjectClasseAttributes($ldap, $account);
+print "<style type=\"text/css\">
+<!--
+#wait{
+position:absolute;
+top:250px;
+left:300px;
+background-color:#FF8383;
+height:50px;
+width:120px;
+display:none;
+}
+--></style>";
+print "<div id=\"wait\">   Aguarde...</div>";
 print "<form onsubmit=\"false;\">";
 print "<table with='100%'>\n";
 action: {

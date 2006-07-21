@@ -180,6 +180,8 @@ function buildMemberList() {
 function searchDisp(){
     var search_pattern=document.getElementById("search_pattern");
     var search_type=document.getElementById("search_type");
+    var wait=document.getElementById("wait");
+    wait.style.display="block";
     loadXMLDoc("proc.cgi?action=retrieve&search_type="+search_type.value+"&search_pattern="+search_pattern.value,procDispResult);
 }
 
@@ -206,6 +208,7 @@ function clearDispList() {
 function buildDispList() {
     var select = document.getElementById("mail_result");
     var items = reqGet.responseXML.getElementsByTagName("email");
+    var wait = document.getElementById("wait");
     //alert(reqGet.responseText);
     // loop through <item> elements, and add each nested
     // <title> element to Topics select element
@@ -216,6 +219,7 @@ function buildDispList() {
             appendToSelect(select, items[i].getAttribute('name'),items[i].textContent);
         }
     }
+    wait.style.display= 'none';
 }
 // add item to select element the less
 // elegant, but compatible way.

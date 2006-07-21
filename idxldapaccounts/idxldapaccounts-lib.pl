@@ -616,6 +616,43 @@ sub LDAPUserAddGroup {
 	}
 	&LDAPGroupAddMember($ldap, $group, $user_uid);
 }
+=pod "
+
+=item I<LDAPMailRemoveList($ldap, @mails)>
+
+=item *
+Remove user to a group
+
+=item *
+$ldap: a Net::LDAP object
+
+=item *
+@mail list of mails to remove from lists
+
+=cut "
+sub LDAPMailRemoveList{
+	my($ldap,@mails)  = (@_);
+    #Removendo das listas de discussao
+	my $listbase = $config{'ldap_discussao_base'};
+	my $listfilter;
+	foreach $curmail(@mails){
+		$listfilter.="(mailForwardingAddress=$curmail)";
+	}
+	my $mailcount =@mails;
+	if($mailcount>1){
+		$listfilter="(|".$listfilter.")";
+	}
+   	my $reslista=&LDAPSearch($ldap,"(&(objectclass=qmailuser)$listfilter)",['uid','mailForwardingAddress'],$listbase);
+	@entries=$reslista->entries;
+	while (my $list_entry = shift @entries){
+		my $mailforwarding=$list_entry->get_value('mailForwardingAddress',asref=>1);
+		#&error(Dumper($mailforwarding));
+		foreach my $curmail(@mails){
+			grep(/$curmail/, @$mailforwarding) && $list_entry->delete ( 'mailForwardingAddress' => [ $curmail ] );
+		}
+		$list_entry->update($ldap);
+	}
+}
 
 =pod "
 
