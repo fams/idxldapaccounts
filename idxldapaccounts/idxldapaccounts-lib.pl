@@ -1117,15 +1117,20 @@ sub createUserArray {
 
 	# password
 	my $userpassword = undef;
-	if ($config{'crypt_passwords'} == 0) {
+	if ($config{'crypt_passwords'} == 1) {
 	#fams 17092004 password patch
-		if ($config{'crypt_passwords_hash'} == 1) {
+		if ($config{'crypt_passwords_hash'} == 0) {
 			my $crypted = crypt($in{'userPassword'}, join '', ('.', '/', 0..9, 'A'..'Z', 'a'..'z')[rand 64, rand 64]);
 			$userpassword = '{Crypt}'.$crypted;
 		}
 		if ($config{'crypt_passwords_hash'} == 2) {
 			my $crypted = md5_base64($in{'userPassword'})."=="; 
 			$userpassword = '{MD5}'.$crypted;
+		}
+		if ($config{'crypt_passwords_hash'} == 1 ) {
+      		# Generate SSHA hash (SHA1 with salt)
+      			my $salt = make_salt(4);
+      			$userpassword = "{SSHA}" . encode_base64( sha1($in{'userPassword'}.$salt) . $salt,'' );
 		}
 	} else {
 		$userpassword = $array->{'userPassword'};
