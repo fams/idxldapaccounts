@@ -235,7 +235,7 @@ if ($in{'delete'}) {
     print "</table>\n";
     print $str;
     my $sambaAcctFlags = &LDAPGetUserAttribute($ldap, $user, 'sambaAcctFlags');
-    print "<input type=hidden name=sambaAcctFlags value=$sambaAcctFlags>";
+    print "<input type=hidden name=sambaAcctFlags value=\"$sambaAcctFlags\">";
     if ($sambaAcctFlags =~ /^\[D/) {
         print "<input type=checkbox name=enableAccount> ".$text{'edit_sambaaccount_is_enabled'};
     } else {
