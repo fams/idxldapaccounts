@@ -99,6 +99,8 @@ function postXML (url, xmlDocument) {
 }
 //Create Request
 function listOperate(select,lista,operation){
+    var wait=document.getElementById("wait");
+    wait.style.display="block";
     var xmlDocument = createXMLFromString('<request type="'+operation+'"></request>');
         if (xmlDocument) {
             //Criando lista
@@ -149,6 +151,8 @@ function procListMemberResult() {
         if (reqGet.status == 200) {
             clearMemberList();
             buildMemberList();
+            var wait=document.getElementById("wait");
+            wait.style.display="none";
         } else {
             alert("There was a problem retrieving the XML data:\n" +
                     reqGet.statusText);
