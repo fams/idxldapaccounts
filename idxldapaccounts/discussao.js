@@ -1,4 +1,9 @@
 // global flag
+/*Suporte a lista de discussao, ajax primário
+# author: <fams@linuxplace.com.br>
+# Version: $Id$
+*/
+
 var isIE = false;
 
 // global request and XML document objects
