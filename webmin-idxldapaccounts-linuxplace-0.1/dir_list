@@ -1,0 +1,11 @@
+etc
+etc/webmin
+etc/webmin/idxldapaccounts
+usr
+usr/share
+usr/share/webmin
+usr/share/webmin/idxldapaccounts
+usr/share/webmin/idxldapaccounts/help
+usr/share/webmin/idxldapaccounts/lang
+usr/share/webmin/idxldapaccounts/images
+usr/share/webmin/idxldapaccounts/images/.xvpics

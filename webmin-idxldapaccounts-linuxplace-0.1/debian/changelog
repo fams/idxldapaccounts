@@ -1,0 +1,6 @@
+webmin-idxldapaccounts-linuxplace (0.1-0) stable; urgency=low
+
+  * Acertos nos warnings iniciais
+  * erros ao usuarios apagar ocasionados pela base de addressbook (ninjamail)
+
+ -- Fernando Augusto <fams@linuxplace.com.br>  Thu, 18 Aug 2005 17:40:02 -0300
