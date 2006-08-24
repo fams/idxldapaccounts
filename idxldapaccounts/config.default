@@ -1,0 +1,27 @@
+letterhomes=1
+max_search_results=300
+crypt_passwords=1
+min_uid=1000
+mkntpwd_path=
+ldap_admin=cn=manager,
+remove_homes=1
+nscd_path=/etc/init.d/nscd
+max_items=50
+ldap_users_base=ou=people,
+samba_sid=S-1-5-21
+ldap_personal_ab_base=ou=personal_addressbook,
+ldap_server=localhost
+min_gid=1000
+ldap_virtual_base=dc=domains,ou=postfix,ou=System,
+hide_disabled_users=1
+loginshell_default=/bin/false
+crypt_passwords_hash=2
+homedir_default=/home/usuarios/USERNAME
+gid_default=Domain users
+samba_dir=/home/samba/
+mailMessageStoreBase=/home/usuarios/
+ldap_groups_base=ou=groups,
+ldap_password=
+ldap_discussao_base=ou=mailinglists,ou=postfix,ou=System,
+remove_personal_ab=1
+create_ldap_ab_base=1
