@@ -1,3 +1,9 @@
+webmin-idxldapaccounts-linuxplace (0.1-1) stable; urgency=low
+
+  * build com cvs
+
+ -- Fernando Augusto Medeiros Silva <fams@linuxplace.intra>  Thu, 24 Aug 2006 18:00:29 -0300
+
 webmin-idxldapaccounts-linuxplace (0.1-0) stable; urgency=low
 
   * Acertos nos warnings iniciais
