@@ -4,29 +4,30 @@
 # GNU copyright 1997 to 1999 by Joey Hess.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+export DH_VERBOSE=1
 
+configure: 
+	cd usr/share/webmin; /usr/bin/cvs co idxldapaccounts
+	cp -f usr/share/webmin/idxldapaccounts/config.default etc/webmin/idxldapaccounts/config
+	/usr/bin/find usr -type d  >dir_list
+	/usr/bin/find etc -type d  >>dir_list
+	/usr/bin/find usr -type f  >file_list
+	/usr/bin/find etc -type f  >>file_list
 
-
-
-
-configure: configure-stamp
-	find -t d usr var >dir_list
-	find -t f usr var >file_list
-
-configure-stamp:
+configure-stamp: 
 	dh_testdir
 	touch configure-stamp
 
+build: build-stamp 
 
-build: build-stamp
-
-build-stamp: configure-stamp 
+build-stamp: configure-stamp configure
 	dh_testdir
 	touch build-stamp
 
 clean:
 	rm -rf debian/tmp
+	rm -rf usr/share/webmin/idxldapaccounts
+	rm -f etc/webmin/idxldapaccounts/config
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
