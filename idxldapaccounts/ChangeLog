@@ -1,102 +1,196 @@
-# Changelog file for Idxldapaccounts
-# $Id$
+2006-08-24 17:26  svccap
 
-2003-12-01 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
-	* version 0-2-5, the following bugs where corrected:
-	          * [BUG-638] empty parameters in creation forms
-		  * [BUG-812] error when invoquing the Net::LDAP::Schema::objectclass method
-		  * [BUG-813] UTF8 support
-		  * [BUG-816] popup sizing under IE
-		  * [BUG-817] unable to choose an item from a popup under IE
+	* config.default: config default
 
-	* independantly, Samba V3 support was added, resulting in an independant 
-	package while Samba V2 is still in use
-	
-2002-10-21 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
-	* version 0-2-4 adaptation to new samba.schema file and minor corrections
+2006-08-23 14:55  fams
 
-2002-10-04 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
-	* thanks to Misja Hoebe for his patch to allow letterhomes 
+	* discussao.js: Version
 
-2002-09-05 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
-	* version 0.2-3, minor corrections, thanks to Tim Verhoeven for its useful remarks
+2006-08-23 14:53  fams
 
-2002-09-03 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
-	* test basic configuration parameters when accessing the module page
+	* accounts.conf, discussao.js: Accounts √© pau Discuss√o, mensagem
+	  de Aguarde agora d√° feedback em todas as operacoes.
 
-2002-07-12 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+2006-08-04 17:17  fams
 
-	* perform a nscd restart after user creation
+	* edit_sambasamaccount.cgi: Resolvido o problema do accountFlags O
+	  povo da idealx √© muito porco ate agora estou resolvendo bugs
+	  idiotas o campo estava sendo mandado hidden para o form sem ""
+	  assim o [U	] virava value=[U     ]> e o firefox limpa o fim
+	  (√≥bviamente)
 
-2002-06-21 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+2006-08-03 14:01  fams
 
-	* version 0.2-2, corrected user creation bug (thanks to Frido Roose), the module uses 
-	the user uid to chown user home directory but as this user uid wasn't yet 
-	present in LDAP, the system could not resolve user name, createUser 
-	function has been split into two functions, one for arributes array creation 
-	and another for system interaction, the last one being colled only if LDAP addition 
-	succeeds
+	* accounts.conf, idxldapaccounts-lib.pl: Erro no cadastro de senhas
+	  resolvido accounts sempre da pau por erro de design da idealx e
+	  nos nao resolvemos o mesmo
 
-2002-06-19 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+2006-07-21 10:55  fams
 
-        * version 0.2-1, in fine, the following BUGs and ENHencements from version 0.1 were corrected:
-		* [BUG-255] write a help document at least in help/intro.en.html 
-		* [BUG-294] document the idxldapaccounts-lib.pl API in POD format
-		* [BUG-260] limit items per page and use multiple pages for displaying users 
-            		list, groups lists, search results
-		* [BUG-269] Webmin acls aren't implemented for this module
-		* [BUG-271] when modifying a group's gidNumber, propagate the change to members
-            		of this group (and change the corresponding rid)
-		* [BUG-272] user input error checking
-		* [ENH-266] make the max item per page parameter configurable from 
-            		configuration menu
-		* [ENH-266] in the users list, show which accounts are disabled
-		* [ENH-267] show to which objeclasses belongs an account (posixAccount, 
-            		sambaAccount ...)
-		* [ENH-254] report an explicit error when a users entry doesn't follow 
-        		Idxldapaccounts objectclasses requirements (see README file for 
-        		details), note that this can only appen when editing LDAP accounts 
-        		that where not created within the Idxldapaccounts interface
-		* [ENH-273] use Webmin logging facility when a (at least) critical error occurs
-	
-2002-06-18 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+	* discussao.js, edit_discussao.cgi, idxldapaccounts-lib.pl:
+	  Implementado wait no edit_discussao problemas de apagar da lista
+	  de discuss√£o resolvidos
 
-	* internationalisation framework
-	* online documentation
+2006-06-20 20:07  fams
 
-2002-06-17 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+	* accounts.conf, config.info, edit_qmailuser.cgi,
+	  idxldapaccounts-lib.pl: Como Sempre, desconsiderar o accounts
+	  Novo metodo de aloca√ß√£o de uids, deve ser configurado
 
-	* configurable hidding of disabled users
-	* action logging
-	* accounts synchronization: 
-	changing user uidNumber, gidNumber or password affects his Samba
-	account, removing a user removes him from all the groups he was a member of, users cannot
-	be removed from a group they have has a primary group, a group cannot be removed until some
-	of its members have it as their primary group
+2006-04-12 13:12  fams
 
-2002-06-13 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+	* configfiles/: init.ldif, postfix/main.cf: retiradas as senhas
 
-	* idxldapaccounts-lib.pl API documentation in pod format 	
-	* module ACLs	
-	* basic user input control
-	
-2002-06-12 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
-		
-	* multiple Organizational Units management
+2006-04-11 15:24  fams
 
-2002-06-10 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+	* accounts.conf, edit_sambasamaccount.cgi: Finalmente resolvidos os
+	  problemas do CanChange e do MustChange
 
-	* users and groups browsers for adding users to a group or a user to groups	
-	
-2002-06-07 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+2006-04-10 19:02  fams
 
-	* accounts modularization, module redisigned to allow generic LDAP accounts
-	administration 
+	* accounts.conf, idxldapaccounts-lib.pl: implementado SSHA
 
-2002-06-05 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
+2006-04-10 08:34  fams
 
-	* display lists on multiple pages (max list items per page is configurable online)
+	* config.info: Fim dos infames combobox com yes e no
 
-2002-06-04 GÈrald Macinenti <gerald.macinenti@IDEALX.com>
-	
-	* first release (0.1)
+2006-04-09 19:14  fams
+
+	* accounts.conf, edit_sambasamaccount.cgi: Accounts agora com tudo
+	  o que precisa para arrancar o samba account modificado edit para
+	  remover ao mesmo temo o objectclass e os atributos
+
+2006-04-08 22:20  fams
+
+	* accounts.conf, config.info, edit_sambasamaccount.cgi,
+	  idxldapaccounts-lib.pl, index.cgi, saida: Limpesa basica de
+	  codigo obsoleto como o mkntpwd continuando a remodelagem do
+	  config.info, alterados os infames drop down yes-no para radio
+	  buttons
+
+2006-04-08 22:05  fams
+
+	* config.info, idxldapaccounts-lib.pl, index.cgi: Reorganizacao do
+	  config.info revertida bagun√ßa feita na √∫ltima configura√ß√£o
+
+2006-04-07 15:58  fams
+
+	* idxldapaccounts-lib.pl: Problemas do remover usuario resolvidos
+
+2006-04-03 14:43  fams
+
+	* accounts.conf, config.info, edit_qmailuser.cgi, edit_user.cgi,
+	  idxldapaccounts-lib.pl, index.cgi, lang/pt_BR: Mudancas no
+	  account (como sempre) Suporte a listas de discussao opcional
+	  cadastro do horde_person agora È opcional e sÛ criado quando
+	  cadastrado um email
+
+2006-03-05 19:50  fams
+
+	* accounts.conf, edit_sambasamaccount.cgi, idxldapaccounts-lib.pl,
+	  lang/pt_BR: O primary group estava sendo setado pelo algoritimo
+	  rid e nao pelo sambaSID do grupo criada funcao gid2sid que
+	  procura no ldap o sid alterados pontos em que o algoritimo era
+	  chamado para chamar gid2sid corrigido erro de traducao,
+	  adicionado para Adicionar
+
+2006-02-26 22:44  fams
+
+	* accounts.conf, lang/pt_BR: accounts sempre modificam traducao
+	  agora esta no repo
+
+2006-01-10 09:27  fams
+
+	* idxldapaccounts-lib.pl: Modificacoes na criacao do usuario
+
+2006-01-04 16:21  plucio
+
+	* edit_qmailuser.cgi, idxldapaccounts-lib.pl, lang/en: Alteracoes
+	  para permitir a criacao do MailMessageStore Directory caso o
+	  mesmo nao exista. Uma funcao que verifica/cria foi criada mas por
+	  enquanto a mesma soh eh chamada durante a edicao de quota.
+
+2005-12-22 20:13  fams
+
+	* accounts.conf, idxldapaccounts-lib.pl: Resolvido o diretorio que
+	  nao apagava o idx primeiro apagaa o usuario e depois pedia ao
+	  ldap o home para dar rm
+
+2005-10-12 15:13  fams
+
+	* idxldapaccounts-lib.pl: Adicionado recurso de apagar das listas
+	  ao apagar o usuario
+
+2005-10-10 15:00  plucio
+
+	* idxldapaccounts-lib.pl: Resolucao de problema na criacao do
+	  addressbook do usuario devido a escolha do campo errado na
+	  composicao do dn
+
+2005-10-10 13:45  plucio
+
+	* idxldapaccounts-lib.pl: Gerada rotina de verificacao que so
+	  altera as permissoes do diretorio home do usuario caso o mesmo
+	  exista permitindo a edicao do General Information na ausencia
+	  deste diretorio no sistema.
+
+2005-10-03 14:51  fams
+
+	* CONTRIBUTORS, COPYING, ChangeLog, FAQ, LICENSE, README, TODO,
+	  accounts.conf, acl_security.pl, add_group.cgi, add_user.cgi,
+	  choose_groups.cgi, choose_users.cgi, config-debian-linux,
+	  config-mandrake-linux, config-openbsd, config-redhat-linux,
+	  config.info, default_accounts.conf, defaultacl, delete_group.cgi,
+	  delete_user.cgi, discussao.js, discussao2.js, edit_account.cgi,
+	  edit_discussao.cgi, edit_group.cgi, edit_proxyaccount.cgi,
+	  edit_qmailuser.cgi, edit_sambasamaccount.cgi, edit_user.cgi,
+	  edit_virtual.cgi, idxldapaccounts-lib.pl, idxldapaccounts.spec,
+	  index.cgi, list_accounts.cgi, list_discussao.cgi,
+	  list_groups.cgi, list_users.cgi, list_virtual.cgi, module.info,
+	  proc.cgi, saida, save_accounts.cgi, configfiles/init.ldif,
+	  configfiles/slapd.access.conf, configfiles/slapd.conf,
+	  configfiles/postfix/dynamicmaps.cf, configfiles/postfix/main.cf,
+	  configfiles/postfix/master.cf, configfiles/postfix/post-install,
+	  configfiles/postfix/postfix-files,
+	  configfiles/postfix/postfix-script,
+	  configfiles/postfix/sasl/smtpd.conf, help/add_group.en.html,
+	  help/add_user.en.html, help/edit_account.en.html,
+	  help/edit_group.en.html, help/edit_sambaaccount.en.html,
+	  help/edit_user.en.html, help/intro.en.html,
+	  help/list_accounts.en.html, help/list_groups.en.html,
+	  help/list_users.en.html, images/accounts.gif,
+	  images/discussao.gif, images/group.gif, images/groups.gif,
+	  images/icon.gif, images/mini_group.gif, images/mini_user.gif,
+	  images/user.gif, images/users.gif, images/virtual.gif, lang/en,
+	  lang/en.new: Initial revision
+
+2005-10-03 14:51  fams
+
+	* CONTRIBUTORS, COPYING, ChangeLog, FAQ, LICENSE, README, TODO,
+	  accounts.conf, acl_security.pl, add_group.cgi, add_user.cgi,
+	  choose_groups.cgi, choose_users.cgi, config-debian-linux,
+	  config-mandrake-linux, config-openbsd, config-redhat-linux,
+	  config.info, default_accounts.conf, defaultacl, delete_group.cgi,
+	  delete_user.cgi, discussao.js, discussao2.js, edit_account.cgi,
+	  edit_discussao.cgi, edit_group.cgi, edit_proxyaccount.cgi,
+	  edit_qmailuser.cgi, edit_sambasamaccount.cgi, edit_user.cgi,
+	  edit_virtual.cgi, idxldapaccounts-lib.pl, idxldapaccounts.spec,
+	  index.cgi, list_accounts.cgi, list_discussao.cgi,
+	  list_groups.cgi, list_users.cgi, list_virtual.cgi, module.info,
+	  proc.cgi, saida, save_accounts.cgi, configfiles/init.ldif,
+	  configfiles/slapd.access.conf, configfiles/slapd.conf,
+	  configfiles/postfix/dynamicmaps.cf, configfiles/postfix/main.cf,
+	  configfiles/postfix/master.cf, configfiles/postfix/post-install,
+	  configfiles/postfix/postfix-files,
+	  configfiles/postfix/postfix-script,
+	  configfiles/postfix/sasl/smtpd.conf, help/add_group.en.html,
+	  help/add_user.en.html, help/edit_account.en.html,
+	  help/edit_group.en.html, help/edit_sambaaccount.en.html,
+	  help/edit_user.en.html, help/intro.en.html,
+	  help/list_accounts.en.html, help/list_groups.en.html,
+	  help/list_users.en.html, images/accounts.gif,
+	  images/discussao.gif, images/group.gif, images/groups.gif,
+	  images/icon.gif, images/mini_group.gif, images/mini_user.gif,
+	  images/user.gif, images/users.gif, images/virtual.gif, lang/en,
+	  lang/en.new: initial
+

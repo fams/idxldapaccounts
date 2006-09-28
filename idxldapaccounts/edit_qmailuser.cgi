@@ -146,6 +146,7 @@ if ($in{'create'}) {
 	
     $attrs{'objectclass'} = \@new_ocs;
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
+    &MailSanitizer($ldap, $base, $user_uid);
     $creation = "<font color=green>".$text{'edit_qmailuser_successfully_created'}."</font></br>\n";
     $result = &LDAPSearch($ldap, 
 			  "(&(objectClass=inetOrgPerson)(objectClass=posixAccount)(uid=$user_uid))", 
@@ -180,8 +181,7 @@ if ($in{'delete'}) {
         push(@new_ocs, $_) unless ($_ =~ /$onglet/i);
     } 
     &LDAPModifyUser($ldap, $base, $user_uid, {'objectClass' => \@new_ocs});
-    &MailSanitizer($ldap, $base, $user_uid);
-    &webmin_log("deleting proxy account for user [$user_uid]",undef, undef,\%in);
+    &webmin_log("deleting email account for user [$user_uid]",undef, undef,\%in);
     print "<font color=green>".$text{'edit_mail_deleted'}."</font></br>\n";
     print "</table>\n";
 } elsif ($in{'new'}) {
