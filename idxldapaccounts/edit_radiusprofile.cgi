@@ -143,18 +143,19 @@ print "<br><br><input type=submit name=create value='".$text{'edit_radiusprofile
     print "<form action=$url&change method=post>";
     print "<h4>".$text{'edit_radiusprofile_select_nas'}."</h4>";
     my %mynas;
-    foreach my $radius ($user->get_value('radiusCheckItem')){
+    my $nas;
+    foreach $radius ($user->get_value('radiusCheckItem')){
         if($radius =~ /NAS-ip-address/i){
             my($lixo,$nas) = split(/:=/,$radius);
             $nas=~s/ //;
             $mynas{$nas}=1;
+    	}
     }
     my $checked="";
     foreach $nas (@configurednas){
-        defined($mynas{$nas}) && do { $checked="checked"; };
+        if($mynas{$nas}) { $checked="checked"; };
         print "<input type='checkbox' name='nas:$nas' $checked> $nas".$br;
     }
-}
 print "<br><br><input type=submit name=change value='".$text{'edit_radiusprofile_apply_changes'}."'>\n";
 }
 print "</form>\n";
