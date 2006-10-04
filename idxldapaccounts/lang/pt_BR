@@ -207,7 +207,20 @@ SAMBASAMACCOUNT=Samba
 QMAILUSER=Email
 SHADOWACCOUNT=Sombra
 PROXYACCOUNT=Proxy
+RADIUSPROFILE=Radius
 mailQuota=Cota
+
+edit_radius_title=Propriedades do Radius
+edit_radiusprofile_successfully_created=Conta Radius criada
+edit_radiusprofile_proxy_account=Conta de radius
+edit_radiusprofile_delete_account=remover conta
+edit_radiusprofile_deleted=conta de radius removida
+edit_radiusprofile_create_account=Ligar Radius
+edit_radiusprofile_is_enabled=conta esta ligada
+edit_radiusprofile_apply_changes=Aplicar mudancas
+edit_radiusprofile_ap=AP
+edit_radiusprofile_infomsg=Habilitar Radius e APs que podem ser validados para esse usuario
+edit_radiusprofile_select_nas=Selecione os APs que esse usuario pode Utilizar
 
 edit_proxy_title=Propriedades do Proxy
 edit_proxyaccount_successfully_created=Proxy ligado para este usuario

@@ -42,6 +42,7 @@ my $creation = '';
 my $sattrs = [];
 my $url = "edit_".lc($onglet).".cgi?&base=".&urlize($base)."&uid=$user_uid&onglet=$onglet";
 
+#recebe nova conta de email alternativo
 if ($in{'add'}){
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
     &MailCheck($ldap,\%in);
@@ -66,6 +67,7 @@ if ($in{'changequota'}) {
     $attrs{'mailQuota'}=$in{'mailquota'}."S";
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
 }
+#recebe alteracao de conta
 if ($in{'change'}) {	
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
     my $attr = {};
@@ -84,7 +86,7 @@ if ($in{'change'}) {
         if ($result->count > 1) {
             &error($text{'err_found_more_than_one_user'});
         }
-      my $user = $result->entry;
+       my $user = $result->entry;
         $old_mail=$in{'old_mail'};
         my @mail_alternates = ();
         foreach my $mailAlternate ($user->get_value('mailAlternateAddress')){
@@ -109,6 +111,7 @@ my $user = $result->entry;
 if (!$user) { 
     &error($text{'err_could_not_find_user'}.": $user_uid"); 
 }
+#recebe criacao de conta master
 if ($in{'create'}) {
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
     my $mail_box=$in{'mail_box'};
@@ -169,7 +172,7 @@ if (!$in{'new'} && !$in{'delete'}) {
 }
 print "</td></tr></table><br>\n";
 print "<table width='80%'>\n";
-
+#recebe delete
 if ($in{'delete'}) {
     my $attr_d;
     foreach my $attr (keys %{$conf->{$onglet}}) {
@@ -186,7 +189,7 @@ if ($in{'delete'}) {
     &webmin_log("deleting email account for user [$user_uid]",undef, undef,\%in);
     print "<font color=green>".$text{'edit_mail_deleted'}."</font></br>\n";
     print "</table>\n";
-} elsif ($in{'new'}) {
+} elsif ($in{'new'}) {  #aqui ele mostra a tela de cadastro da primeira conta
     print "<tr><td colspan=2>".$text{'edit_qmailuser_infomsg'}."</td></tr>";
     print $str;
     print "<form action=$url method=post>";
@@ -201,7 +204,7 @@ if ($in{'delete'}) {
     print "</tr>\n";
     print "<tr><td colspan=2><br><br><input type=submit name=create value='".$text{'edit_qmailuser_create_account'}."'></td></tr>\n";
     print "</table>\n<br/>";
-} else {
+} else { #Mostra se ja tem conta
     print "</table>\n";
     print "<table width='80%'>";
     #Primary Account

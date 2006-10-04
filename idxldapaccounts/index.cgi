@@ -33,10 +33,15 @@ print "<hr>\n";
 
 my $error = &check_configuration_errors(); 
 if (!$error) {	
+    $conf = &parseConfig('accounts.conf');
+    my @opts = ( 'users', 'groups', 'accounts');
+    my @myocs=&getConfiguredOcs($conf);
+
     if ($config{'use_discussao'}){
-    	@opts = ( 'users', 'groups', 'accounts', 'virtual','discussao');
-    }else{
-    	@opts = ( 'users', 'groups', 'accounts', 'virtual');
+    	push(@opts,'discussao');
+    }
+    if (inArray(@myocs,'QMAILUSER')){
+    	push(@opts,'virtual');
     }
     @links = map { "list_${_}.cgi" } @opts;
     @titles = map { $text{"index_${_}_link"} } @opts;

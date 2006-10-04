@@ -54,6 +54,15 @@ my $ldap = &LDAPInit();
 &LDAPClose($ldap);
 
 =cut "
+sub inArray {
+	my $val = shift;
+	for my $elem ( @_ ) {
+		if( $val eq $elem ) {
+			return 1;
+		}
+	}
+	return 0;
+}
 
 #############
 ## LDAP utils
