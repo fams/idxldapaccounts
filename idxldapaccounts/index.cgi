@@ -36,11 +36,12 @@ if (!$error) {
     $conf = &parseConfig('accounts.conf');
     my @opts = ( 'users', 'groups', 'accounts');
     my @myocs=&getConfiguredOcs($conf);
+#    &error(@myocs);
 
     if ($config{'use_discussao'}){
     	push(@opts,'discussao');
     }
-    if (inArray(@myocs,'QMAILUSER')){
+    if (inArray('QMAILUSER',@myocs)){
     	push(@opts,'virtual');
     }
     @links = map { "list_${_}.cgi" } @opts;

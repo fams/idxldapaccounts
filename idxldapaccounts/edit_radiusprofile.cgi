@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 
 
-#  This code was developped by IDEALX (http://IDEALX.org/) and
+#  This code was developped by Linuxplace (www.linuxplace.com.br)
 #  contributors (their names can be found in the CONTRIBUTORS file).
 #
-#                 Copyright (C) 2002 IDEALX
+#                 Copyright (C) 2006 Linuxplace
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 #  USA.
 
-# author: <gerald.macinenti@IDEALX.com>
+# author: <fams@linuxplace.com.br>
 # Version: $Id$
 
 require './idxldapaccounts-lib.pl';
@@ -51,7 +51,7 @@ if ($in{'change'}) {
     my $attr = {};
     my @newnas=('NAS-IP-Address := 127.0.0.1');
     for(@configurednas){
-        if($in{'nas:'.$_}=="On") { push(@newnas,"NAS-IP-Address := $_")};
+        if(defined($in{'nas:'.$_})) { push(@newnas,"NAS-IP-Address := $_")};
     }
     my $result = &LDAPSearch($ldap, 
          "(&(objectClass=inetOrgPerson)(objectClass=posixaccount)(uid=$user_uid))", 
@@ -65,7 +65,7 @@ if ($in{'change'}) {
         &error($text{'err_could_not_find_user'}.": $user_uid"); 
     }
     my @radiuscheckitem=$user->get_value('radiuscheckitem');
-    @radiuscheckitem = grep(/NAS-IP-Address/,@radiuscheckitem);
+    @radiuscheckitem = grep(!/NAS-IP-Address/i,@radiuscheckitem);
     @radiuscheckitem=(@radiuschekitem,@newnas);
     $user->replace('radiuscheckitem',\@radiuscheckitem); 
     $user->update($ldap);
@@ -92,7 +92,6 @@ if ($in{'create'}) {
 	push(@new_ocs, $_) unless ($_ eq 'radiusprofile');
     } 
     push(@new_ocs, 'radiusprofile');
-    #&error(@new_ocs);
     $attrs{'objectclass'} = \@new_ocs;
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
     $creation = "<font color=green>".$text{'edit_radiusprofile_successfully_created'}."</font></br>\n";
@@ -153,7 +152,7 @@ print "<br><br><input type=submit name=create value='".$text{'edit_radiusprofile
     }
     my $checked="";
     foreach $nas (@configurednas){
-        if($mynas{$nas}) { $checked="checked"; };
+        if($mynas{$nas}) { $checked="checked"; }else{$checked=""};
         print "<input type='checkbox' name='nas:$nas' $checked> $nas".$br;
     }
 print "<br><br><input type=submit name=change value='".$text{'edit_radiusprofile_apply_changes'}."'>\n";
@@ -167,6 +166,4 @@ print "</form>\n";
 ###########
 # functions
 ###########
-
-
 
