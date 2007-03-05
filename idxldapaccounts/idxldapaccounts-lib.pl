@@ -413,7 +413,7 @@ sub LDAPDeleteUser {
 	#use Data::Dumper;
 #Removendo aderecos do usuario, FIXME need to have a better place to put it
 #Removendo das listas de discussao
-	if($config{'create_ldap_ab_base'}){
+	if($config{'use_discussao'}){
 		my $listbase = $config{'ldap_discussao_base'};
 		my $listfilter;
 		foreach $curmail(@mails){
@@ -437,6 +437,18 @@ sub LDAPDeleteUser {
 #Removendo personal Addressbook
 	if ($config{'remove_personal_ab'}){
 		 my $dn="ou=$user_uid,".$config{'ldap_personal_ab_base'};
+		 my $result=&LDAPSearch($ldap,"objectclass=organizationalPerson",([cn]),$dn);
+		 @entries=$result->entries;
+		 my $abentry="";
+		 while(my $member = shift @entries){
+		 	$abentry=$member->get_value('cn');
+		 	my $res = $ldap->delete( "cn=$abentry,$dn" );
+		 	if ($res->code()) {
+			  	&error("PAB".&ldap_error_name($res->code).
+						   	": ".&ldap_error_text($res->code));
+		 	}
+		 }
+		 	
 		 my $res = $ldap->delete( $dn );
 		 if ($res->code()) {
 			  &error("PAB".&ldap_error_name($res->code).
