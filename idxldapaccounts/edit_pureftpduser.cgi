@@ -46,10 +46,10 @@ my $url = "edit_".lc($onglet).".cgi?&base=".&urlize($base)."&uid=$user_uid&ongle
 if ($in{'change'}) {	
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
     my $attr = {};
-    $proxyEnable = defined($in{'proxyEnable'}) ? 1 : 0 ;
-    $attr{'proxyEnable'}=$proxyEnable;
+    $FTPStatus = defined($in{'FTPStatus'}) ? "enabled" : "disabled" ;
+    $attr{'FTPStatus'}=$FTPStatus;
     &LDAPModifyUser($ldap, $base, $user_uid, \%attr);
-    &webmin_log("modifying proxy account for user [$user_uid]",undef, undef,\%in);
+    &webmin_log("modifying FTP account for user [$user_uid]",undef, undef,\%in);
 }
 my $result = &LDAPSearch($ldap, 
 			 "(&(objectClass=inetOrgPerson)(objectClass=posixAccount)(uid=$user_uid))", 
@@ -65,13 +65,13 @@ if (!$user) {
 if ($in{'create'}) {
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
     my %attrs;
-    $attrs{'proxyEnable'} = 1 ;
+    $attr{'FTPStatus'}=$FTPStatus;
     my @old_ocs = &LDAPGetUserAttributes($ldap, $user, 'objectclass');
     my @new_ocs = ();
     foreach (@old_ocs) {
-	push(@new_ocs, $_) unless ($_ eq 'proxyAccount');
+	push(@new_ocs, $_) unless ($_ eq 'PureFTPduser');
     } 
-    push(@new_ocs, 'proxyAccount');
+    push(@new_ocs, 'PureFTPduser');
     #&error(@new_ocs);
     $attrs{'objectclass'} = \@new_ocs;
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
