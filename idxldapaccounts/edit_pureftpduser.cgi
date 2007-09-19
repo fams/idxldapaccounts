@@ -22,11 +22,11 @@
 #  USA.
 
 # author: Fernando Augusto <fams@linuxplace.com.br>
-# Version: $Id
+# Version: $Id$
 
 require './idxldapaccounts-lib.pl';
 my %access = &get_module_acl();
-$access{'view_user_tech'} or &error($text{'acl_view_user_tech_msg'});
+$access{'view_user_ftpaccount'} or &error($text{'acl_view_user_ftpaccount_msg'});
 &ReadParse();
 
 # input
