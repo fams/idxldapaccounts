@@ -209,6 +209,7 @@ SHADOWACCOUNT=Sombra
 PROXYACCOUNT=Proxy
 RADIUSPROFILE=Radius
 mailQuota=Cota
+PUREFTPDUSER=Ftp
 
 edit_radius_title=Propriedades do Radius
 edit_radiusprofile_successfully_created=Conta Radius criada
@@ -295,6 +296,7 @@ edit_sambaaccount_apply_changes=Aplicar mudancas
 
 acl_configure_account=Pode configurar tipos de contas
 acl_view_user_tech=Pode ver informacoes tecnicas dos usuarios
+acl_view_user_ftp=Pode ver informacoes de ftp dos usuarios
 acl_view_user_perso=Pode ver informacoes pessoais dos usuarios
 acl_view_group=Pode ver informacoes dos grupos
 acl_edit_user=Pode editar usuarios
@@ -305,7 +307,8 @@ acl_create_group=Pode criar grupos
 acl_delete_group=Pode remover grupos
 
 acl_configure_account_msg=Voce nao tem permissao para configurar os tipos de contas
-acl_view_user_tech_msg=Voce nao ter permissao para ver as informacoes dos usuarios
+acl_view_user_tech_msg=Voce nao tem permissao para ver as informacoes dos usuarios
+acl_view_user_ftp_msg=Voc&ecirc; n&atilde;o tem permiss&atilde;o para ver as informa&ccedil;&otilde;es de ftp dos usu&aacute;rios
 acl_view_user_perso_msg=Voce nao tem permissao para ver as informacoes pessoais dos usuarios
 acl_view_group_msg=Voce nao tem permissao para ver as informacoes dos grupos
 acl_edit_user_msg=Voce nao tem permissao para editar os usuarios
@@ -314,6 +317,7 @@ acl_create_user_msg=Voce nao tem permissao para criar usuarios
 acl_delete_user_msg=Voce nao tem permissao para remover usuarios
 acl_create_group_msg=Voce nao tem permissao para criar grupos
 acl_delete_group_msg=Voce nao tem permissao para remover grupos
+
 
 index_discussao_link=Listas
 list_discussao_title=Lista Discussao
@@ -342,3 +346,20 @@ create_discussion_name=Nome da Lista
 create_discussao_mail=Lista de Email
 create_discussao_title=Criar Nova Lista
 create_discussao_save=Criar
+
+edit_pureftp_infomsg=Habilitar conta de ftp para esse usu&aacute;rio
+edit_pureftp_create_account=Habilita FTP
+edit_pureftp_is_disabled=FTP Desabilitado
+edit_pureftp_is_enabled=FTP Habilitado
+edit_pureftp_apply_changes=Aplicar Mudan&ccedil;as
+edit_pureftp_successfully_created=Conta de FTP criada para o usu&aacute;rio
+edit_pureftp_ftp_account=Conta FTP
+edit_pureftp_deleted=conta de FTP removida
+edit_pureftp_quotafiles=Limite de Arquivos
+edit_pureftp_quotambytes=Limite de Espaco (Mega Bytes)
+edit_pureftp_uploadratio=Raz&atilde;o de Envio
+edit_pureftp_downloadratio=Raz&atilde;o de Recep&ccedil;&atilde;o
+edit_pureftp_uploadbandwidth=Taxa de upload (kbytes)
+edit_pureftp_downloadbandwidth=Taxa de Download (kbytes)
+edit_pureftp_dir=Diret&oacute;rio de FTP
+edit_pureftp_delete_account=remover conta

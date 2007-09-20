@@ -208,6 +208,7 @@ QMAILUSER=Email
 SHADOWACCOUNT=Shadow
 PROXYACCOUNT=Proxy
 mailQuota=Quota
+PUREFTPDUSER=Ftp
 
 edit_proxy_title=Proxy Properties
 edit_proxyaccount_successfully_created=Proxy enabled to this user
@@ -282,6 +283,7 @@ edit_sambaaccount_apply_changes=Apply changes
 
 acl_configure_account=Can configure account types
 acl_view_user_tech=Can view users technical informations
+acl_view_user_ftp=Can view users ftp informations
 acl_view_user_perso=Can view users personnal informations
 acl_view_group=Can view groups informations
 acl_edit_user=Can edit users
@@ -293,6 +295,7 @@ acl_delete_group=Can delete groups
 
 acl_configure_account_msg=You're not allowed to configure account types
 acl_view_user_tech_msg=You're not allowed to view users informations
+acl_view_user_ftp_msg=You're not allowed to view users ftp informations
 acl_view_user_perso_msg=You're not allowed to view users personnal informations
 acl_view_group_msg=You're not allowed to view groups informations
 acl_edit_user_msg=You're not allowed to edit users
@@ -329,3 +332,20 @@ create_discussion_name=List Name
 create_discussao_mail=List Mail
 create_discussao_title=Create New List
 create_discussao_save=Create
+
+edit_pureftp_infomsg=Enable FTP Account for this user
+edit_pureftp_create_account=Enable FTP
+edit_pureftp_is_disabled=FTP Disabled
+edit_pureftp_is_enabled=FTP Enabled
+edit_pureftp_apply_changes=Apply Changes
+edit_pureftp_successfully_created=FTP Account successfully created
+edit_pureftp_ftp_account=FTP Account
+edit_pureftp_deleted=FTP Account deleted
+edit_pureftp_quotafiles=File number Quota
+edit_pureftp_quotambytes=File Size Quota (Mega Bytes)
+edit_pureftp_uploadratio=Upload Ratio
+edit_pureftp_downloadratio=Download Ratio
+edit_pureftp_uploadbandwidth=Upload Bandwidth (kbytes)
+edit_pureftp_downloadbandwidth=Download Bandwidth (kbytes)
+edit_pureftp_dir=FTP Dir
+edit_pureftp_delete_account=remove account

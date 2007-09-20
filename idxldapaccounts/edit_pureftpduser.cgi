@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-
+#
 
 #  This code was developped by Linuxplace (http://www.linuxplace.com.br) and
 #  contributors (their names can be found in the CONTRIBUTORS file).
@@ -26,7 +26,7 @@
 
 require './idxldapaccounts-lib.pl';
 my %access = &get_module_acl();
-$access{'view_user_ftpaccount'} or &error($text{'acl_view_user_ftpaccount_msg'});
+$access{'view_user_ftp'} or &error($text{'acl_view_user_ftp_msg'});
 &ReadParse();
 
 # input
@@ -48,6 +48,14 @@ if ($in{'change'}) {
     my $attr = {};
     $FTPStatus = defined($in{'FTPStatus'}) ? "enabled" : "disabled" ;
     $attr{'FTPStatus'}=$FTPStatus;
+    $attr{'FTPQuotaFiles'}=$in{'FTPQuotaFiles'};
+    $attr{'FTPQuotaMBytes'}=$in{'FTPQuotaMBytes'};
+    $attr{'FTPUploadRatio'}=$in{'FTPUploadRatio'};
+    $attr{'FTPDownloadRatio'}=$in{'FTPDownloadRatio'};
+    $attr{'FTPUploadBandwidth'}=$in{'FTPUploadBandwidth'};
+    $attr{'FTPDownloadBandwidth'}=$in{'FTPDownloadBandwidth'};
+    $attr{'FTPdir'}=$in{'FTPdir'} ;
+
     &LDAPModifyUser($ldap, $base, $user_uid, \%attr);
     &webmin_log("modifying FTP account for user [$user_uid]",undef, undef,\%in);
 }
@@ -65,7 +73,14 @@ if (!$user) {
 if ($in{'create'}) {
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
     my %attrs;
-    $attr{'FTPStatus'}=$FTPStatus;
+    $attrs{'FTPStatus'}='enabled';
+    $attrs{'FTPQuotaFiles'}=$in{'FTPQuotaFiles'};
+    $attrs{'FTPQuotaMBytes'}=$in{'FTPQuotaMBytes'};
+    $attrs{'FTPUploadRatio'}=$in{'FTPUploadRatio'};
+    $attrs{'FTPDownloadRatio'}=$in{'FTPDownloadRatio'};
+    $attrs{'FTPUploadBandwidth'}=$in{'FTPUploadBandwidth'};
+    $attrs{'FTPDownloadBandwidth'}=$in{'FTPDownloadBandwidth'};
+    $attrs{'FTPdir'}=$in{'FTPdir'} ;
     my @old_ocs = &LDAPGetUserAttributes($ldap, $user, 'objectclass');
     my @new_ocs = ();
     foreach (@old_ocs) {
@@ -75,15 +90,15 @@ if ($in{'create'}) {
     #&error(@new_ocs);
     $attrs{'objectclass'} = \@new_ocs;
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
-    $creation = "<font color=green>".$text{'edit_proxyaccount_successfully_created'}."</font></br>\n";
+    $creation = "<font color=green>".$text{'edit_pureftp_successfully_created'}."</font></br>\n";
     $result = &LDAPSearch($ldap, 
 			  "(&(objectClass=inetOrgPerson)(objectClass=posixAccount)(uid=$user_uid))", 
 			  $sattrs, 
 			  $base);  
     $user = $result->entry;
-    &webmin_log("creating proxy account for user [$user_uid]",undef, undef,\%in);
+    &webmin_log("creating ftp account for user [$user_uid]",undef, undef,\%in);
 }
-&header($user_uid,"images/icon.gif","edit_proxyaccount",1,undef,undef);
+&header($user_uid,"images/icon.gif","edit_pureftpduser",1,undef,undef);
 
 &printMenu($ldap, $conf, $user, $user_uid, $onglet, $base);
 
@@ -91,13 +106,13 @@ print "<table><tr><td><img src=images/user.gif></td>
 <td><h1>$user_uid</h1></td><td>$creation</td></tr></table>\n";
 print "<hr>\n";
 
-print "<table width='80%'><tr><td><h2>".$text{'edit_proxyaccount_proxy_account'}."</h2></td><td>\n";
+print "<table width='80%'><tr><td><h2>".$text{'edit_pureftp_ftp_account'}."</h2></td><td>\n";
 if (!$in{'new'} && !$in{'delete'}) {
-    print "<a href=$url&delete=yes>".$text{'edit_proxyaccount_delete_account'}."</a>\n";
+    print "<a href=$url&delete=yes>".$text{'edit_pureftp_delete_account'}."</a>\n";
 }
 print "</td></tr></table><br>\n";
 print "<form action=$url method=post>\n";
-print "<table width='80%'>\n";
+print "<table width='70%' class='ftptable'>\n";
 
 if ($in{'delete'}) {
     foreach my $attr (keys %{$conf->{$onglet}}) {
@@ -110,23 +125,76 @@ foreach (@old_ocs) {
     push(@new_ocs, $_) unless ($_ =~ /$onglet/i);
 } 
     &LDAPModifyUser($ldap, $base, $user_uid, {'objectClass' => \@new_ocs});
-    &webmin_log("deleting proxy account for user [$user_uid]",undef, undef,\%in);
-    print "<font color=green>".$text{'edit_proxyaccount_deleted'}."</font></br>\n";
+    &webmin_log("deleting FTP account for user [$user_uid]",undef, undef,\%in);
+    print "<font color=green>".$text{'edit_pureftp_deleted'}."</font></br>\n";
 } elsif ($in{'new'}) {
-print "<tr><td>".$text{'edit_proxyaccount_infomsg'}."</td></tr>";
-print "</table>\n";
-print $str;
-print "<br><br><input type=submit name=create value='".$text{'edit_proxyaccount_create_account'}."'>\n";
-} else {
-print "</table>\n";
-print $str;
-my $proxyEnable = &LDAPGetUserAttribute($ldap, $user, 'proxyEnable');
-if ($proxyEnable == 0 ) {
-    print "<input type=checkbox name='proxyEnable'> ".$text{'edit_proxyaccount_is_enabled'};
-} else {
-    print "<input type=checkbox name='proxyEnable' checked> ".$text{'edit_proxyaccount_is_enabled'};
+###
+#Form de criacao de conta ftp
+#
+$pureftp_quotafiles=$conf->{$onglet}->{'FTPQuotaFiles'}->{'default'};
+$pureftp_quotambytes=$conf->{$onglet}->{'FTPQuotaMBytes'}->{'default'};
+$pureftp_uploadratio=$conf->{$onglet}->{'FTPUploadRatio'}->{'default'};
+$pureftp_downloadratio=$conf->{$onglet}->{'FTPDownloadRatio'}->{'default'};
+$pureftp_uploadbandwidth=$conf->{$onglet}->{'FTPUploadBandwidth'}->{'default'};
+$pureftp_downloadbandwidth=$conf->{$onglet}->{'FTPDownloadBandwidth'}->{'default'};
+$pureftp_dir=$conf->{$onglet}->{'FTPdir'}->{'default'};
+if($pureftp_dir=~/^\//){
+	$pureftp_dir=~s/USERNAME/$user_uid/;
+}else{
+	my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homedirectory');	
+	$pureftp_dir="$homedir/$pureftp_dir";
 }
-print "<br><br><input type=submit name=change value='".$text{'edit_proxyaccount_apply_changes'}."'>\n";
+
+print "<tr><td>".$text{'edit_pureftp_quotafiles'}."</td>
+	<td><input type=text name=\"FTPQuotaFiles\" value=\"$pureftp_quotafiles\"></td></tr>";
+print "<tr><td>".$text{'edit_pureftp_quotambytes'}."</td>
+	<td><input type=text name=\"FTPQuotaMBytes\" value=\"$pureftp_quotambytes\"></td></tr>";
+print "<tr><td>".$text{'edit_pureftp_uploadratio'}."</td>
+	<td><input type=text name=\"FTPUploadRatio\" value=\"$pureftp_uploadratio\"></td></tr>";
+print "<tr><td>".$text{'edit_pureftp_downloadratio'}."</td>
+	<td><input type=text name=\"FTPDownloadRatio\" value=\"$pureftp_downloadratio\"></td></tr>";
+print "<tr><td>".$text{'edit_pureftp_uploadbandwidth'}."</td>
+	<td><input type=text name=\"FTPUploadBandwidth\" value=\"$pureftp_uploadbandwidth\"></td></tr>";
+print "<tr><td>".$text{'edit_pureftp_downloadbandwidth'}."</td>
+	<td><input type=text name=\"FTPDownloadBandwidth\" value=\"$pureftp_downloadbandwidth\"></td></tr>";
+print "<tr><td>".$text{'edit_pureftp_dir'}."</td>
+	<td><input type=text name=\"FTPdir\" value=\"$pureftp_dir\"></td></tr>";
+print "</table>\n";
+print $str;
+print "<br><br><input type=submit name=create value='".$text{'edit_pureftp_create_account'}."'>\n";
+} else {
+    my $FTPStatus = &LDAPGetUserAttribute($ldap, $user, 'FTPStatus');
+    my $pureftp_quotafiles = &LDAPGetUserAttribute($ldap, $user, 'FTPQuotaFiles');
+    my $pureftp_quotambytes = &LDAPGetUserAttribute($ldap, $user, 'FTPQuotaMBytes');
+    my $pureftp_uploadratio = &LDAPGetUserAttribute($ldap, $user, 'FTPUploadRatio');
+    my $pureftp_downloadratio = &LDAPGetUserAttribute($ldap, $user, 'FTPDownloadRatio');
+    my $pureftp_uploadbandwidth = &LDAPGetUserAttribute($ldap, $user, 'FTPUploadBandwidth');
+    my $pureftp_downloadbandwidth = &LDAPGetUserAttribute($ldap, $user, 'FTPDownloadBandwidth');
+    my $pureftp_dir = &LDAPGetUserAttribute($ldap, $user, 'FTPdir');
+    #form de alteracao
+
+    print "<tr><td>".$text{'edit_pureftp_quotafiles'}."</td>
+	    <td><input type=text name=\"FTPQuotaFiles\" value=\"$pureftp_quotafiles\"></td></tr>";
+    print "<tr><td>".$text{'edit_pureftp_quotambytes'}."</td>
+	    <td><input type=text name=\"FTPQuotaMBytes\" value=\"$pureftp_quotambytes\"></td></tr>";
+    print "<tr><td>".$text{'edit_pureftp_uploadratio'}."</td>
+	    <td><input type=text name=\"FTPUploadRatio\" value=\"$pureftp_uploadratio\"></td></tr>";
+    print "<tr><td>".$text{'edit_pureftp_downloadratio'}."</td>
+	    <td><input type=text name=\"FTPDownloadRatio\" value=\"$pureftp_downloadratio\"></td></tr>";
+    print "<tr><td>".$text{'edit_pureftp_uploadbandwidth'}."</td>
+	    <td><input type=text name=\"FTPUploadBandwidth\" value=\"$pureftp_uploadbandwidth\"></td></tr>";
+    print "<tr><td>".$text{'edit_pureftp_downloadbandwidth'}."</td>
+	    <td><input type=text name=\"FTPDownloadBandwidth\" value=\"$pureftp_downloadbandwidth\"></td></tr>";
+    print "<tr><td>".$text{'edit_pureftp_dir'}."</td>
+	    <td><input type=text name=\"FTPdir\" value=\"$pureftp_dir\"></td></tr>";
+    print "</table>\n";
+    print $str;
+    if ($FTPStatus =~ /^disabled/ ) {
+        print "<input type=checkbox name='FTPStatus'> ".$text{'edit_pureftp_is_enabled'};
+    } else {
+        print "<input type=checkbox name='FTPStatus' checked> ".$text{'edit_pureftp_is_enabled'};
+    }
+    print "<br><br><input type=submit name=change value='".$text{'edit_pureftp_apply_changes'}."'>\n";
 }
 print "</form>\n";
     
@@ -137,6 +205,3 @@ print "</form>\n";
 ###########
 # functions
 ###########
-
-
-
