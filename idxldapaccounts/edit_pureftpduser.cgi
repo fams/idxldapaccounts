@@ -43,7 +43,7 @@ my $sattrs = [];
 my $url = "edit_".lc($onglet).".cgi?&base=".&urlize($base)."&uid=$user_uid&onglet=$onglet";
 
 
-if ($in{'change'}) {	
+if ($in{'change'}) {    
     $access{'edit_user'} or &error($text{'acl_edit_user_msg'});
     my $attr = {};
     $FTPStatus = defined($in{'FTPStatus'}) ? "enabled" : "disabled" ;
@@ -60,9 +60,9 @@ if ($in{'change'}) {
     &webmin_log("modifying FTP account for user [$user_uid]",undef, undef,\%in);
 }
 my $result = &LDAPSearch($ldap, 
-			 "(&(objectClass=inetOrgPerson)(objectClass=posixAccount)(uid=$user_uid))", 
-			 $sattrs, 
-			 $base);  
+             "(&(objectClass=inetOrgPerson)(objectClass=posixAccount)(uid=$user_uid))", 
+             $sattrs, 
+             $base);  
 if ($result->count > 1) {
     &error($text{'err_found_more_than_one_user'});
 }
@@ -84,18 +84,19 @@ if ($in{'create'}) {
     my @old_ocs = &LDAPGetUserAttributes($ldap, $user, 'objectclass');
     my @new_ocs = ();
     foreach (@old_ocs) {
-	push(@new_ocs, $_) unless ($_ eq 'PureFTPduser');
+    push(@new_ocs, $_) unless ($_ eq 'PureFTPduser');
     } 
     push(@new_ocs, 'PureFTPduser');
     #&error(@new_ocs);
     $attrs{'objectclass'} = \@new_ocs;
-    &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
+    &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);    
     $creation = "<font color=green>".$text{'edit_pureftp_successfully_created'}."</font></br>\n";
     $result = &LDAPSearch($ldap, 
-			  "(&(objectClass=inetOrgPerson)(objectClass=posixAccount)(uid=$user_uid))", 
-			  $sattrs, 
-			  $base);  
+              "(&(objectClass=inetOrgPerson)(objectClass=posixAccount)(uid=$user_uid))", 
+              $sattrs, 
+              $base);  
     $user = $result->entry;
+    FtpSanitizer($ldap, $base, $user_uid);    
     &webmin_log("creating ftp account for user [$user_uid]",undef, undef,\%in);
 }
 &header($user_uid,"images/icon.gif","edit_pureftpduser",1,undef,undef);
@@ -116,8 +117,8 @@ print "<table width='70%' class='ftptable'>\n";
 
 if ($in{'delete'}) {
     foreach my $attr (keys %{$conf->{$onglet}}) {
-	next if ($attr =~ /(uid|uidNumber|gidNumber|cn|description)/);
-	&LDAPModifyUser($ldap, $base, $user_uid, {$attr => \()});
+    next if ($attr =~ /(uid|uidNumber|gidNumber|cn|description)/);
+    &LDAPModifyUser($ldap, $base, $user_uid, {$attr => \()});
 }
     my @old_ocs = &LDAPGetUserAttributes($ldap, $user, 'objectclass');
     my @new_ocs = ();
@@ -139,26 +140,26 @@ $pureftp_uploadbandwidth=$conf->{$onglet}->{'FTPUploadBandwidth'}->{'default'};
 $pureftp_downloadbandwidth=$conf->{$onglet}->{'FTPDownloadBandwidth'}->{'default'};
 $pureftp_dir=$conf->{$onglet}->{'FTPdir'}->{'default'};
 if($pureftp_dir=~/^\//){
-	$pureftp_dir=~s/USERNAME/$user_uid/;
+    $pureftp_dir=~s/USERNAME/$user_uid/;
 }else{
-	my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homedirectory');	
-	$pureftp_dir="$homedir/$pureftp_dir";
+    my $homedir = &LDAPGetUserAttribute($ldap, $user, 'homedirectory');    
+    $pureftp_dir="$homedir/$pureftp_dir";
 }
 
 print "<tr><td>".$text{'edit_pureftp_quotafiles'}."</td>
-	<td><input type=text name=\"FTPQuotaFiles\" value=\"$pureftp_quotafiles\"></td></tr>";
+    <td><input type=text name=\"FTPQuotaFiles\" value=\"$pureftp_quotafiles\"></td></tr>";
 print "<tr><td>".$text{'edit_pureftp_quotambytes'}."</td>
-	<td><input type=text name=\"FTPQuotaMBytes\" value=\"$pureftp_quotambytes\"></td></tr>";
+    <td><input type=text name=\"FTPQuotaMBytes\" value=\"$pureftp_quotambytes\"></td></tr>";
 print "<tr><td>".$text{'edit_pureftp_uploadratio'}."</td>
-	<td><input type=text name=\"FTPUploadRatio\" value=\"$pureftp_uploadratio\"></td></tr>";
+    <td><input type=text name=\"FTPUploadRatio\" value=\"$pureftp_uploadratio\"></td></tr>";
 print "<tr><td>".$text{'edit_pureftp_downloadratio'}."</td>
-	<td><input type=text name=\"FTPDownloadRatio\" value=\"$pureftp_downloadratio\"></td></tr>";
+    <td><input type=text name=\"FTPDownloadRatio\" value=\"$pureftp_downloadratio\"></td></tr>";
 print "<tr><td>".$text{'edit_pureftp_uploadbandwidth'}."</td>
-	<td><input type=text name=\"FTPUploadBandwidth\" value=\"$pureftp_uploadbandwidth\"></td></tr>";
+    <td><input type=text name=\"FTPUploadBandwidth\" value=\"$pureftp_uploadbandwidth\"></td></tr>";
 print "<tr><td>".$text{'edit_pureftp_downloadbandwidth'}."</td>
-	<td><input type=text name=\"FTPDownloadBandwidth\" value=\"$pureftp_downloadbandwidth\"></td></tr>";
+    <td><input type=text name=\"FTPDownloadBandwidth\" value=\"$pureftp_downloadbandwidth\"></td></tr>";
 print "<tr><td>".$text{'edit_pureftp_dir'}."</td>
-	<td><input type=text name=\"FTPdir\" value=\"$pureftp_dir\"></td></tr>";
+    <td><input type=text name=\"FTPdir\" value=\"$pureftp_dir\"></td></tr>";
 print "</table>\n";
 print $str;
 print "<br><br><input type=submit name=create value='".$text{'edit_pureftp_create_account'}."'>\n";
@@ -174,19 +175,19 @@ print "<br><br><input type=submit name=create value='".$text{'edit_pureftp_creat
     #form de alteracao
 
     print "<tr><td>".$text{'edit_pureftp_quotafiles'}."</td>
-	    <td><input type=text name=\"FTPQuotaFiles\" value=\"$pureftp_quotafiles\"></td></tr>";
+        <td><input type=text name=\"FTPQuotaFiles\" value=\"$pureftp_quotafiles\"></td></tr>";
     print "<tr><td>".$text{'edit_pureftp_quotambytes'}."</td>
-	    <td><input type=text name=\"FTPQuotaMBytes\" value=\"$pureftp_quotambytes\"></td></tr>";
+        <td><input type=text name=\"FTPQuotaMBytes\" value=\"$pureftp_quotambytes\"></td></tr>";
     print "<tr><td>".$text{'edit_pureftp_uploadratio'}."</td>
-	    <td><input type=text name=\"FTPUploadRatio\" value=\"$pureftp_uploadratio\"></td></tr>";
+        <td><input type=text name=\"FTPUploadRatio\" value=\"$pureftp_uploadratio\"></td></tr>";
     print "<tr><td>".$text{'edit_pureftp_downloadratio'}."</td>
-	    <td><input type=text name=\"FTPDownloadRatio\" value=\"$pureftp_downloadratio\"></td></tr>";
+        <td><input type=text name=\"FTPDownloadRatio\" value=\"$pureftp_downloadratio\"></td></tr>";
     print "<tr><td>".$text{'edit_pureftp_uploadbandwidth'}."</td>
-	    <td><input type=text name=\"FTPUploadBandwidth\" value=\"$pureftp_uploadbandwidth\"></td></tr>";
+        <td><input type=text name=\"FTPUploadBandwidth\" value=\"$pureftp_uploadbandwidth\"></td></tr>";
     print "<tr><td>".$text{'edit_pureftp_downloadbandwidth'}."</td>
-	    <td><input type=text name=\"FTPDownloadBandwidth\" value=\"$pureftp_downloadbandwidth\"></td></tr>";
+        <td><input type=text name=\"FTPDownloadBandwidth\" value=\"$pureftp_downloadbandwidth\"></td></tr>";
     print "<tr><td>".$text{'edit_pureftp_dir'}."</td>
-	    <td><input type=text name=\"FTPdir\" value=\"$pureftp_dir\"></td></tr>";
+        <td><input type=text name=\"FTPdir\" value=\"$pureftp_dir\"></td></tr>";
     print "</table>\n";
     print $str;
     if ($FTPStatus =~ /^disabled/ ) {
@@ -205,3 +206,25 @@ print "</form>\n";
 ###########
 # functions
 ###########
+sub FtpSanitizer{
+    my ($ldap,$base,$mailuid) = @_;
+    my $result = &LDAPSearch($ldap,
+                          "(&(objectclass=qmailuser)(uid=$ftpuid))",
+                             'ftpDir',
+                             $base);
+    if ($result->count > 1) {
+        &error($text{'err_pureftp_account_invalid'});
+    }
+    my $diretorio = $result->entry->get_value('ftpDir');
+    if(($diretorio=~/\.\./)or($diretorio=~/ /)){
+        &error($text{'err_pureftp_invalid_path'});
+    }
+
+    if ( ! -d $diretorio){
+        eval { mkpath([ "$diretorio"], 0 , 0711 ) };
+        if ($@) {
+            &error($text{'err_create_ftp_box'});
+        }
+    }
+    system("/bin/chown $mailuid:100 $diretorio");
+}
