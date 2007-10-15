@@ -93,6 +93,7 @@ use Digest::SHA1 qw(sha1);
 use MIME::Base64 qw(encode_base64);
 use File::Basename;
 use File::Path;
+use lxnclient;
 
 
 =pod "

@@ -1,10 +1,11 @@
 #!/usr/bin/perl
 
 
-#  This code was developped by IDEALX (http://IDEALX.org/) and
+#  This code was developped by Linuxplace (http://www.linuxplace.com.br) based in 
+#  prevrious work from IDEALX (http://IDEALX.org/) and
 #  contributors (their names can be found in the CONTRIBUTORS file).
 #
-#                 Copyright (C) 2002 IDEALX
+#                 Copyright (C) 2005 Linuxplace
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -21,7 +22,7 @@
 #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 #  USA.
 
-# author: <gerald.macinenti@IDEALX.com>
+# author: <fams@linuxplace.com.br>
 # Version: $Id$
 
 require './idxldapaccounts-lib.pl';

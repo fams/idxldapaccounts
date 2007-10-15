@@ -322,7 +322,7 @@ sub MailCreateCheck{
     return ($result->count > 0)? 1: 0;
 }
 
-sub MailSanitizer{
+sub MailSanitizer {
     my ($ldap,$base,$mailuid) = @_;
     my $result = &LDAPSearch($ldap,
 			  "(&(objectclass=qmailuser)(uid=$mailuid))",
@@ -335,20 +335,25 @@ sub MailSanitizer{
     if(($diretorio=~/\.\./)or($diretorio=~/ /)){
         &error($text{'err_mail_box_invalid'});
     }
-
-    if ( ! -d $diretorio){
-        eval { mkpath([ "$diretorio"], 0 , 0711 ) };
-        if ($@) {
-            &error($text{'err_create_mail_box'});
-        }
-        eval { mkpath([ "$diretorio/new","$diretorio/cur","$diretorio/tmp"], 0 , 0700 ) };
-        if ($@) {
-            &error($text{'err_create_mail_box'});
-        }
+    my $mailserver = new lxnclient;
+    if(! $mailserver->connect('execscript',$config{remotemail})){
+        &error($mailserver->{MSG});
     }
-    system("/bin/chown $mailuid:100 $diretorio");
-    system("/bin/chown $mailuid:100 $diretorio/new");
-    system("/bin/chown $mailuid:100 $diretorio/cur");
-    system("/bin/chown $mailuid:100 $diretorio/tmp");
+    #FIXME Nao eh desnecessário esse check acima?
 
+    if(my $ret=$mailserver->exec("mksmbdir $mailuid 1")){
+        if($ret ==2){ &error($mailserver->{MSG});}
+    }else{
+        &error($mailserver->{MSG});
+    }
+    #get new prompt
+    *WRITER = $mailserver->{WRITER};
+    print WRITER "\n";
+    if(my $ret=$mailserver->exec("mkmaildir $mailuid 1")){
+        if($ret ==2){ &error($mailserver->{MSG});}
+        return 1;
+    }else{
+        &error($mailserver->{MSG});
+    }
+    undef $mailserver;
 }

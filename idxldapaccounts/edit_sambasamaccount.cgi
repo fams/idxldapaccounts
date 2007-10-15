@@ -296,9 +296,18 @@ sub sambaCreateUserArray {
 
 sub sambaCreateUser {
     my ($user, $array) = (@_);
+    my $smbserver = new lxnclient;
+    if(! $smbserver->connect('execscript',$config{remotesmb})){
+        &error($smbserver->{MSG});
+    }
 
-    # put system interactions here
-
+    if(my $ret=$smbserver->exec("mksmbdir $ftpuid 1")){
+        if($ret == 2){ &error($smbserver->{MSG});}
+        return 1;
+    }else{
+        &error($smbserver->{MSG});
+    }
+    undef $smbserver;
     return undef;
 }
 

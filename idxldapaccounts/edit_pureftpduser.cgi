@@ -29,6 +29,13 @@ my %access = &get_module_acl();
 $access{'view_user_ftp'} or &error($text{'acl_view_user_ftp_msg'});
 &ReadParse();
 
+#use CGI;
+use CGI::Ajax;
+
+#my $cgi = new CGI;
+my $pjx = new CGI::Ajax( 'pureftpdsub' => 'ajax.cgi');
+
+
 # input
 my $user_uid = $in{'uid'};
 my $onglet = $in{'onglet'};
@@ -99,10 +106,59 @@ if ($in{'create'}) {
     FtpSanitizer($ldap, $base, $user_uid);    
     &webmin_log("creating ftp account for user [$user_uid]",undef, undef,\%in);
 }
-&header($user_uid,"images/icon.gif","edit_pureftpduser",1,undef,undef);
+#Scripts para a pagina
+$prebody .=<<EOF
+"<style type=\"text/css\">
+<!--
+#wait{
+position:absolute;
+top:360px;
+left:500px;
+background-color:#FF8383;
+height:50px;
+width:120px;
+display:none;
+}
+--></style>";
+EOF
+;
+$prebody .= <<EOF
+<script type=text/javascript>
+vrfyftpdir = function (){
+    alert (arguments[0]);
+};
+</script>
+EOF
+;
+$prebody .= $pjx;
+$prebody .= <<EOF
+<script type=text/javascript>
+// these 2 functions provide access to the javascript events. Since
+// is an object anything here will apply to any div that uses a
+// cgi::ajx registered function. as a convenience, we send in the id
+// of the current element (el) below. but that can also be accessed
+// this.target;
+// if these are not defined, no problem...
+pjx.prototype.pjxInitialized = function(el){
+  document.getElementById('wait').innerHTML = 'Loading';
+  document.getElementById('wait').style.backgroundColor = '#Faa';
+  document.getElementById('wait').style.display= 'block';
+}
+
+pjx.prototype.pjxCompleted = function(el){
+  // here we use this.target:
+  // since this is a prototype function, we have access to all of hte 
+  // pjx obejct properties. 
+  document.getElementById('wait').style.display = 'none';
+}
+
+</script>
+EOF
+;
+&header($user_uid,"images/icon.gif","edit_pureftpduser",1,undef,undef,undef,$prebody);
 
 &printMenu($ldap, $conf, $user, $user_uid, $onglet, $base);
-
+print "<div id='wait'></div>";
 print "<table><tr><td><img src=images/user.gif></td>
 <td><h1>$user_uid</h1></td><td>$creation</td></tr></table>\n";
 print "<hr>\n";
@@ -161,6 +217,8 @@ print "<tr><td>".$text{'edit_pureftp_downloadbandwidth'}."</td>
 print "<tr><td>".$text{'edit_pureftp_dir'}."</td>
     <td><input type=text name=\"FTPdir\" value=\"$pureftp_dir\"></td></tr>";
 print "</table>\n";
+    
+
 print $str;
 print "<br><br><input type=submit name=create value='".$text{'edit_pureftp_create_account'}."'>\n";
 } else {
@@ -189,6 +247,11 @@ print "<br><br><input type=submit name=create value='".$text{'edit_pureftp_creat
     print "<tr><td>".$text{'edit_pureftp_dir'}."</td>
         <td><input type=text name=\"FTPdir\" value=\"$pureftp_dir\"></td></tr>";
     print "</table>\n";
+    print <<EOF
+<input type="button" value="Verificar diretorio" onclick="pureftpdsub( ['function__vrfyftpdir' , 'ftpuid__$user_uid'] , [ vrfyftpdir ],[ 'POST' ]  );"/>
+<div id="resultdiv"></div>
+EOF
+;
     print $str;
     if ($FTPStatus =~ /^disabled/ ) {
         print "<input type=checkbox name='FTPStatus'> ".$text{'edit_pureftp_is_enabled'};
@@ -207,7 +270,7 @@ print "</form>\n";
 # functions
 ###########
 sub FtpSanitizer{
-    my ($ldap,$base,$mailuid) = @_;
+    my ($ldap,$base,$ftpuid) = @_;
     my $result = &LDAPSearch($ldap,
                           "(&(objectclass=qmailuser)(uid=$ftpuid))",
                              'ftpDir',
@@ -219,12 +282,23 @@ sub FtpSanitizer{
     if(($diretorio=~/\.\./)or($diretorio=~/ /)){
         &error($text{'err_pureftp_invalid_path'});
     }
-
-    if ( ! -d $diretorio){
-        eval { mkpath([ "$diretorio"], 0 , 0711 ) };
-        if ($@) {
-            &error($text{'err_create_ftp_box'});
-        }
+    my $ftpserver=new lxnclient;     
+    if(! $ftpserver->connect('execscript',$config{remoteftp})){
+        &error($ftpserver->{MSG});
     }
-    system("/bin/chown $mailuid:100 $diretorio");
+
+    if(my $ret=$ftpserver->exec("mkftpdir $ftpuid 1")){
+    	if($ret == 2){ &error($ftpserver->{MSG});}
+        return 1;
+    }else{
+        &error($ftpserver->{MSG});
+    }
+    undef $ftpserver;
+#    if ( ! -d $diretorio){
+#        eval { mkpath([ "$diretorio"], 0 , 0711 ) };
+#        if ($@) {
+#            &error($text{'err_create_ftp_box'});
+#        }
+#    }
+#    system("/bin/chown $mailuid:100 $diretorio");
 }

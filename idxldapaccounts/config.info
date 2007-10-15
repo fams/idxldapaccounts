@@ -38,4 +38,9 @@ use_discussao=Use distribution list,1,1-yes,0-no
 #Radius
 line6=Radius Prefs,11
 valid_nas=Valid NAS to Login (separeted by ;),0
-
+#Remote exec
+line7=Remote Exec prefs,11
+remotemail=Mail Server Address,0
+remoteftp=Ftp Server Address,0
+remotesmb=Samba Server Address,0
+remotehome=Homedir Server Address,0

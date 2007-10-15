@@ -1,3 +1,51 @@
+2007-09-20 15:33  root
+
+	* accounts.conf, acl_security.pl, edit_proxyaccount.cgi,
+	  edit_pureftpduser.cgi, lang/en, lang/pt_BR: Adicionado conta
+	  pureftp
+
+2007-09-19 17:23  fams
+
+	* accounts.conf, edit_pureftpduser.cgi: Novas alteracoes no ftp
+
+2007-09-19 16:03  fams
+
+	* edit_pureftpduser.cgi: So testes
+
+2007-09-19 16:01  fams
+
+	* edit_pureftpduser.cgi: Nova aba
+
+2007-03-05 09:33  svccap
+
+	* idxldapaccounts-lib.pl: Apaga entradas de addressbook ao apagar
+	  usuario.
+
+2006-10-05 10:03  fams
+
+	* accounts.conf, edit_radiusprofile.cgi, index.cgi: Resolvido
+	  problema do virtual no index, agora ele só aparece se existir
+	  email configurado O radius Profile Está funcionando
+
+2006-10-04 20:45  fams
+
+	* edit_radiusprofile.cgi: Corrigido erro de mostrar varios nas
+
+2006-10-04 20:29  fams
+
+	* accounts.conf, config.info, edit_qmailuser.cgi,
+	  edit_radiusprofile.cgi, idxldapaccounts-lib.pl, index.cgi,
+	  lang/pt_BR: Mudancas para radius com AP
+
+2006-09-28 11:34  fams
+
+	* edit_qmailuser.cgi: Resolvido problema de criar e apagar conta de
+	  email Nao estava cadastrando Maildir nem apagando a conta
+
+2006-09-28 10:23  fams
+
+	* ChangeLog, edit_qmailuser.cgi: Criando caixa postal
+
 2006-08-24 17:26  svccap
 
 	* config.default: config default
