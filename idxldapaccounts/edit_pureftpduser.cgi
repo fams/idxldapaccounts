@@ -126,24 +126,34 @@ EOF
 $prebody .= <<EOF
 <script type=text/javascript>
 vrfyftpdir = function (){
+	//alert (arguments[0]);
     eval(arguments[0]);
     if(status[0] == false){
+		document.getElementById('resultdiv').style.color = '#F00' ;
     	document.getElementById('btmkftpdir').style.display='block';
     	document.getElementById('resultdiv').innerHTML="N&atilde;o existe o diret&oacute;rio";
+		return true;
     }
+	var html ="";
+	html += (status[1])?"":"<li>N&atilde;o &eacute; um diret&oacute;rio</li>";
+	html += (status[2])?"":"<li>Sem direito de leitura</li>";
+	html += (status[3])?"":"<li>Sem direito de escrita</li>";
+	if (html.length > 0) {
+		document.getElementById('resultdiv').style.color = '#F00' ;
+		document.getElementById('resultdiv').innerHTML="Os seguintes erros foram encontrados:<ul>";
+		document.getElementById('resultdiv').innerHTML +=html;
+		document.getElementById('resultdiv').innerHTML +="</ul><br/>Utilize um gerenciador de arquivos para resolver o problema";
+	}
 };
 mkftpdir = function (){
     //alert(arguments[0]);
     eval(arguments[0]);
-    alert('fams');
     if(ret == true ){
-    	document.getElementById('btmkftpdir').style.display='none';
-    	document.getElementById('resultdiv').innerHTML="Diret&oacute;rio criado";
+        document.getElementById('btmkftpdir').style.display='none';
+        document.getElementById('resultdiv').innerHTML="Diret&oacute;rio criado";
     }else{
-    alert('fams2');
-    	document.getElementById('resultdiv').innerHTML=msg;
+        document.getElementById('resultdiv').innerHTML=msg;
     }
-    alert('fams3');
 }
 </script>
 EOF

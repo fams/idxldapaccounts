@@ -11,6 +11,8 @@ print $q->header();
 my %subs = (
                 "vrfyftpdir"      => \&vrfyftpdir,
                 "mkftpdir"      => \&mkftpdir,
+                "vrfymaildir"      => \&vrfymaildir,
+                "mkmaildir"      => \&mkmaildir,
             );
 
 if( defined( $subs{$q->param('function')} ) ) {
@@ -59,4 +61,39 @@ sub vrfyftpdir  {
         return  0 , $ftpserver->{MSG} ;
     }
     undef $ftpserver;
+}
+sub mkmaildir  {
+    my $q = shift;
+    my $mailuid = $q->param("mailuid");
+    my $mailserver=new lxnclient;
+    if(! $mailserver->connect('execscript', $config{remotemail})){
+        return  0 , $mailserver->{MSG} ;
+    }
+    my $ret=$mailserver->exec("mkmaildir $mailuid");
+    chomp $ftpserver->{MSG};
+    my $html = qq(var msg = "$mailserver->{MSG}" ;var ret=$ret;);
+    return  $ret, $html ;
+    undef $mailserver;
+}
+sub vrfymaildir  {
+    my $q = shift;
+    my $mailuid = $q->param("mailuid");
+    my $mailserver=new lxnclient;
+    if(! $mailserver->connect('execscript', $config{remotemail})){
+        return  0 , $mailserver->{MSG} ;
+    }
+    if(my $ret=$mailserver->exec("vrfymaildir $ftpuid")){
+    	split (/:/,$mailserver->{MSG});
+	shift;
+	my $status = shift;
+	my $html = "var status = new Array();";
+	$html .= ( $status & 1 )?"status[0] = true;":"status[0]=false;";
+	$html .= ( $status & 2 )?"status[1] = true;":"status[1]=false;";
+	$html .= ( $status & 4 )?"status[2] = true;":"status[2]=false;";
+	$html .= ( $status & 8 )?"status[3] = true;":"status[3]=false;";
+        return  $ret, $html ;
+    }else{
+        return  0 , $mailserver->{MSG} ;
+    }
+    undef $mailserver;
 }
