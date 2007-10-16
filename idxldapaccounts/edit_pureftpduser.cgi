@@ -114,9 +114,10 @@ $prebody .=<<EOF
 position:absolute;
 top:360px;
 left:500px;
-background-color:#FF8383;
+background-color:#200;
 display:none;
 }
+
 #btmkftpdir{
 display:none;
 }
@@ -129,7 +130,7 @@ vrfyftpdir = function (){
 	//alert (arguments[0]);
     eval(arguments[0]);
     if(status[0] == false){
-		document.getElementById('resultdiv').style.color = '#F00' ;
+	document.getElementById('resultdiv').style.color = '#FF0000' ;
     	document.getElementById('btmkftpdir').style.display='block';
     	document.getElementById('resultdiv').innerHTML="N&atilde;o existe o diret&oacute;rio";
 		return true;
@@ -139,7 +140,7 @@ vrfyftpdir = function (){
 	html += (status[2])?"":"<li>Sem direito de leitura</li>";
 	html += (status[3])?"":"<li>Sem direito de escrita</li>";
 	if (html.length > 0) {
-		document.getElementById('resultdiv').style.color = '#F00' ;
+		document.getElementById('resultdiv').style.color = '#FF0000' ;
 		document.getElementById('resultdiv').innerHTML="Os seguintes erros foram encontrados:<ul>";
 		document.getElementById('resultdiv').innerHTML +=html;
 		document.getElementById('resultdiv').innerHTML +="</ul><br/>Utilize um gerenciador de arquivos para resolver o problema";
@@ -169,7 +170,8 @@ $prebody .= <<EOF
 // if these are not defined, no problem...
 pjx.prototype.pjxInitialized = function(el){
   document.getElementById('wait').innerHTML = "<p style='vertical-align:middle'>Carregando ...<img src='images/ani-busy.gif'></p>";
-  document.getElementById('wait').style.backgroundColor = '#F66';
+  document.getElementById('wait').style.backgroundColor = '#FFF';
+  document.getElementById('wait').style.color = '#F00';
   document.getElementById('wait').style.valign = 'middle';
   document.getElementById('wait').style.display= 'block';
 }
