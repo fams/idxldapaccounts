@@ -108,25 +108,43 @@ if ($in{'create'}) {
 }
 #Scripts para a pagina
 $prebody .=<<EOF
-"<style type=\"text/css\">
+<style type="text/css">
 <!--
 #wait{
 position:absolute;
 top:360px;
 left:500px;
 background-color:#FF8383;
-height:50px;
-width:120px;
 display:none;
 }
---></style>";
+#btmkftpdir{
+display:none;
+}
+--></style>
 EOF
 ;
 $prebody .= <<EOF
 <script type=text/javascript>
 vrfyftpdir = function (){
-    alert (arguments[0]);
+    eval(arguments[0]);
+    if(status[0] == false){
+    	document.getElementById('btmkftpdir').style.display='block';
+    	document.getElementById('resultdiv').innerHTML="N&atilde;o existe o diret&oacute;rio";
+    }
 };
+mkftpdir = function (){
+    //alert(arguments[0]);
+    eval(arguments[0]);
+    alert('fams');
+    if(ret == true ){
+    	document.getElementById('btmkftpdir').style.display='none';
+    	document.getElementById('resultdiv').innerHTML="Diret&oacute;rio criado";
+    }else{
+    alert('fams2');
+    	document.getElementById('resultdiv').innerHTML=msg;
+    }
+    alert('fams3');
+}
 </script>
 EOF
 ;
@@ -140,8 +158,9 @@ $prebody .= <<EOF
 // this.target;
 // if these are not defined, no problem...
 pjx.prototype.pjxInitialized = function(el){
-  document.getElementById('wait').innerHTML = 'Loading';
-  document.getElementById('wait').style.backgroundColor = '#Faa';
+  document.getElementById('wait').innerHTML = "<p style='vertical-align:middle'>Carregando ...<img src='images/ani-busy.gif'></p>";
+  document.getElementById('wait').style.backgroundColor = '#F66';
+  document.getElementById('wait').style.valign = 'middle';
   document.getElementById('wait').style.display= 'block';
 }
 
@@ -249,6 +268,7 @@ print "<br><br><input type=submit name=create value='".$text{'edit_pureftp_creat
     print "</table>\n";
     print <<EOF
 <input type="button" value="Verificar diretorio" onclick="pureftpdsub( ['function__vrfyftpdir' , 'ftpuid__$user_uid'] , [ vrfyftpdir ],[ 'POST' ]  );"/>
+<input type="button" id="btmkftpdir" value="Criar Diret&oacute;rio" onclick="pureftpdsub( ['function__mkftpdir' , 'ftpuid__$user_uid'] , [ mkftpdir ],[ 'POST' ]  );"/>
 <div id="resultdiv"></div>
 EOF
 ;
@@ -275,14 +295,14 @@ sub FtpSanitizer{
                           "(&(objectclass=qmailuser)(uid=$ftpuid))",
                              'ftpDir',
                              $base);
-    if ($result->count > 1) {
+    if ( $result->count > 1 ) {
         &error($text{'err_pureftp_account_invalid'});
     }
     my $diretorio = $result->entry->get_value('ftpDir');
     if(($diretorio=~/\.\./)or($diretorio=~/ /)){
         &error($text{'err_pureftp_invalid_path'});
     }
-    my $ftpserver=new lxnclient;     
+    my $ftpserver = new lxnclient;     
     if(! $ftpserver->connect('execscript',$config{remoteftp})){
         &error($ftpserver->{MSG});
     }
@@ -294,11 +314,4 @@ sub FtpSanitizer{
         &error($ftpserver->{MSG});
     }
     undef $ftpserver;
-#    if ( ! -d $diretorio){
-#        eval { mkpath([ "$diretorio"], 0 , 0711 ) };
-#        if ($@) {
-#            &error($text{'err_create_ftp_box'});
-#        }
-#    }
-#    system("/bin/chown $mailuid:100 $diretorio");
 }
