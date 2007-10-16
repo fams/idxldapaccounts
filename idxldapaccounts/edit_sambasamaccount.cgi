@@ -300,8 +300,7 @@ sub sambaCreateUser {
     if(! $smbserver->connect('execscript',$config{remotesmb})){
         &error($smbserver->{MSG});
     }
-
-    if(my $ret=$smbserver->exec("mksmbdir $ftpuid 1")){
+    if(my $ret=$smbserver->exec("mksmbdir $user 1")){
         if($ret == 2){ &error($smbserver->{MSG});}
         return 1;
     }else{

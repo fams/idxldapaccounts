@@ -270,7 +270,7 @@ print "<hr><form action$url method=post>";
 print "<table widht='80%'>";
 print "  <tr>"; 
 print "    <td>".$text{'edit_qmailuser_mail_quota'}."</td>";
-print "    <td><input type=text name=mailquota value='".$quota."'><input type=submit name=changequota value='".$text{'edit_qmailuser_change_quota'}."'</td>
+print "    <td><input type=text name=mailquota value='".$quota."'>BYTES<input type=submit name=changequota value='".$text{'edit_qmailuser_change_quota'}."'></td>
           </tr>
        </table></form>";
 
