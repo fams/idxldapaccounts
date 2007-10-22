@@ -304,7 +304,7 @@ print "</form>\n";
 sub FtpSanitizer{
     my ($ldap,$base,$ftpuid) = @_;
     my $result = &LDAPSearch($ldap,
-                          "(&(objectclass=qmailuser)(uid=$ftpuid))",
+                          "(&(objectclass=pureftpduser)(uid=$ftpuid))",
                              'ftpDir',
                              $base);
     if ( $result->count > 1 ) {
