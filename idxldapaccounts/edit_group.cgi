@@ -58,7 +58,13 @@ if ($in{'create'}) {
 		push (@attrs, utf8Encode($in{$k}));
     }
     push (@attrs, 'objectClass');
-    push (@attrs, ['posixGroup']);
+#Compliance with rfc 2307
+    $schema= $ldap->schema();
+    if(defined $schema->objectclass('namedObject')){
+        push (@attrs, ['posixGroup', 'namedObject' ]);
+    }else{
+        push (@attrs, ['posixGroup' ]);
+    }
     &LDAPAddGroup($ldap, $dn, \@attrs);
     &webmin_log("creating group [$dn]", undef, undef,\%in);
     $creation = "<font color=green>".$text{'edit_group_group_successfully_created'}."</font></br>\n";

@@ -1,3 +1,4 @@
+#!/usr/bin/perl
 # idxldapaccounts-lib.pl
 do '../web-lib.pl';
 
@@ -54,15 +55,7 @@ my $ldap = &LDAPInit();
 &LDAPClose($ldap);
 
 =cut "
-sub inArray {
-	my $val = shift;
-	for my $elem ( @_ ) {
-		if( $val eq $elem ) {
-			return 1;
-		}
-	}
-	return 0;
-}
+
 
 #############
 ## LDAP utils
@@ -269,7 +262,7 @@ sub LDAPGetObjectClasses {
 	my $ldap = shift;
 
 	my $schema = $ldap->schema();
-	my @ocs = $schema->objectclasses();
+	my @ocs = $schema->all_objectclasses();
 
 	return @ocs;
 }
@@ -824,7 +817,7 @@ sub LDAPAddGroup {
 	my $res = $ldap->add( utf8Encode($dn), attrs => [ @$attrs ] );
 	if ($res->code()) { 
 		&error(&ldap_error_name($res->code).
-			   ": ".&ldap_error_text($res->code)."DN:".$dn); 
+			   ": ".&ldap_error_text($res->code)."<br>DN:".$dn."<br>".@$attrs[6]); 
 	}
 }
 
@@ -1039,6 +1032,7 @@ sub LDAPGroupRemoveMember {
 =cut "
 
 =pod "
+
 =item I<gid2sid($ldap, $gid)>
 
 =item *
@@ -1073,7 +1067,7 @@ sub gid2sid {
 
 =pod"
 
-=item I<getAttrValue($attrs,$attr)
+=item I<getAttrValue($attrs,$attr)>
 
 =item *
 get attribute value in pair list
@@ -1084,7 +1078,7 @@ $attrs attrs
 =item *
 $attr attribute desired
 
-=cut"
+=cut "
 
 sub getAttrValue{
 	my ($attrs,$attr)= (@_);
@@ -1237,7 +1231,7 @@ Return a hash for modification of user LDAP attributes
 =item *
 $ldap: a Net::LDAP object
 
-= item *
+=item *
 $base: base OU
 
 =item *
@@ -1756,6 +1750,7 @@ $ldap: a Net::LDAP object
 $gid: an gidNumber
 
 =cut "
+
 sub pickGid {
 	my $ldap = shift;
 	if($config{use_new_allocation}){
@@ -2281,7 +2276,7 @@ sub utf8Decode {
 			  
 =pod "
 
-=item I<LDAPChangeVirtual($ldap,$virtual)
+=item I<LDAPChangeVirtual($ldap,$virtual)>
 
 =item *
 Add/Remove/Modify VitualAccounts
@@ -2291,8 +2286,8 @@ return a Net::LDAP::Entry
 $ldap: a Net::LDAP object
 $virtual: list of dcobjects
 
+=cut "
 
-=cut"
 sub LDAPChangeVirtual(){
 	my ($ldap,$virtual) =@_;
 	my $changes ={};
@@ -2304,9 +2299,10 @@ sub LDAPChangeVirtual(){
 	}
 
 }
+
 =pod "
 
-=item I<LDAPGetVirtual($ldap)
+=item I<LDAPGetVirtual($ldap)>
 
 =item *
 return the Configured Domains
@@ -2315,8 +2311,8 @@ return a Net::LDAP::Entry
 =item *
 $ldap: a Net::LDAP object
 
+=cut "
 
-=cut"
 sub LDAPGetVirtuals {
 	my ($ldap) = (@_);
 	$result = LDAPSearch($ldap,"(&(objectClass=dNSDomain)(objectClass=domainRelatedObject)(dc=domains))",
@@ -2331,7 +2327,7 @@ sub LDAPGetVirtuals {
 
 =pod "
 
-=item I<LDAPGetDiscussao($ldap)
+=item I<LDAPGetDiscussao($ldap)>
 
 =item *
 return the Discussion Lists
@@ -2341,7 +2337,8 @@ return a Net::LDAP::Entry
 $ldap: a Net::LDAP object
 
 
-=cut"
+=cut "
+
 sub LDAPGetDiscussao {
 	my ($ldap) = (@_);
 	$result = LDAPSearch($ldap,"(&(objectClass=qmailUser)(objectClass=top))",
@@ -2367,9 +2364,28 @@ sub make_salt
   }
 =pod "
 
+=item I<inArray($val,@array)>
+
+=item * Return if an element exists in array
+
+=cut "
+
+sub inArray {
+	my $val = shift;
+	for my $elem ( @_ ) {
+		if( $val eq $elem ) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+=pod "
+
 =head1 AUTHORS
 
 Gerald Macinenti - <gerald.macinenti@IDEALX.com>
+
 Fernando Augusto Medeiros Sivla - <fams@linuxplace.com.br>
 
 =cut "
