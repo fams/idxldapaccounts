@@ -25,7 +25,7 @@ ldap_password=
 ldap_discussao_base=ou=mailinglists,ou=postfix,ou=System,
 remove_personal_ab=1
 create_ldap_ab_base=1
-remoteftp=127.0.0.1:22
-remotesmb=127.0.0.1:22
-remotemail=127.0.0.1:22
-remoteunix=127.0.0.1:22
+remoteftp=127.0.0.1
+remotesmb=127.0.0.1
+remotemail=127.0.0.1
+remoteunix=127.0.0.1
