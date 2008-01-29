@@ -1,0 +1,46 @@
+line1=Configura&ccedil;&atilde;o geral,11
+max_items=N&uacute;mero m&aacute;ximo de &iacute;tems por p&aacute;gina,0
+max_search_results=N&uacute;mero m&aacute;ximo de &iacute;tems retornados por uma consulta LDAP,0
+hide_disabled_users=N&atilde;o mostrar usu&aacute;rios desativados,1-sim,0-n&atilde;o
+nscd_path=Caminho do script de inicializa&ccedil;&atilde;o nscd,3,/etc/init.d/nscd
+use_new_allocation=Usar novo m&eacute;tod de aloca&ccedil;&atilde;o de  UID/GID,1,1-sim,0-n&atilde;o
+line2=Configura&ccedil;&atilde;o LDAP,11
+ldap_server=FQDN do servidor LDAP,0
+ldap_admin=Rootdn da base LDAP,0
+ldap_password=Senha do rootdn,0
+ldap_suffix=Sufixxo da base,0
+ldap_users_base=Base de pesquisa para usu&aacute;rios,0
+ldap_groups_base=Base de pesquisa para grupos,0
+ldap_personal_ab_base=Base de pesquisa para o cat&aacute;logo de endere&ccedil;os pessoal,0
+ldap_discussao_base=Base de pesquisa para as listas de distribui&ccedil;&atilde;o,0
+ldap_virtual_base=Base de pesquisa para os dom&iacute;nios virtuais,0
+ldap_pool_dn=Pool DN,0
+line3=Configura&ccedil;&atilde;o do Samba,11
+samba_sid=SID do dom&iacute;nio <i>SAMBA</i>,0
+#users
+line4=Configura&ccedil;&atilde;o de Usu&aacute;rios e Grupos,11
+gid_default=Grupo primario padr&atilde;o,0
+min_gid=gidNumber m&iacute;nimo,0
+min_uid=uidNumber m&iacute;nimo,0
+homedir_default=homedir padr&atilde;o (USERNAME ser&aacute; substitu&iacute;do pelo nome do usu&aacute;rio ),0
+letterhomes=Agrupar os homedirs por letra (l/linuxplace),1,1-sim,0-n&atilde;o
+loginshell_default=Shell unix padr&atilde;o,0
+crypt_passwords=Encriptar as senhas,1,1-sim,0-n&atilde;o
+crypt_passwords_hash=Hash de senhas a ser utilizado,4,2-MD5,1-SSHA,0-CRYPT
+remove_homes=Remover diret&oacute;rio home quando apagar o usu&aacute;rio,1,1-sim,0-n&atilde;o
+#/users
+line5=Configura&ccedil;&atilde;o de Email,11
+mailMessageStoreBase=Raiz dos diret&oacute;rios de email ,0
+use_horde=Criar prefer&ecirc;ncias do Horde,1,1-sim,0-n&atilde;o
+create_ldap_ab_base=Criar cat&aacute;logo de endere&ccedil;os pessoal no LDAP,1,1-sim,0-n&atilde;o
+remove_personal_ab=Remover cat&aacute;log de endere&ccedil;os pessoal quando apagar usu&aacute;rio,1,1-sim,0-n&atilde;o
+use_discussao=Permitir listas de distribui&ccedil;,1,1-sim,0-n&atilde;o
+#Radius
+line6=Configura&ccedil;&otilde;es do Radius,11
+valid_nas=NAS permitidos para efetuar logon (separados por ;),0
+#Remote exec
+line7=Configura&ccedil;&atilde;o do execscript,11
+remotemail=Endere&ccedil;o do servidor de Correio,0
+remoteftp=Endere&ccedil;o do servidor de FTP,0
+remotesmb=Endere&ccedil;o do servidor SAMBA,0
+remotehome=Endere&ccedil;o do servidor NFS HOME,0
