@@ -1,0 +1,83 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+configure: 
+	cd usr/share/webmin; /usr/bin/cvs co idxldapaccounts
+	cp -f usr/share/webmin/idxldapaccounts/config.default etc/webmin/idxldapaccounts/config
+	/usr/bin/find usr -type d  >dir_list
+	/usr/bin/find etc -type d  >>dir_list
+	/usr/bin/find usr -type f  >file_list
+	/usr/bin/find etc -type f  >>file_list
+
+configure-stamp: 
+	dh_testdir
+	touch configure-stamp
+
+build: build-stamp 
+
+build-stamp: configure-stamp configure
+	dh_testdir
+	touch build-stamp
+
+clean:
+	rm -rf debian/tmp
+	rm -rf usr/share/webmin/idxldapaccounts
+	rm -f etc/webmin/idxldapaccounts/config
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	dh_clean 
+	
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+	# Add here commands to install the package into debian/gconfig.
+	for i in `cat dir_list`; do mkdir -p debian/tmp/$$i; done
+	for i in `cat file_list`; do install $$i debian/tmp/$$i; done
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+#	dh_installdocs
+	dh_installexamples
+#	dh_install
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_python
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
