@@ -335,6 +335,9 @@ sub MailSanitizer {
     if(($diretorio=~/\.\./)or($diretorio=~/ /)){
         &error($text{'err_mail_box_invalid'});
     }
+    # perform a nscd restart to be sure the user is known from the system
+    my $nscd = $config{"nscd_path"};
+    system("$nscd restart");
     my $mailserver = new lxnclient;
     if(! $mailserver->connect('execscript',$config{remotemail})){
         &error($mailserver->{MSG});

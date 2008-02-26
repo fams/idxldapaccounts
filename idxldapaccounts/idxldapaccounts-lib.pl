@@ -1276,6 +1276,9 @@ sub modifyUserGeneral {
 			exit 1;
 		}
 		&webmin_log("changing user [$user_uid] home directory [$homedir] to owner [$user_uid.$gidnumber]"); 
+	        # perform a nscd restart to be sure the user is known from the system
+        	my $nscd = $config{"nscd_path"};
+        	system("$nscd restart");
 	}
 	}
 
