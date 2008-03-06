@@ -7,12 +7,8 @@
 export DH_VERBOSE=1
 
 configure: 
-	cd usr/share/webmin; /usr/bin/cvs co idxldapaccounts
-	cp -f usr/share/webmin/idxldapaccounts/config.default etc/webmin/idxldapaccounts/config
-	/usr/bin/find usr -type d  >dir_list
-	/usr/bin/find etc -type d  >>dir_list
-	/usr/bin/find usr -type f  >file_list
-	/usr/bin/find etc -type f  >>file_list
+	/usr/bin/find idxldapaccounts -type d  >dir_list
+	/usr/bin/find idxldapaccounts -type f  >file_list
 
 configure-stamp: 
 	dh_testdir
@@ -25,11 +21,11 @@ build-stamp: configure-stamp configure
 	touch build-stamp
 
 clean:
-	rm -rf debian/tmp
-	rm -rf usr/share/webmin/idxldapaccounts
-	rm -f etc/webmin/idxldapaccounts/config
+	rm -rf debian/webmin-idxldapaccount-linuxplace
 	dh_testdir
 	dh_testroot
+	rm -r file_list
+	rm -r dir_list
 	rm -f build-stamp configure-stamp
 	dh_clean 
 	
@@ -41,8 +37,11 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/gconfig.
-	for i in `cat dir_list`; do mkdir -p debian/tmp/$$i; done
-	for i in `cat file_list`; do install $$i debian/tmp/$$i; done
+	mkdir -p $(CURDIR)/debian/webmin-idxldapaccounts-linuxplace/usr/share/webmin/idxldapaccounts
+	mkdir -p $(CURDIR)/debian/webmin-idxldapaccounts-linuxplace/etc/webmin/idxldapaccounts/
+	for i in `cat dir_list` ; do mkdir -p $(CURDIR)/debian/webmin-idxldapaccounts-linuxplace/usr/share/webmin/$$i; done
+	for i in `cat file_list`; do install $$i $(CURDIR)/debian/webmin-idxldapaccounts-linuxplace/usr/share/webmin/$$i; done
+	install $(CURDIR)/idxldapaccounts/config.default $(CURDIR)/debian/webmin-idxldapaccounts-linuxplace/etc/webmin/idxldapaccounts/config
 
 # Build architecture-independent files here.
 binary-indep: build install

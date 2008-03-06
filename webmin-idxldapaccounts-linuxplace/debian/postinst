@@ -1,6 +1,0 @@
-#!/bin/sh
-if [ "$1" = "configure" ]; then
-	sed -e "/root/ s/$/ idxldapaccounts/" < /etc/webmin/webmin.acl > /etc/webmin/webmin.acl.new
-	mv /etc/webmin/webmin.acl /etc/webmin/webmin.acl.old
-	mv /etc/webmin/webmin.acl.new /etc/webmin/webmin.acl
-fi
