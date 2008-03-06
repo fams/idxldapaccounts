@@ -24,8 +24,8 @@ clean:
 	rm -rf debian/webmin-idxldapaccount-linuxplace
 	dh_testdir
 	dh_testroot
-	rm -r file_list
-	rm -r dir_list
+	rm -f file_list
+	rm -f dir_list
 	rm -f build-stamp configure-stamp
 	dh_clean 
 	
