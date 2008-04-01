@@ -7,6 +7,6 @@ Standards-Version: 3.6.0
 
 Package: webmin-idxldapaccounts-linuxplace
 Architecture: all
-Depends: webmin (>= 1.130), libnet-ldap-perl, libcrypt-smbhash-perl, libunicode-maputf8-perl, libdigest-sha1-perl, libnet-ssh-perl, libcgi-ajax-perl
+Depends: webmin (>= 1.130), libnet-ldap-perl, libcrypt-smbhash-perl, libunicode-maputf8-perl, libdigest-sha1-perl, libnet-ssh-perl, libcgi-ajax-perl, libxml-dom-perl
 Description: Modulo idxldapaccounts modificado para o NINJA
  Modulo de gerenciamento ldap centralizado do NINJA linuxplace

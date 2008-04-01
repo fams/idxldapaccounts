@@ -1,3 +1,9 @@
+webmin-idxldapaccounts-linuxplace (0.2-5) stable; urgency=low
+
+  * Falta de dependencias para o gerenciador de listas resolvida 
+
+ -- Fernando Augusto Medeiros Silva <fams@linuxplace.com.br>  Tue, 01 Apr 2008 15:13:18 -0300
+
 webmin-idxldapaccounts-linuxplace (0.2-4) stable; urgency=low
 
   * Mudanca no history do pacote
