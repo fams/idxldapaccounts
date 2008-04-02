@@ -280,6 +280,9 @@ edit_qmailuser_alternate_mail=Conta de Email Alternativa
 edit_qmailuser_mail_apply_changes=Mudar
 edit_qmailuser_mail_quota=Tamanho da cota de email
 edit_qmailuser_change_quota=mudar cota
+edit_qmailuser_vrfydir=Verificar Mailbox
+edit_qmailuser_createdir=Criar Mailbox
+edit_qmailuser_deleted=Conta de email removida
 
 edit_sambaaccount_successfully_created=Conta do Samba criada com sucesso
 edit_sambaaccount_samba_account=Conta do Samba
@@ -308,6 +311,7 @@ acl_delete_group=Pode remover grupos
 
 acl_configure_account_msg=Voce nao tem permissao para configurar os tipos de contas
 acl_view_user_tech_msg=Voce nao tem permissao para ver as informacoes dos usuarios
+acl_view_user_mail_msg=Voce nao tem permissao para ver as informacoes de correio
 acl_view_user_ftp_msg=Voc&ecirc; n&atilde;o tem permiss&atilde;o para ver as informa&ccedil;&otilde;es de ftp dos usu&aacute;rios
 acl_view_user_perso_msg=Voce nao tem permissao para ver as informacoes pessoais dos usuarios
 acl_view_group_msg=Voce nao tem permissao para ver as informacoes dos grupos

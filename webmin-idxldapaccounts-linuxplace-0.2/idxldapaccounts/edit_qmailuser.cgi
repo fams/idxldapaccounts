@@ -26,8 +26,14 @@
 
 require './idxldapaccounts-lib.pl';
 my %access = &get_module_acl();
-$access{'view_user_tech'} or &error($text{'acl_view_user_tech_msg'});
+$access{'view_user_mail'} or &error($text{'acl_view_user_mail_msg'});
 &ReadParse();
+
+#use CGI;
+use CGI::Ajax;
+
+#my $cgi = new CGI;
+my $pjx = new CGI::Ajax( 'qmailusersub' => 'ajax.cgi');
 
 # input
 my $user_uid = $in{'uid'};
@@ -158,9 +164,93 @@ if ($in{'create'}) {
     $user = $result->entry;
     &webmin_log("creating mail account for user [$user_uid]",undef, undef,\%in);
 }
-&header($user_uid,"images/icon.gif","edit_qmailuser",1,undef,undef);
+#Scripts para a pagina
+$prebody .=<<EOF
+<style type="text/css">
+<!--
+#wait{
+position:absolute;
+top:360px;
+left:500px;
+background-color:#200;
+display:none;
+}
+
+.hidden{
+display:none;
+}
+--></style>
+EOF
+;
+$prebody .= <<EOF
+<script type=text/javascript>
+vrfymaildir = function (){
+	//alert (arguments[0]);
+    eval(arguments[0]);
+    if(status[0] == false){
+	document.getElementById('resultdiv').style.color = '#FF0000' ;
+    	document.getElementById('createlink').style.display='inline';
+    	document.getElementById('resultdiv').innerHTML="N&atilde;o existe a caixa postal";
+		return true;
+    }
+	var html ="";
+	html += (status[1])?"":"<li>N&atilde;o &eacute; um diret&oacute;rio</li>";
+	html += (status[2])?"":"<li>Sem direito de leitura</li>";
+	html += (status[3])?"":"<li>Sem direito de escrita</li>";
+	if (html.length > 0) {
+		document.getElementById('resultdiv').style.color = '#FF0000' ;
+		document.getElementById('resultdiv').innerHTML="Os seguintes erros foram encontrados:<ul>";
+		document.getElementById('resultdiv').innerHTML +=html;
+		document.getElementById('resultdiv').innerHTML +="</ul><br/>Utilize um gerenciador de arquivos para resolver o problema";
+	}else{
+		document.getElementById('resultdiv').style.color = '#FF0000' ;
+		document.getElementById('resultdiv').innerHTML="Maildir OK";
+	}
+};
+mkmaildir = function (){
+    //alert(arguments[0]);
+    eval(arguments[0]);
+    if(ret == true ){
+        document.getElementById('createlink').style.display='none';
+        document.getElementById('resultdiv').innerHTML="Diret&oacute;rio criado";
+    }else{
+        document.getElementById('resultdiv').innerHTML=msg;
+    }
+}
+</script>
+EOF
+;
+$prebody .= $pjx;
+$prebody .= <<EOF
+<script type=text/javascript>
+// these 2 functions provide access to the javascript events. Since
+// is an object anything here will apply to any div that uses a
+// cgi::ajx registered function. as a convenience, we send in the id
+// of the current element (el) below. but that can also be accessed
+// this.target;
+// if these are not defined, no problem...
+pjx.prototype.pjxInitialized = function(el){
+  document.getElementById('wait').innerHTML = "<p style='vertical-align:middle'>Carregando ...<img src='images/ani-busy.gif'></p>";
+  document.getElementById('wait').style.backgroundColor = '#FFF';
+  document.getElementById('wait').style.color = '#F00';
+  document.getElementById('wait').style.valign = 'middle';
+  document.getElementById('wait').style.display= 'block';
+}
+
+pjx.prototype.pjxCompleted = function(el){
+  // here we use this.target:
+  // since this is a prototype function, we have access to all of hte 
+  // pjx obejct properties. 
+  document.getElementById('wait').style.display = 'none';
+}
+
+</script>
+EOF
+;
+&header($user_uid,"images/icon.gif","edit_qmailuser",1,undef,undef,undef,$prebody);
 
 &printMenu($ldap, $conf, $user, $user_uid, $onglet, $base);
+print "<div id='wait'></div>";
 
 print "<table><tr><td><img src=images/user.gif></td>
 <td><h1>$user_uid</h1></td><td>$creation</td></tr></table>\n";
@@ -169,6 +259,8 @@ print "<hr>\n";
 print "<table width='80%'><tr><td><h2>".$text{'edit_qmailuser_qmail_user'}."</h2></td><td>\n";
 if (!$in{'new'} && !$in{'delete'}) {
     print "<a href=$url&delete=yes>".$text{'edit_qmailuser_delete_account'}."</a>\n";
+    print "<a href=\"javascript:qmailusersub( ['function__vrfymaildir' , 'mailuid__$user_uid'] , [ vrfymaildir ],[ 'POST' ]  );\">".$text{'edit_qmailuser_vrfydir'}."</a>\n";
+    print "<a href=\"javascript:qmailusersub( ['function__mkmaildir' , 'mailuid__$user_uid'] , [ mkmaildir ],[ 'POST' ]  );\" id='createlink' class='hidden'>".$text{'edit_qmailuser_createdir'}."</a>\n";
 }
 print "</td></tr></table><br>\n";
 print "<table width='80%'>\n";
@@ -187,7 +279,7 @@ if ($in{'delete'}) {
     $attr_d->{'objectClass'}= \@new_ocs;
     &LDAPModifyUser($ldap, $base, $user_uid, $attr_d);
     &webmin_log("deleting email account for user [$user_uid]",undef, undef,\%in);
-    print "<font color=green>".$text{'edit_mail_deleted'}."</font></br>\n";
+    print "<font color=green>".$text{'edit_qmailuser_deleted'}."</font></br>\n";
     print "</table>\n";
 } elsif ($in{'new'}) {  #aqui ele mostra a tela de cadastro da primeira conta
     print "<tr><td colspan=2>".$text{'edit_qmailuser_infomsg'}."</td></tr>";
@@ -259,8 +351,9 @@ if ($in{'delete'}) {
     print "</select>";
     #print "<script>alert('".$old_mail."');</script>";
     print "<input type=submit name=add value='".$text{'edit_qmailuser_create_account'}."'></td></tr>\n";
-    print "</table>";
-    print "<br>\n";
+    print "</table>
+    <div id=\"resultdiv\"></div>
+    <br>\n";
 #<Quotasize>
 $_=$user->get_value('mailQuota');
 /(.*)S$/;
@@ -272,9 +365,13 @@ print "  <tr>";
 print "    <td>".$text{'edit_qmailuser_mail_quota'}."</td>";
 print "    <td><input type=text name=mailquota value='".$quota."'>BYTES<input type=submit name=changequota value='".$text{'edit_qmailuser_change_quota'}."'></td>
           </tr>
-       </table></form>";
-
+       </table>";
 #</Quotasize>
+print <<EOF
+</form>
+EOF
+;
+
 }
     
 &LDAPClose($ldap);

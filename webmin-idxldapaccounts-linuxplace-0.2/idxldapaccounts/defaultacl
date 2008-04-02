@@ -1,6 +1,7 @@
 configure_virtual=1
 configure_account=1
 view_user_tech=1
+view_user_mail=1
 view_user_perso=1
 view_group=1
 edit_user=1

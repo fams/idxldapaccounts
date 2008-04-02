@@ -65,7 +65,7 @@ sub vrfyftpdir  {
 sub mkmaildir  {
     my $q = shift;
     my $mailuid = $q->param("mailuid");
-    perform a nscd restart to be sure the user is known from the system
+    #perform a nscd restart to be sure the user is known from the system
     my $nscd = $config{"nscd_path"};
     system("$nscd restart");
     my $mailserver=new lxnclient;
@@ -73,8 +73,8 @@ sub mkmaildir  {
         return  0 , $mailserver->{MSG} ;
     }
     my $ret=$mailserver->exec("mkmaildir $mailuid");
-    chomp $ftpserver->{MSG};
-    my $html = qq(var msg = "$mailserver->{MSG}" ;var ret=$ret;);
+    chomp $mailserver->{MSG};
+    my $html = qq(var msg = "$mailserver->{MSG}" ; var ret=$ret;);
     return  $ret, $html ;
     undef $mailserver;
 }
@@ -85,7 +85,7 @@ sub vrfymaildir  {
     if(! $mailserver->connect('execscript', $config{remotemail})){
         return  0 , $mailserver->{MSG} ;
     }
-    if(my $ret=$mailserver->exec("vrfymaildir $ftpuid")){
+    if(my $ret=$mailserver->exec("vrfymaildir $mailuid")){
     	split (/:/,$mailserver->{MSG});
 	shift;
 	my $status = shift;

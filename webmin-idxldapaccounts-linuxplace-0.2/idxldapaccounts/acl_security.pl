@@ -26,6 +26,7 @@ require 'idxldapaccounts-lib.pl';
 my @acl_var = (
 	       "configure_account",
 	       "view_user_tech",
+	       "view_user_mail",
 	       "view_user_ftp",
 	       "view_user_perso",
 	       "view_group",
