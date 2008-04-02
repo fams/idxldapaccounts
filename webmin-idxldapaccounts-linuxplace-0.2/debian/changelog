@@ -1,3 +1,15 @@
+webmin-idxldapaccounts-linuxplace (0.2-7) stable; urgency=low
+
+  * Mesmo da alteracao anterior 
+
+ -- Fernando Augusto Medeiros Silva <fams@linuxplace.com.br>  Wed, 02 Apr 2008 17:23:39 -0300
+
+webmin-idxldapaccounts-linuxplace (0.2-6) stable; urgency=low
+
+  * adicionado suporte a verificar diretorio de mail 
+
+ -- Fernando Augusto Medeiros Silva <fams@linuxplace.com.br>  Wed, 02 Apr 2008 17:17:58 -0300
+
 webmin-idxldapaccounts-linuxplace (0.2-5) stable; urgency=low
 
   * Falta de dependencias para o gerenciador de listas resolvida 
