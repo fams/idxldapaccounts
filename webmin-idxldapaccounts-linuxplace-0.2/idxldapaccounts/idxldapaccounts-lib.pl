@@ -445,8 +445,10 @@ sub LDAPDeleteUser {
 		 	
 		 my $res = $ldap->delete( $dn );
 		 if ($res->code()) {
+            if ( $res->code() =! 32){ 
 			  &error("PAB".&ldap_error_name($res->code).
 						   ": ".&ldap_error_text($res->code));
+            }
 		 }
 	}
 #Removendo Homedir
