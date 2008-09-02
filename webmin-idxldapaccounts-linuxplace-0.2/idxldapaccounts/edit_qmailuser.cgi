@@ -71,6 +71,16 @@ if ($in{'add'}){
 }
 if ($in{'changequota'}) { 
     $attrs{'mailQuota'}=$in{'mailquota'}."S";
+    my $mailserver = new lxnclient;
+    if(! $mailserver->connect('execscript',$config{remotemail})){
+        &error($mailserver->{MSG});
+    }
+    #FIXME Nao eh desnecessário esse check acima?
+    if(my $ret=$mailserver->exec("removequotafile $user_uid")){
+        if($ret ==2){ &error($mailserver->{MSG});}
+    }else{
+        &error($mailserver->{MSG});
+    }
     &LDAPModifyUser($ldap, $base, $user_uid, \%attrs);	
 }
 #recebe alteracao de conta
