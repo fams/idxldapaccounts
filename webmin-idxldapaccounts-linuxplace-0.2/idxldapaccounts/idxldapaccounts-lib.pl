@@ -430,20 +430,20 @@ sub LDAPDeleteUser {
 	}
 #Removendo personal Addressbook
 	if ($config{'remove_personal_ab'}){
-		 my $dn="ou=$user_uid,".$config{'ldap_personal_ab_base'};
-		 my $result=&LDAPSearch($ldap,"objectclass=organizationalPerson",([cn]),$dn);
+		 my $abdn="ou=$user_uid,".$config{'ldap_personal_ab_base'};
+		 my $result=&LDAPSearch($ldap,"objectclass=organizationalPerson",([cn]),$abdn);
 		 @entries=$result->entries;
 		 my $abentry="";
 		 while(my $member = shift @entries){
 		 	$abentry=$member->get_value('cn');
-		 	my $res = $ldap->delete( "cn=$abentry,$dn" );
+		 	my $res = $ldap->delete( "cn=$abentry,$abdn" );
 		 	if ($res->code()) {
 			  	&error("PAB".&ldap_error_name($res->code).
 						   	": ".&ldap_error_text($res->code));
 		 	}
 		 }
-		 	
-		 my $res = $ldap->delete( $dn );
+         #Remove o addressbook	
+		 my $res = $ldap->delete( $abdn );
 		 if ($res->code()) {
             if ( $res->code() =! 32){ 
 			  &error("PAB".&ldap_error_name($res->code).
