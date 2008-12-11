@@ -42,5 +42,5 @@ valid_nas=NAS permitidos para efetuar logon (separados por ;),0
 line7=Configura&ccedil;&atilde;o do execscript,11
 remotemail=Endere&ccedil;o do servidor de Correio,0
 remoteftp=Endere&ccedil;o do servidor de FTP,0
-remotesmb=Endere&ccedil;o do servidor SAMBA,0
+remotesmb=Endere&ccedil;o do servidor SAMBA,15,multisamba
 remotehome=Endere&ccedil;o do servidor NFS HOME,0

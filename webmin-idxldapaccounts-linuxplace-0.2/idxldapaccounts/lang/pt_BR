@@ -296,6 +296,8 @@ edit_sambaaccount_create_account=Criar conta
 edit_sambaaccount_nt_disabled=Gerenciador de conta NT/LAN Manager esta desligada para este usuario, Mude ou entre novamente com a senha do usuario no Menu Geral de usuario para poder ativa-la
 edit_sambaaccount_is_enabled=conta esta disponivel
 edit_sambaaccount_apply_changes=Aplicar mudancas
+edit_sambaaccount_server_home=Servidor para armazernar o Homedir
+
 
 acl_configure_account=Pode configurar tipos de contas
 acl_view_user_tech=Pode ver informacoes tecnicas dos usuarios

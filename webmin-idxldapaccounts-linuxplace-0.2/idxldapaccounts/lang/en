@@ -279,6 +279,7 @@ edit_sambaaccount_retype_password=Retype password
 edit_sambaaccount_create_account=Create account
 edit_sambaaccount_nt_disabled=NT/LAN Manager account is disabled for this user, re-renter or change user password on the General user menu in order to active it
 edit_sambaaccount_is_enabled=account is enabled
+edit_sambaaccount_server_home=Server to store Homedir
 edit_sambaaccount_apply_changes=Apply changes
 
 acl_configure_account=Can configure account types
