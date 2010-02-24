@@ -71,6 +71,7 @@ if ($in{'add'}){
 }
 if ($in{'changequota'}) { 
     $attrs{'mailQuota'}=$in{'mailquota'}."S";
+    $attrs{'mailQuotaDovecot'}=int($in{'mailquota'}/1024);
     my $mailserver = new lxnclient;
     if(! $mailserver->connect('execscript',$config{remotemail})){
         &error($mailserver->{MSG});
@@ -142,6 +143,7 @@ if ($in{'create'}) {
   	$attrs{'mailMessageStore'} = $config{'mailMessageStoreBase'}.$user_uid."/Maildir/";
     }
     $attrs{'mailQuota'}=$conf->{$onglet}->{'mailQuota'}->{'default'}."S";
+    $attrs{'mailQuotaDovecot'}=int($conf->{$onglet}->{'mailQuota'}->{'default'}/1024);
     if(&MailCreateCheck($ldap,$base,$attrs{'mail'})){
         &error($text{'err_mail_exists'});
     }

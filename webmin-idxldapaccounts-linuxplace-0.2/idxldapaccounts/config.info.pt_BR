@@ -28,6 +28,7 @@ loginshell_default=Shell unix padr&atilde;o,0
 crypt_passwords=Encriptar as senhas,1,1-sim,0-n&atilde;o
 crypt_passwords_hash=Hash de senhas a ser utilizado,4,2-MD5,1-SSHA,0-CRYPT
 remove_homes=Remover diret&oacute;rio home quando apagar o usu&aacute;rio,1,1-sim,0-n&atilde;o
+remove_homes_save=Salvar diret&oacute;rio home quando apagar o usu&aacute;rio,1,1-sim,0-n&atilde;o
 #/users
 line5=Configura&ccedil;&atilde;o de Email,11
 mailMessageStoreBase=Raiz dos diret&oacute;rios de email ,0
