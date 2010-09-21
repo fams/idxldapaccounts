@@ -30,9 +30,10 @@ my %access = &get_module_acl();
 $access{'configure_discussao'} or &error($text{'acl_configure_discussao_msg'});
 &ReadParse();
 my $listname = $in{'listname'};
+my $listuid = $in{'listuid'};
 $action = $in{'action'};
 if($action=~/^edit/){
-	&header($text{'edit_discussao_title'},"images/discussao.gif","edit_discussao",1,undef,undef,undef,qq(<script src=discussao.js type=text/javascript></script>),qq(onLoad="getListMembers('$listname');"));
+	&header($text{'edit_discussao_title'},"images/discussao.gif","edit_discussao",1,undef,undef,undef,qq(<script src=discussao.js type=text/javascript></script>),qq(onLoad="getListMembers('$listuid');"));
 }else{
 	&header($text{'edit_discussao_title'},"images/discussao.gif","edit_discussao",1,1,undef,undef,qq(<script src=discussao.js type=text/javascript></script>));
 }
@@ -57,15 +58,15 @@ print "<div id=\"wait\">   Aguarde...</div>";
 print "<form onsubmit=\"false;\">";
 print "<table with='100%'>\n";
 action: {
-    my $listname = $in{'listname'};
-    my $listname = ($listname =~ /^\!(.*)/) ? $1 : $listname;
+    my $listuid = $in{'listuid'};
+    my $listuid = ($listuid =~ /^\!(.*)/) ? $1 : $listuid;
 
 ###EDIT
     $action =~ /^edit/ && do{
         @lista = ();
-    my $attrs = ['uid', 'mail', 'mailForwardingAddress'];
+    my $attrs = ['uid','cn', 'mail', 'mailForwardingAddress'];
     my $result = &LDAPSearch($ldap,
-        "(&(objectClass=top)(objectClass=qmailUser)(uid=$listname))",
+        "(&(objectClass=top)(objectClass=qmailUser)(uid=$listuid))",
         $attrs,
         $base);
     @lista = $result->entries;
@@ -96,19 +97,19 @@ action: {
     print "<td rowspan=10 width=\"40%\"><select id=\"mail_result\" name=\"mail_result\" multiple size=10>\n";
     print "<option>&nbsp;&nbsp;&nbsp;&nbsp;</option>"; 
     print "</select><br/>";
-    print "<input id=\"mail_avulso\" name=\"mail_avulso\" type=\"text\" size=15 maxlenght=30 /> <input type=\"button\" value=\"".$text{'edit_discussao_include_member'}."\" onClick=\"listOperate('mail_avulso','$listname','add');\"/></td> \n";
+    print "<input id=\"mail_avulso\" name=\"mail_avulso\" type=\"text\" size=15 maxlenght=30 /> <input type=\"button\" value=\"".$text{'edit_discussao_include_member'}."\" onClick=\"listOperate('mail_avulso','$listuid','add');\"/></td> \n";
      
     
 
     print "<td width=\"20%\">\n";
 #print "<input type=submit value='".$text{'edit_discussao_include_member'}."' name=submit>\n";
-   print "<input type=button onClick=\"listOperate('mail_result','$listname','add');\" value='".$text{'edit_discussao_include_member'}."' name=adicionar>\n";
+   print "<input type=button onClick=\"listOperate('mail_result','$listuid','add');\" value='".$text{'edit_discussao_include_member'}."' name=adicionar>\n";
 #   print "<input type=hidden value=$domain_members name=add><BR><BR>\n";
 #   print "</td><td>\n";
     print "<BR><BR>";
 
 
-    print "<input type=button onClick=\"listOperate('list_members','$listname','remove');\" value='".$text{'edit_discussao_remove_member'}."' name=submit2 >\n";
+    print "<input type=button onClick=\"listOperate('list_members','$listuid','remove');\" value='".$text{'edit_discussao_remove_member'}."' name=submit2 >\n";
 
     print "</td>\n";
     
@@ -165,19 +166,19 @@ action: {
     last action  };
  ###DELETE
     $action =~ /^delete/ && do{
-        my $listname=$in{'listname'};
+        my $listuid=$in{'listuid'};
         if(defined($in{'confirm'})){
-            my $res = $ldap->delete('uid='.$listname.','.$config{'ldap_discussao_base'});
+            my $res = $ldap->delete('uid='.$listuid.','.$config{'ldap_discussao_base'});
             if ($res->code()) { 
                        &error(&ldap_error_name($res->code).
                    ": ".&ldap_error_text($res->code)); 
             }
-        print "<tr><td>$virtual".$text{'edit_discussao_deleted'}."</td></tr>"; 
+        print "<tr><td>$listuid".$text{'edit_discussao_deleted'}."</td></tr>"; 
         }else{
-            print "".$text{'edit_discussao_about_to_delete_discussao'}." $listname, ".$text{'edit_discussao_are_you_sure'}."<br>";
+            print "".$text{'edit_discussao_about_to_delete_discussao'}." $listuid, ".$text{'edit_discussao_are_you_sure'}."<br>";
             print "<input type=submit name=confirm value=".$text{'delete_discussao_confirm'}.">";
             print "<input type=hidden name=action value='delete'>";
-            print "<input type=hidden name=listname value='".$listname."'>";
+            print "<input type=hidden name=listuid value='".$listuid."'>";
 
         }
     last action  };
@@ -186,7 +187,9 @@ action: {
     print "<table border width=100%>\n";
     print "<tr $tb> <td><b>$text{'create_discussao_title'} </b></td> </tr>\n";
     print "<tr $cb><td><table width=100%>\n";
-    print "<br>".$text{'create_discussion_name'}.":<input type=text name=list_name><td><br>";
+    print "<br>"
+       .$text{'create_discussion_uid'}.":<input type=text name=list_uid><br>"
+       .$text{'create_discussion_name'}.":<input type=text name=list_name><br>";
     
     print $text{'create_discussao_mail'}.":<input type=text name=mail_box>@";
     print "<select name=mail_domain> ";
@@ -209,7 +212,7 @@ action: {
     @dmembers = split(//,$in{'domain_members'}); 
 #    @dmembers = split(//,$in{'domain_members'});
         foreach my $members_to_include (@dmembers) {
-            my $res = $ldap->modify('uid='.$listname.','.$config{'ldap_discussao_base'}, add => { 'mailForwardingAddress' => $members_to_include } );
+            my $res = $ldap->modify('uid='.$listuid.','.$config{'ldap_discussao_base'}, add => { 'mailForwardingAddress' => $members_to_include } );
             if ($res->code()) { 
                        &error(&ldap_error_name($res->code).
                    ": ".&ldap_error_text($res->code)); 
@@ -223,8 +226,8 @@ action: {
 
 ###REMOVE
     $action =~ /^remove/ && do{
-    my $listname = $in{'listname'};
-    my $dn = "uid=$listname,$base";
+    my $listuid = $in{'listuid'};
+    my $dn = "uid=$listuid,$base";
     @rmembers = split(//,$in{'list_members'});
         foreach my $members_to_remove (@rmembers) {
             my $res = $ldap->modify($dn, delete => { 'mailForwardingAddress' => $members_to_remove } );
@@ -243,8 +246,9 @@ action: {
     $action =~ /^create/ && do{
     my $newldomain = $in{'mail_domain'};
     my $newlist = $in{'list_name'};
+    my $newluid = $in{'list_uid'};
     my $newlmail = $in{'mail_box'};
-    my $dn = "uid=$newlist,$base";
+    my $dn = "uid=$newluid,$base";
     my $lmail = $newlmail.'@'.$newldomain;
 
     $result = $ldap->add( $dn,
@@ -253,7 +257,7 @@ action: {
             'mail'      =>  $lmail,
             'sn'        =>  '.',
             'cn'        =>  $newlist,
-            'uid'       =>  $newlist,
+            'uid'       =>  $newluid,
 
             ]
     );

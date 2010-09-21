@@ -269,6 +269,7 @@ edit_qmailuser_mail_quota=Mail Quota Size
 edit_qmailuser_change_quota=change Quota
 
 edit_sambaaccount_successfully_created=Samba account successfully created
+edit_sambaaccount_server_home=Server to store Homedir
 edit_sambaaccount_samba_account=Samba account
 edit_sambaaccount_delete_account=delete account
 edit_sambaaccount_deleted=Samba account deleted

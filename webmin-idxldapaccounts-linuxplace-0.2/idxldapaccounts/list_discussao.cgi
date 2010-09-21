@@ -35,7 +35,7 @@ $access{'configure_discussao'} or &error($text{'acl_configure_discussao_msg'});
 print "<h1>".$text{'list_discussao_lists'}."</h1>\n";
 
 my $ldap = &LDAPInit();
-my $attrs = ['uid', 'mail'];
+my $attrs = ['uid', 'mail', 'cn'];
 my $base = $config{'ldap_discussao_base'};
 
 print "<table width='100%'>\n";
@@ -61,9 +61,11 @@ my $result = &LDAPSearch($ldap,
 #print "<table width='100%'>\n";
 #print "<tr $cb><td><b>".$text{'list_discussao_name'}."</b></td><td></td></tr>\n";
 foreach my $_list (@listas) {
-    my $_listname=$_list->get_value('uid');
+    my $_listuid=$_list->get_value('uid');
+    my $_listname=$_list->get_value('cn');
     my $_listmail=$_list->get_value('mail');
-    print "<tr><td><a href=edit_discussao.cgi?action=edit&listname=$_listname>$_listname</a><td>$_listmail</td><td><a href=edit_discussao.cgi?action=delete&listname=$_listname>$text{'delete'}</a></td>\n";
+    $_listuid =~ s/[^a-zA-Z\.\-]//; 
+    print "<tr><td><a href=\"edit_discussao.cgi?action=edit&listuid=$_listuid\">$_listname</a></td><td>$_listmail</td><td><a href=\"edit_discussao.cgi?action=delete&listuid=$_listuid\">$text{'delete'}</a></td>\n";
 }
 print "</table>\n"; 
 print "<form action='edit_discussao.cgi' method='post'>\n";

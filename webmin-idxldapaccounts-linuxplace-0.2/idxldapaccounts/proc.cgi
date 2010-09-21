@@ -51,6 +51,7 @@ action: {
         my $attrs = ['uid', 'mail', 'mailAlternateAddress','cn'];
         SWITCH:{
             if ($search_type =~ /^name/) { $search_attribute='cn' ; last SWITCH; }
+            if ($search_type =~ /^uid/) { $search_attribute='uid' ; last SWITCH; }
             if ($search_type =~ /^mail/)  { $search_attribute='mail'; last SWITCH; }
             if ($search_type =~ /^sector/)  { $search_attribute='ou' ; last SWITCH; }
             $nothing=1;
@@ -69,12 +70,12 @@ action: {
         $xml_response.="</maillist>";
 };
     $action =~ /^getListMembers/ && do{
-        my $listname = $in{'listname'};
-        my $listname = ($listname =~ /^\!(.*)/) ? $1 : $listname; 
+        my $listuid = $in{'listuid'};
+        my $listuid = ($listuid =~ /^\!(.*)/) ? $1 : $listuid; 
         @mails = ();
         my $attrs = ['uid', 'mail', 'mailForwardingAddress'];
         my $result = &LDAPSearch($ldap,
-            "(&(objectClass=top)(objectClass=qmailUser)(uid=$listname))",
+            "(&(objectClass=top)(objectClass=qmailUser)(uid=$listuid))",
             $attrs,
             $base);
         my $lista =$result->entry(0);

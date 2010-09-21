@@ -145,7 +145,7 @@ function listOperate(select,lista,operation){
 
 //Retrieve
 function getListMembers(lista){
-    loadXMLDoc("proc.cgi?action=getListMembers&listname="+lista,procListMemberResult);
+    loadXMLDoc("proc.cgi?action=getListMembers&listuid="+lista,procListMemberResult);
 }
 
 function procListMemberResult() {
