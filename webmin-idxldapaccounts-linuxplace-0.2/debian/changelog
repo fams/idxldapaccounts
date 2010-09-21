@@ -1,8 +1,8 @@
-webmin-idxldapaccounts-linuxplace (0.2-8) lucid; urgency=low
+webmin-idxldapaccounts-linuxplace (0.2-8) stable; urgency=low
 
-  * 
+  * Adicionado suporte para listas por uid 
 
- -- Fernando Augusto Medeiros Silva <fams@linuxplace.com.br>  Tue, 21 Sep 2010 15:17:50 -0300
+ -- fams <fams@linuxplace.com.br>  Tue, 21 Sep 2010 16:03:11 -0300
 
 webmin-idxldapaccounts-linuxplace (0.2-7) stable; urgency=low
 
