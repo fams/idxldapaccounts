@@ -61,10 +61,16 @@ if ($in{'create'}) {
 #Compliance with rfc 2307
     $schema= $ldap->schema();
     if(defined $schema->objectclass('namedObject')){
-        push (@attrs, ['posixGroup', 'namedObject' ]);
+        push (@attrs, ['posixGroup', 'namedObject','sambaGroupMapping'] );
     }else{
-        push (@attrs, ['posixGroup' ]);
+        push (@attrs, ['posixGroup','sambaGroupMapping' ]);
     }
+#GroupMap
+    push (@attrs, 'sambaSID');
+    push (@attrs, [ $config{'samba_sid'} . '-' . ((2 * int($in{'gidNumber'})) + 1000) ] );
+    push (@attrs, 'sambaGroupType');
+    push (@attrs, ['2']);
+
     &LDAPAddGroup($ldap, $dn, \@attrs);
     &webmin_log("creating group [$dn]", undef, undef,\%in);
     $creation = "<font color=green>".$text{'edit_group_group_successfully_created'}."</font></br>\n";

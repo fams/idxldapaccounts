@@ -77,7 +77,8 @@ my $ldap = &LDAPInit();
 
 =cut "
 
-use Net::LDAP qw(:all);
+# use Net::LDAP qw(:all);
+use Net::LDAP;
 use Net::LDAP::Util qw(ldap_error_name ldap_error_text);
 use Unicode::MapUTF8 qw(to_utf8 from_utf8);
 use Crypt::SmbHash;
