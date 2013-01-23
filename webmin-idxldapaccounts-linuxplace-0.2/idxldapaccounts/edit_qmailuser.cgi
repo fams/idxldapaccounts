@@ -160,9 +160,11 @@ if ($in{'create'}) {
     	push(@new_ocs, 'hordePerson');
 	$attrs{'hordePrefs'}=".";
 	$attrs{'ImpPrefs'}=".";
+	$attrs{'turbaPrefs'}=".";
     }else{
 	$attrs{'hordePrefs'}=undef;
 	$attrs{'ImpPrefs'}=undef;
+	$attrs{'turbaPrefs'}=undef;
     }
 	
     $attrs{'objectclass'} = \@new_ocs;

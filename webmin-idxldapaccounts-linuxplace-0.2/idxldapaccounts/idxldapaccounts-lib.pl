@@ -405,7 +405,6 @@ sub LDAPDeleteUser {
 	my $usermail=$user->get_value('mail', asref=>1 );
 	my $usermail2=$user->get_value('mailAlternateAddress', asref=>1 );
 	my @mails=(@$usermail,@$usermail2);
-	#use Data::Dumper;
 #Removendo aderecos do usuario, FIXME need to have a better place to put it
 #Removendo das listas de discussao
 	if($config{'use_discussao'}){
@@ -516,8 +515,9 @@ sub LDAPModifyUser {
 							 replace => { %$changes },
 						   );
 	if ($res->code()) { 
-		&error(&ldap_error_name($res->code).
-			   ": ".&ldap_error_text($res->code)); 
+	use Data::Dumper;
+		&error("ModifyUser " . &ldap_error_name($res->code).
+			   ": <pre>".&ldap_error_text($res->code). Dumper($changes) . "</pre>"); 
 	}
 	$user->update($ldap);
 }
